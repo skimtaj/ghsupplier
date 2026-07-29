@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Nababia Mission</title>
+    <title>NM - Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -16,19 +17,21 @@
         }
 
         :root {
-            --admin-primary-color: #2c3e50;
-            --admin-secondary-color: #1a2530;
-            --admin-accent-color: #3498db;
-            --admin-success-color: #2ecc71;
-            --admin-danger-color: #e74c3c;
+            --admin-primary-color: #4F0853;
+            --admin-secondary-color: #2e0431;
+            --admin-accent-color: #9a4a9e;
+            --admin-accent-hover: #7a2a7e;
+            --admin-accent-light: rgba(79, 8, 83, 0.15);
+            --admin-success-color: #28a745;
+            --admin-danger-color: #dc3545;
             --admin-sidebar-width: 260px;
             --admin-header-height: 70px;
             --admin-footer-height: 50px;
             --admin-transition: all 0.2s ease;
             --admin-border-radius: 8px;
-            --admin-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            --admin-sidebar-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            --admin-active-glow: rgba(52, 152, 219, 0.2);
+            --admin-card-shadow: 0 4px 12px rgba(79, 8, 83, 0.08);
+            --admin-sidebar-shadow: 0 0 20px rgba(79, 8, 83, 0.25);
+            --admin-active-glow: rgba(79, 8, 83, 0.3);
         }
 
         body {
@@ -91,7 +94,7 @@
         }
 
         .admin-toggle-sidebar:hover {
-            background: var(--admin-secondary-color);
+            background: var(--admin-accent-color);
         }
 
         .admin-search-box {
@@ -105,6 +108,11 @@
             font-size: 14px;
             width: 220px;
             transition: var(--admin-transition);
+        }
+
+        .admin-search-box input:focus {
+            border-color: var(--admin-accent-color);
+            box-shadow: 0 0 0 3px var(--admin-accent-light);
         }
 
         .admin-search-box i {
@@ -134,11 +142,12 @@
             height: 36px;
             border-radius: 50%;
             object-fit: cover;
+            border: 2px solid var(--admin-accent-color);
         }
 
         .admin-sidebar {
             width: var(--admin-sidebar-width);
-            background: #211B34;
+            background: #0b061a;
             color: white;
             height: 100vh;
             position: fixed;
@@ -149,10 +158,23 @@
             left: 0;
         }
 
+        .admin-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .admin-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .admin-sidebar::-webkit-scrollbar-thumb {
+            background: var(--admin-accent-color);
+            border-radius: 4px;
+        }
+
         .admin-sidebar-header {
             padding: 16px 12px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(245, 179, 66, 0.12);
             display: flex;
             align-items: center;
         }
@@ -167,7 +189,7 @@
 
         .admin-sidebar-header h3 i {
             margin-right: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(245, 179, 66, 0.12);
             width: 34px;
             height: 34px;
             border-radius: 8px;
@@ -175,6 +197,7 @@
             align-items: center;
             justify-content: center;
             font-size: 16px;
+            color: var(--admin-accent-color);
         }
 
         .admin-sidebar-menu {
@@ -192,7 +215,7 @@
             position: relative;
             overflow: hidden;
             text-decoration: none;
-            color: white;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .admin-menu-item::before {
@@ -202,7 +225,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(245, 179, 66, 0.08), transparent);
             transition: left 0.5s ease;
         }
 
@@ -211,19 +234,21 @@
         }
 
         .admin-menu-item:hover {
-            background-color: rgba(255, 255, 255, 0.08);
+            background-color: rgba(245, 179, 66, 0.1);
             transform: translateX(3px);
+            color: white;
         }
 
         .admin-menu-item.active {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: rgba(245, 179, 66, 0.15);
             box-shadow:
-                0 0 10px var(--admin-active-glow),
+                0 0 20px var(--admin-active-glow),
                 0 2px 6px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+                inset 0 1px 0 rgba(245, 179, 66, 0.08);
             position: relative;
             transform: translateX(3px);
             z-index: 1;
+            color: white;
         }
 
         .admin-menu-item.active::after {
@@ -233,21 +258,20 @@
             top: 0;
             height: 100%;
             width: 3px;
-            background: linear-gradient(to bottom, var(--admin-accent-color), var(--admin-success-color));
+            background: var(--admin-accent-color);
             border-radius: 0 3px 3px 0;
-            box-shadow: 0 0 8px var(--admin-accent-color);
+            box-shadow: 0 0 12px var(--admin-accent-color);
         }
 
         .admin-menu-item.active i {
             color: var(--admin-accent-color);
-            text-shadow: 0 0 6px var(--admin-accent-color);
+            text-shadow: 0 0 10px var(--admin-accent-color);
             transform: scale(1.05);
         }
 
         .admin-menu-item.active span {
             font-weight: 600;
             color: #ffffff;
-            text-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
         }
 
         .admin-menu-item i {
@@ -276,13 +300,13 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.6s ease;
-            background-color: rgba(0, 0, 0, 0.08);
+            background-color: rgba(245, 179, 66, 0.05);
             border-radius: 6px;
             margin: 0 8px;
         }
 
         .admin-submenu.open {
-            max-height: 300px;
+            max-height: 500px;
         }
 
         .admin-submenu-item {
@@ -294,7 +318,7 @@
             position: relative;
             display: block;
             text-decoration: none;
-            color: white;
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .admin-submenu-item::before {
@@ -306,7 +330,7 @@
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.2);
             transition: var(--admin-transition);
         }
 
@@ -316,16 +340,18 @@
         }
 
         .admin-submenu-item:hover {
-            background-color: rgba(255, 255, 255, 0.08);
+            background-color: rgba(245, 179, 66, 0.08);
             padding-left: 42px;
+            color: white;
         }
 
         .admin-submenu-item.active {
-            background-color: rgba(255, 255, 255, 0.12);
+            background-color: rgba(245, 179, 66, 0.12);
             font-weight: 500;
+            color: white;
             box-shadow:
-                0 0 8px rgba(52, 152, 219, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+                0 0 12px rgba(245, 179, 66, 0.1),
+                inset 0 1px 0 rgba(245, 179, 66, 0.08);
             position: relative;
         }
 
@@ -337,15 +363,15 @@
             transform: translateY(-50%);
             height: 65%;
             width: 2px;
-            background: linear-gradient(to bottom, var(--admin-accent-color), var(--admin-success-color));
+            background: var(--admin-accent-color);
             border-radius: 0 2px 2px 0;
-            box-shadow: 0 0 6px var(--admin-accent-color);
+            box-shadow: 0 0 10px var(--admin-accent-color);
         }
 
         .admin-submenu-item.active::before {
             background-color: var(--admin-accent-color);
             transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 0 4px var(--admin-accent-color);
+            box-shadow: 0 0 6px var(--admin-accent-color);
         }
 
         .admin-main-content {
@@ -395,6 +421,7 @@
             display: flex;
             align-items: center;
             transition: var(--admin-transition);
+            border-left: 3px solid var(--admin-accent-color);
         }
 
         .stat-card:hover {
@@ -411,6 +438,8 @@
             justify-content: center;
             font-size: 24px;
             margin-right: 16px;
+            background: var(--admin-accent-light);
+            color: var(--admin-accent-color);
         }
 
         .stat-info {
@@ -431,23 +460,23 @@
         }
 
         .users-icon {
-            background: rgba(52, 152, 219, 0.08);
+            background: var(--admin-accent-light);
             color: var(--admin-accent-color);
         }
 
         .revenue-icon {
-            background: rgba(46, 204, 113, 0.08);
-            color: var(--admin-success-color);
+            background: var(--admin-accent-light);
+            color: var(--admin-accent-color);
         }
 
         .orders-icon {
-            background: rgba(241, 196, 15, 0.08);
-            color: #f1c40f;
+            background: var(--admin-accent-light);
+            color: var(--admin-accent-color);
         }
 
         .pending-icon {
-            background: rgba(231, 76, 60, 0.08);
-            color: var(--admin-danger-color);
+            background: var(--admin-accent-light);
+            color: var(--admin-accent-color);
         }
 
         .recent-activity {
@@ -477,7 +506,7 @@
             align-items: center;
             justify-content: center;
             margin-right: 12px;
-            background: rgba(52, 152, 219, 0.08);
+            background: var(--admin-accent-light);
             color: var(--admin-accent-color);
         }
 
@@ -703,35 +732,34 @@
                 <h3><i class="fas fa-chart-pie"></i> <span>Nababia Mission</span></h3>
             </div>
             <div class="admin-sidebar-menu">
-                <a href="/nm/admin-dashboard" class="admin-menu-item active">
+                <a href="/nababiamission/admin-dashboard" class="admin-menu-item active">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
 
-
-
-
+                <!-- Registration - 2026 -->
                 <div class="admin-menu-item" onclick="toggleAdminSubmenu('registration')">
                     <i class="fas fa-user-plus"></i>
-                    <span>Registration - 2026</span>
+                    <span>Students List</span>
                     <i class="fas fa-chevron-down" style="margin-left: auto; font-size: 12px;"></i>
                 </div>
                 <div class="admin-submenu" id="registration-submenu">
-                    <a href="/nm/admin-dashboard/admission-list" class="admin-submenu-item">All Registration</a>
-                    <a href="#" class="admin-submenu-item">Add New</a>
+                    <a href="/nm/admin-dashboard/student-list" class="admin-submenu-item">All Students</a>
+                    <a href="/nm/admin-dashboard/add-student" class="admin-submenu-item">Add New</a>
                 </div>
 
-                <a href="#" class="admin-menu-item">
-                    <i class="fas fa-flag"></i>
-                    <span>Report</span>
+
+                <a href="/nababiamission/admin-dashboard/guardian-feedback" class="admin-menu-item">
+                    <i class="fas fa-user-shield"></i> <span>Guardian Feedback</span>
                 </a>
 
-                <a href="#" class="admin-menu-item">
+                <a href="/nababiamission/admin-dashboard/add-class" class="admin-menu-item">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
 
-                <a href="#" onclick="adminLogout()" class="admin-menu-item">
+
+                <a href="/logout" onclick="return confirm('Are You Sure ?')" class="admin-menu-item">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -739,130 +767,153 @@
         </div>
 
 
-    </div>
 
-    <script>
-
-
-        const adminLogout = () => {
-
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, Logout!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-
-                    window.location.href = '/logout'
-                }
-            });
-
-        }
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
 
 
-        function toggleAdminSubmenu(id) {
-            const submenu = document.getElementById(`${id}-submenu`);
-            const allSubmenus = document.querySelectorAll('.admin-submenu');
 
-            allSubmenus.forEach(sub => {
-                if (sub.id !== `${id}-submenu` && sub.classList.contains('open')) {
-                    sub.classList.remove('open');
-                }
-            });
+            // ✅ Submenu Toggle (FIXED)
+            function toggleAdminSubmenu(id) {
+                const submenu = document.getElementById(`${id}-submenu`);
+                const parentItem = submenu.previousElementSibling;
 
-            if (submenu) {
+                const allSubmenus = document.querySelectorAll('.admin-submenu');
+
+                allSubmenus.forEach(sub => {
+                    if (sub !== submenu) {
+                        sub.classList.remove('open');
+
+                        const prev = sub.previousElementSibling;
+                        const chevron = prev?.querySelector('.fa-chevron-down');
+                        if (chevron) chevron.style.transform = 'rotate(0deg)';
+                    }
+                });
+
                 submenu.classList.toggle('open');
-            }
-        }
 
-        function toggleAdminSidebar() {
-            const sidebar = document.getElementById('admin-sidebar');
-            const overlay = document.getElementById('admin-overlay');
-
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('active');
-
-            if (window.innerWidth < 768) {
-                document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-            }
-        }
-
-        document.getElementById('admin-overlay').addEventListener('click', function () {
-            toggleAdminSidebar();
-        });
-
-        document.querySelectorAll('.admin-menu-item').forEach(item => {
-            item.addEventListener('click', function (e) {
-                if (this.querySelector('.fa-chevron-down')) {
-                    e.preventDefault();
-                    return;
+                const chevron = parentItem.querySelector('.fa-chevron-down');
+                if (chevron) {
+                    chevron.style.transform = submenu.classList.contains('open')
+                        ? 'rotate(180deg)'
+                        : 'rotate(0deg)';
                 }
+            }
 
-                document.querySelectorAll('.admin-menu-item').forEach(i => {
-                    i.classList.remove('active');
-                });
+            // ✅ Sidebar Toggle (Mobile)
+            function toggleAdminSidebar() {
+                const sidebar = document.getElementById('admin-sidebar');
+                const overlay = document.getElementById('admin-overlay');
 
-                this.classList.add('active');
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
 
                 if (window.innerWidth < 768) {
+                    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+                }
+            }
+
+            // ✅ Overlay click close
+            document.getElementById('admin-overlay').addEventListener('click', toggleAdminSidebar);
+
+            // ✅ Menu Active Fix
+            document.querySelectorAll('.admin-menu-item').forEach(item => {
+                item.addEventListener('click', function () {
+
+                    // ❌ DO NOT block submenu click
+                    if (this.querySelector('.fa-chevron-down')) return;
+
+                    document.querySelectorAll('.admin-menu-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+
+                    if (window.innerWidth < 768) {
+                        toggleAdminSidebar();
+                    }
+                });
+            });
+
+            // ✅ Submenu Active Fix
+            document.querySelectorAll('.admin-submenu-item').forEach(item => {
+                item.addEventListener('click', function () {
+
+                    document.querySelectorAll('.admin-submenu-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+
+                    this.classList.add('active');
+
+                    const parentSubmenu = this.closest('.admin-submenu');
+                    if (parentSubmenu) {
+                        const parentMenuItem = parentSubmenu.previousElementSibling;
+
+                        document.querySelectorAll('.admin-menu-item').forEach(i => {
+                            i.classList.remove('active');
+                        });
+
+                        parentMenuItem.classList.add('active');
+                    }
+
+                    if (window.innerWidth < 768) {
+                        toggleAdminSidebar();
+                    }
+                });
+            });
+
+            // ✅ Click outside to close (mobile)
+            document.addEventListener('click', function (event) {
+                const sidebar = document.getElementById('admin-sidebar');
+                const toggleBtn = document.querySelector('.admin-toggle-sidebar');
+
+                if (
+                    window.innerWidth < 768 &&
+                    sidebar.classList.contains('open') &&
+                    !sidebar.contains(event.target) &&
+                    (!toggleBtn || !toggleBtn.contains(event.target))
+                ) {
                     toggleAdminSidebar();
                 }
             });
-        });
 
-        document.querySelectorAll('.admin-submenu-item').forEach(item => {
-            item.addEventListener('click', function () {
-                document.querySelectorAll('.admin-submenu-item').forEach(i => {
-                    i.classList.remove('active');
-                });
+            // ✅ Resize fix
+            window.addEventListener('resize', function () {
+                const sidebar = document.getElementById('admin-sidebar');
+                const overlay = document.getElementById('admin-overlay');
 
-                this.classList.add('active');
-
-                if (window.innerWidth < 768) {
-                    toggleAdminSidebar();
+                if (window.innerWidth >= 768) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
                 }
             });
-        });
 
-        document.addEventListener('click', function (event) {
-            const sidebar = document.getElementById('admin-sidebar');
-            const toggleBtn = document.querySelector('.admin-toggle-sidebar');
+            // ✅ Auto active menu based on URL (ADVANCED 🔥)
+            document.addEventListener('DOMContentLoaded', function () {
+                const currentPath = window.location.pathname;
 
-            if (window.innerWidth < 768 &&
-                sidebar.classList.contains('open') &&
-                !sidebar.contains(event.target) &&
-                (!toggleBtn || !toggleBtn.contains(event.target))) {
-                toggleAdminSidebar();
-            }
-        });
+                document.querySelectorAll('.admin-menu-item, .admin-submenu-item').forEach(link => {
+                    if (link.getAttribute('href') === currentPath) {
 
-        window.addEventListener('resize', function () {
-            const sidebar = document.getElementById('admin-sidebar');
-            const overlay = document.getElementById('admin-overlay');
+                        link.classList.add('active');
 
-            if (window.innerWidth >= 768) {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
+                        // Open parent submenu if exists
+                        const parentSubmenu = link.closest('.admin-submenu');
+                        if (parentSubmenu) {
+                            parentSubmenu.classList.add('open');
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const dashboardItem = document.querySelector('.admin-menu-item[href="/mmr-admin"]');
-            if (dashboardItem) {
-                dashboardItem.classList.add('active');
-            }
-        });
+                            const parentMenuItem = parentSubmenu.previousElementSibling;
+                            parentMenuItem.classList.add('active');
 
+                            const chevron = parentMenuItem.querySelector('.fa-chevron-down');
+                            if (chevron) chevron.style.transform = 'rotate(180deg)';
+                        }
+                    }
+                });
+            });
 
-
-
-
-    </script>
+        </script>
 </body>
 
 </html>

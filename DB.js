@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const mongourl = process.env.DB_URL
-//const mongourl = 'mongodb://localhost:27017/afm-project';
+const mongourl = process.env.DB_URL;
 
 mongoose.connect(mongourl);
 

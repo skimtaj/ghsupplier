@@ -1,4 +1,5 @@
-require("regenerator-runtime/runtime");
+
+
 const express = require('express');
 const app = express();
 require('dotenv').config();
@@ -17,24 +18,48 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+
 app.use(flash());
 app.use((req, res, next) => { res.locals.messages = req.flash(); next(); });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'Public')));
-app.use('/upload', express.static('uploads'));
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 
+// app.set("views", path.join(__dirname, "adminModule", "Views"));
 app.set('view engine', 'ejs');
+
 app.use(bodyParser.json());
 
+
+
+/*app.use((req, res) => {
+
+  if (req.originalUrl.startsWith('/nababiamission/reuslts/class-test-result')) {
+    return res.status(404).render('404_page')
+  }
+
+
+  return res.status(404).send('404 - Page Not Found');
+
+}) */
+
+
+app.use('', require('./teacherModule/routes/teacher_routes'))
+
 app.use('', require('./adminModule/routes/admin_routes'));
-app.use('', require('./userModule/routes/user_routes'))
 
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
 
-  console.log('Server is conected')
-})
+  console.log('Server is connected');
+
+});
+
+
+
+
