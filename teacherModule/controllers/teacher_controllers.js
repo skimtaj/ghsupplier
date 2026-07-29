@@ -86,9 +86,20 @@ const teacherSigninPost = async (req, res) => {
 
 };
 
-const teacherDashboard = (req, res) => {
+const teacherDashboard = async (req, res) => {
 
-    res.render('../teacherModule/Views/teacher_dashboard')
+    const totalStudents = await result_model.countDocuments();
+
+    const totalBoys = await result_model.find({ section: 'Boys' });
+    const totalBoysCount = totalBoys.length;
+
+    const totalGirls = await result_model.find({ section: 'Girls' });
+    const totalGirlsCount = totalGirls.length;
+
+
+    console.log(totalStudents, totalBoysCount, totalGirlsCount)
+
+    res.render('../teacherModule/Views/teacher_dashboard', { totalStudents })
 
 }
 
@@ -103,7 +114,7 @@ const editResult = async (req, res) => {
 
 const editResultPost = async (req, res) => {
 
-     try {
+    try {
 
         const editResultData = req.body;
 
@@ -175,7 +186,7 @@ const editResultPost = async (req, res) => {
         await result_model.findByIdAndUpdate(req.params.id, editResultData);
 
         req.flash("success", "Result updated successfully.");
-        return res.redirect("/nababiamission/admin-dashboard");
+        return res.redirect("/nababiamission/teacher-dashboard");
     }
 
     catch (err) {
