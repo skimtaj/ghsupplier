@@ -97,9 +97,7 @@ const teacherDashboard = async (req, res) => {
     const totalGirlsCount = totalGirls.length;
 
 
-    console.log(totalStudents, totalBoysCount, totalGirlsCount)
-
-    res.render('../teacherModule/Views/teacher_dashboard', { totalStudents })
+    res.render('../teacherModule/Views/teacher_dashboard', { totalStudents, totalBoysCount, totalGirlsCount })
 
 }
 
