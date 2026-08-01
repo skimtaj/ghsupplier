@@ -43,9 +43,9 @@ route.get('/nababiamission/nm-admin', adminCredential);
 
 route.post('/nababiamission/admin-login', adminLoginPost);
 
-route.get('/nababiamission/admin-signup/SSSSS', auth, adminSignup);
+route.get('/nababiamission/admin-signup/SSSSS', adminSignup);
 
-route.post('/nababiamission/admin-signup', auth, adminSignupPost);
+route.post('/nababiamission/admin-signup', adminSignupPost);
 
 route.get('/logout', adminLogout);
 

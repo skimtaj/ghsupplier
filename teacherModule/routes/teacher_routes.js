@@ -10,8 +10,8 @@ route.get('/nababiamission/teacher-credential', teacherCredential);
 
 route.post('/nababiamission/teacher-signin', teacherSigninPost);
 
-route.get('/nababiamission/teacher-signup/tttt', auth, teacherSignup);
-route.post('/nababiamission/teacher-signup/tttt', auth, teacherSignupPost);
+route.get('/nababiamission/teacher-signup/tttt', teacherSignup);
+route.post('/nababiamission/teacher-signup/tttt', teacherSignupPost);
 
 route.get('/nababiamission/teacher-dashboard', auth, teacherDashboard);
 
