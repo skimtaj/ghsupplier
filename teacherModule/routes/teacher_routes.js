@@ -23,7 +23,6 @@ route.get('/nababiamission/teacher-dashboard/view-result/:id', auth, viewResult)
 route.get('/teacher-logout', teacherLogout)
 
 
-
 route.get('/nababiamission/class-nursery', auth, nursery);
 
 route.get('/nababiamission/class-I', auth, classI);

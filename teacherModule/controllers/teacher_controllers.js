@@ -184,7 +184,55 @@ const editResultPost = async (req, res) => {
         await result_model.findByIdAndUpdate(req.params.id, editResultData);
 
         req.flash("success", "Result updated successfully.");
-        return res.redirect("/nababiamission/teacher-dashboard");
+
+
+        if (editResultData.current_class === "I") {
+            return res.redirect("/nababiamission/class-I");
+        }
+        else if (editResultData.current_class === "II") {
+            return res.redirect("/nababiamission/class-II");
+        }
+        else if (editResultData.current_class === "III") {
+            return res.redirect("/nababiamission/class-III");
+        }
+        else if (editResultData.current_class === "IV") {
+            return res.redirect("/nababiamission/class-IV");
+        }
+        else if (editResultData.current_class === "V") {
+            return res.redirect("/nababiamission/class-V");
+        }
+        else if (editResultData.current_class === "VI") {
+            return res.redirect("/nababiamission/class-VI");
+        }
+        else if (editResultData.current_class === "VII") {
+            return res.redirect("/nababiamission/class-VII");
+        }
+        else if (editResultData.current_class === "VIII") {
+            return res.redirect("/nababiamission/class-VIII");
+        }
+        else if (editResultData.current_class === "IX") {
+            return res.redirect("/nababiamission/class-IX");
+        }
+        else if (editResultData.current_class === "X") {
+            return res.redirect("/nababiamission/class-X");
+        }
+        else if (editResultData.current_class === "XI (Arts)") {
+            return res.redirect("/nababiamission/class-XI-arts");
+        }
+        else if (editResultData.current_class === "XI (Science)") {
+            return res.redirect("/nababiamission/class-XI-science");
+        }
+        else if (editResultData.current_class === "XII (Arts)") {
+            return res.redirect("/nababiamission/class-XII-arts");
+        }
+        else if (editResultData.current_class === "XII (Science)") {
+            return res.redirect("/nababiamission/class-XII-science");
+        }
+        else {
+            return res.redirect("/nababiamission/teacher-dashboard");
+        }
+
+
     }
 
     catch (err) {
