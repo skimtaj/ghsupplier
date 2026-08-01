@@ -18,8 +18,8 @@
         </script>
         <style>
             /* ============================================
-           RESET & VARIABLES
-           ============================================ */
+                   RESET & VARIABLES
+                   ============================================ */
             * {
                 margin: 0;
                 padding: 0;
@@ -50,8 +50,8 @@
             }
 
             /* ============================================
-           MAIN CONTENT - Space for sidebar
-           ============================================ */
+                   MAIN CONTENT - Space for sidebar
+                   ============================================ */
             .main-content {
                 margin-left: var(--sidebar-width);
                 min-height: 100vh;
@@ -61,8 +61,8 @@
             }
 
             /* ============================================
-           MARKSHEET FORM CARD
-           ============================================ */
+                   MARKSHEET FORM CARD
+                   ============================================ */
             .marksheet-card {
                 background: var(--white);
                 border-radius: 16px;
@@ -98,8 +98,8 @@
             }
 
             /* ============================================
-           FILTER BAR
-           ============================================ */
+                   FILTER BAR
+                   ============================================ */
             .filter-bar {
                 display: flex;
                 flex-wrap: wrap;
@@ -164,8 +164,8 @@
             }
 
             /* ============================================
-           BUTTONS
-           ============================================ */
+                   BUTTONS
+                   ============================================ */
             .btn-filter-sm {
                 background: var(--primary);
                 border: none;
@@ -222,8 +222,8 @@
             }
 
             /* ============================================
-           STUDENT ROW - One row per student
-           ============================================ */
+                   STUDENT ROW - One row per student
+                   ============================================ */
             .student-row {
                 display: flex;
                 flex-wrap: wrap;
@@ -333,8 +333,8 @@
             }
 
             /* ============================================
-           UTILITY CLASSES
-           ============================================ */
+                   UTILITY CLASSES
+                   ============================================ */
             .no-subjects-msg {
                 padding: 1rem;
                 text-align: center;
@@ -389,40 +389,180 @@
             }
 
             /* ============================================
-           RESPONSIVE BREAKPOINTS (Mobile-first)
-           ============================================ */
+                   RESPONSIVE BREAKPOINTS
+                   ============================================ */
 
-            /* Mobile: slightly smaller, compact */
-            @media (max-width: 767.98px) {
+            /* ----- Large screens (1200px and up) ----- */
+            @media (min-width: 1200px) {
+                .marksheet-card {
+                    padding: 2rem 2.5rem;
+                }
+
+                .student-row {
+                    padding: 0.6rem 1rem;
+                    gap: 12px 18px;
+                }
+
+                .student-row .field {
+                    flex: 1 1 80px;
+                    min-width: 65px;
+                }
+
+                .student-row .field-om {
+                    flex: 0 1 100px;
+                    min-width: 65px;
+                }
+
+                .student-row .field-roll {
+                    flex: 0 1 70px;
+                    min-width: 55px;
+                }
+
+                .student-row .field-subject {
+                    flex: 1 1 110px;
+                    min-width: 85px;
+                }
+
+                .student-row .field .static-text,
+                .student-row .field input {
+                    font-size: 0.85rem;
+                    padding: 0.2rem 0.4rem;
+                }
+
+                .student-row .field label {
+                    font-size: 0.6rem;
+                }
+            }
+
+            /* ----- Tablets and small laptops (992px - 1199px) ----- */
+            @media (max-width: 1199.98px) and (min-width: 992px) {
+                .main-content {
+                    padding: 18px 22px;
+                }
+
+                .marksheet-card {
+                    padding: 1.5rem 1.8rem;
+                }
+
+                .student-row {
+                    padding: 0.5rem 0.8rem;
+                    gap: 10px 14px;
+                }
+
+                .student-row .field {
+                    flex: 1 1 70px;
+                    min-width: 55px;
+                }
+
+                .student-row .field-om {
+                    flex: 0 1 85px;
+                    min-width: 55px;
+                }
+
+                .student-row .field-roll {
+                    flex: 0 1 60px;
+                    min-width: 45px;
+                }
+
+                .student-row .field-subject {
+                    flex: 1 1 95px;
+                    min-width: 75px;
+                }
+
+                .student-row .field .static-text,
+                .student-row .field input {
+                    font-size: 0.78rem;
+                    padding: 0.15rem 0.3rem;
+                }
+
+                .student-row .field label {
+                    font-size: 0.55rem;
+                }
+            }
+
+            /* ----- Tablets (768px - 991px) ----- */
+            @media (max-width: 991.98px) {
                 .main-content {
                     margin-left: 0;
-                    padding: 8px 10px;
+                    padding: 16px 20px;
                     width: 100%;
                 }
 
                 .marksheet-card {
-                    padding: 0.8rem 0.6rem;
-                    border-radius: 12px;
+                    padding: 1.2rem 1.5rem;
+                }
+
+                .filter-bar .filter-group {
+                    flex: 1 1 130px;
+                    min-width: 110px;
+                }
+
+                .student-row {
+                    padding: 0.5rem 0.8rem;
+                    gap: 8px 12px;
+                }
+
+                .student-row .field {
+                    flex: 1 1 65px;
+                    min-width: 50px;
+                }
+
+                .student-row .field-om {
+                    flex: 0 1 75px;
+                    min-width: 50px;
+                }
+
+                .student-row .field-roll {
+                    flex: 0 1 55px;
+                    min-width: 42px;
+                }
+
+                .student-row .field-subject {
+                    flex: 1 1 85px;
+                    min-width: 65px;
+                }
+
+                .student-row .field .static-text,
+                .student-row .field input {
+                    font-size: 0.72rem;
+                    padding: 0.12rem 0.25rem;
+                }
+
+                .student-row .field label {
+                    font-size: 0.5rem;
                 }
 
                 .form-title {
-                    font-size: 1rem;
-                    flex-direction: column;
-                    align-items: flex-start;
-                    padding-bottom: 0.4rem;
-                    margin-bottom: 0.8rem;
+                    font-size: 1.2rem;
                 }
 
-                .form-title small {
-                    font-size: 0.7rem;
+                .filter-bar {
+                    padding: 0.6rem 1rem;
+                    gap: 10px 16px;
+                }
+            }
+
+            /* ----- Mobile phones (576px - 767px) ----- */
+            @media (max-width: 767.98px) {
+                .main-content {
+                    padding: 12px 14px;
+                }
+
+                .marksheet-card {
+                    padding: 1rem;
+                }
+
+                .form-title {
+                    font-size: 1.1rem;
+                    flex-direction: column;
+                    align-items: flex-start;
                 }
 
                 .filter-bar {
                     flex-direction: column;
                     align-items: stretch;
-                    padding: 0.6rem 0.6rem;
-                    gap: 8px;
-                    border-radius: 8px;
+                    padding: 0.8rem 1rem;
+                    gap: 10px;
                 }
 
                 .filter-bar .filter-group {
@@ -430,35 +570,23 @@
                     min-width: unset;
                 }
 
-                .filter-bar .filter-group select {
-                    font-size: 0.85rem;
-                    padding: 0.4rem 0.6rem;
-                    height: 40px;
-                    border-radius: 8px;
-                }
-
-                .filter-bar .filter-group label {
-                    font-size: 0.6rem;
-                    margin-bottom: 2px;
+                .filter-bar .filter-actions {
+                    flex-direction: row;
+                    flex-wrap: wrap;
                 }
 
                 .btn-filter-sm {
-                    height: 38px;
-                    font-size: 0.75rem;
-                    padding: 0.2rem 1rem;
-                    border-radius: 8px;
                     flex: 1;
                     justify-content: center;
-                    min-width: 70px;
+                    min-width: 80px;
                 }
 
                 .student-row {
                     flex-direction: column;
                     align-items: stretch;
-                    gap: 6px 0;
-                    padding: 0.6rem 0.6rem;
+                    gap: 4px 0;
+                    padding: 0.6rem 0.8rem;
                     margin-bottom: 0.5rem;
-                    border-radius: 10px;
                 }
 
                 .student-row .field {
@@ -485,178 +613,156 @@
                     min-width: unset;
                 }
 
+                .student-row .field .static-text,
+                .student-row .field input {
+                    font-size: 0.85rem;
+                    padding: 0.25rem 0.4rem;
+                }
+
                 .student-row .field label {
                     font-size: 0.6rem;
-                    margin-bottom: 2px;
-                }
-
-                .student-row .field input,
-                .student-row .field .static-text {
-                    font-size: 0.85rem;
-                    padding: 0.3rem 0.5rem;
-                    border-radius: 8px;
-                    height: 38px;
-                }
-
-                .student-row .field-om input {
-                    font-size: 0.9rem;
-                    padding: 0.3rem 0.5rem;
-                    height: 42px;
-                    border-radius: 8px;
-                    border-width: 2px;
-                }
-
-                .student-row .field input[readonly] {
-                    background: #f0ecf2;
-                    font-weight: 500;
+                    margin-bottom: 1px;
                 }
 
                 .btn-submit-marksheet {
                     width: 100%;
                     justify-content: center;
                     white-space: normal;
-                    padding: 0.5rem 0.8rem;
-                    font-size: 0.85rem;
-                    height: 44px;
-                    border-radius: 10px !important;
+                    padding: 0.4rem 1rem;
                 }
 
                 .update-wrap {
                     text-align: center;
-                    padding-top: 12px;
-                    margin-top: 12px;
-                }
-
-                .no-subjects-msg {
-                    font-size: 0.85rem;
-                    padding: 1rem;
-                }
-
-                .filter-bar .filter-actions {
-                    gap: 6px;
                 }
             }
 
-            /* small phones: even more compact */
-            @media (max-width: 480px) {
+            /* ----- Small mobile phones (380px - 575px) ----- */
+            @media (max-width: 575.98px) {
                 .main-content {
-                    padding: 4px 6px;
+                    padding: 8px 10px;
                 }
 
                 .marksheet-card {
-                    padding: 0.5rem 0.4rem;
-                    border-radius: 10px;
+                    padding: 0.7rem;
+                    border-radius: 12px;
                 }
 
                 .form-title {
-                    font-size: 0.9rem;
+                    font-size: 0.95rem;
+                    padding-bottom: 0.4rem;
+                    margin-bottom: 0.8rem;
+                }
+
+                .form-title small {
+                    font-size: 0.7rem;
+                }
+
+                .filter-bar {
+                    padding: 0.5rem 0.6rem;
+                    gap: 8px;
                 }
 
                 .filter-bar .filter-group select {
-                    height: 36px;
-                    font-size: 0.8rem;
-                    padding: 0.2rem 0.5rem;
+                    font-size: 0.7rem;
+                    padding: 0.2rem 0.4rem;
+                }
+
+                .filter-bar .filter-group label {
+                    font-size: 0.6rem;
                 }
 
                 .btn-filter-sm {
-                    height: 34px;
-                    font-size: 0.7rem;
+                    font-size: 0.65rem;
                     padding: 0.2rem 0.8rem;
+                    height: 30px;
                     min-width: 60px;
                 }
 
                 .student-row {
-                    padding: 0.5rem 0.4rem;
-                    gap: 5px 0;
-                }
-
-                .student-row .field input,
-                .student-row .field .static-text {
-                    height: 34px;
-                    font-size: 0.8rem;
-                    padding: 0.2rem 0.4rem;
-                }
-
-                .student-row .field-om input {
-                    height: 38px;
-                    font-size: 0.85rem;
-                    padding: 0.2rem 0.4rem;
-                }
-
-                .btn-submit-marksheet {
-                    height: 40px;
-                    font-size: 0.8rem;
                     padding: 0.4rem 0.6rem;
-                }
-            }
-
-            /* very small phones */
-            @media (max-width: 380px) {
-                .main-content {
-                    padding: 2px 4px;
+                    gap: 3px 0;
+                    margin-bottom: 0.4rem;
                 }
 
-                .marksheet-card {
-                    padding: 0.4rem 0.3rem;
-                }
-
-                .filter-bar .filter-group select {
-                    height: 32px;
+                .student-row .field .static-text,
+                .student-row .field input {
                     font-size: 0.75rem;
-                    padding: 0.2rem 0.4rem;
-                }
-
-                .btn-filter-sm {
-                    height: 30px;
-                    font-size: 0.65rem;
-                    padding: 0.1rem 0.6rem;
-                }
-
-                .student-row .field input,
-                .student-row .field .static-text {
-                    height: 30px;
-                    font-size: 0.75rem;
-                    padding: 0.15rem 0.3rem;
-                }
-
-                .student-row .field-om input {
-                    height: 34px;
-                    font-size: 0.8rem;
-                }
-
-                .btn-submit-marksheet {
-                    height: 36px;
-                    font-size: 0.75rem;
-                    padding: 0.3rem 0.5rem;
+                    padding: 0.15rem 0.25rem;
                 }
 
                 .student-row .field label {
                     font-size: 0.55rem;
                 }
 
-                .form-title {
+                .student-row .field-om input {
+                    font-size: 0.75rem;
+                    padding: 0.15rem 0.25rem;
+                }
+
+                .btn-submit-marksheet {
+                    font-size: 0.7rem;
+                    padding: 0.3rem 1rem;
+                }
+
+                .no-subjects-msg {
+                    padding: 0.8rem;
                     font-size: 0.85rem;
                 }
             }
 
-            /* Large screens: keep compact but comfortable */
-            @media (min-width: 768px) {
+            /* ----- Very small phones (below 380px) ----- */
+            @media (max-width: 379.98px) {
+                .main-content {
+                    padding: 5px 6px;
+                }
 
-                .student-row .field input,
-                .student-row .field .static-text {
-                    font-size: 0.8rem;
-                    padding: 0.2rem 0.4rem;
+                .marksheet-card {
+                    padding: 0.5rem;
+                }
+
+                .form-title {
+                    font-size: 0.85rem;
+                }
+
+                .filter-bar {
+                    padding: 0.4rem 0.5rem;
+                    gap: 6px;
+                }
+
+                .filter-bar .filter-group select {
+                    font-size: 0.6rem;
+                    padding: 0.15rem 0.3rem;
+                }
+
+                .btn-filter-sm {
+                    font-size: 0.55rem;
+                    padding: 0.15rem 0.5rem;
+                    height: 26px;
+                    gap: 4px;
+                }
+
+                .student-row {
+                    padding: 0.3rem 0.4rem;
+                }
+
+                .student-row .field .static-text,
+                .student-row .field input {
+                    font-size: 0.65rem;
+                    padding: 0.1rem 0.2rem;
+                }
+
+                .student-row .field label {
+                    font-size: 0.5rem;
                 }
 
                 .student-row .field-om input {
-                    font-size: 0.8rem;
-                    padding: 0.2rem 0.4rem;
+                    font-size: 0.65rem;
+                    padding: 0.1rem 0.2rem;
                 }
 
                 .btn-submit-marksheet {
-                    font-size: 0.85rem;
-                    padding: 0.4rem 2rem;
-                    height: 42px;
+                    font-size: 0.6rem;
+                    padding: 0.25rem 0.8rem;
                 }
             }
 
@@ -675,61 +781,6 @@
     </head>
 
     <body>
-
-
-<% if (messages.success) { %>
-                        <script>
-                            Swal.fire({
-                                toast: true,
-                                position: "top-end",
-                                icon: "success",
-                                title: "<%= messages.success %>",
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                background: "#ffffff",
-                                iconColor: "#00b894",
-                                color: "#333",
-                                customClass: {
-                                    popup: 'custom-swal-toast'
-                                },
-                                didOpen: (toast) => {
-                                    toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                                    toast.style.borderRadius = '8px';
-                                    toast.style.padding = '0.75rem 1.25rem';
-                                }
-                            });
-                        </script>
-                        <% } %>
-
-
-                        <% if (messages.error) { %>
-                        <script>
-                            Swal.fire({
-                                toast: true,
-                                position: "top-end",
-                                icon: "success",
-                                title: "<%= messages.error %>",
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                background: "#ffffff",
-                                iconColor: "#red",
-                                color: "#333",
-                                customClass: {
-                                    popup: 'custom-swal-toast'
-                                },
-                                didOpen: (toast) => {
-                                    toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                                    toast.style.borderRadius = '8px';
-                                    toast.style.padding = '0.75rem 1.25rem';
-                                }
-                            });
-                        </script>
-                        <% } %>
-
-
-
 
         <!-- MAIN CONTENT - Space for sidebar (your sidebar is included via teacher_sidebar) -->
         <div class="main-content">
@@ -762,7 +813,7 @@
                                         <label><i class="fas fa-chalkboard"></i> Class</label>
                                         <select id="filterClass">
                                             <option value="">All Classes</option>
-                                            <option value="Nursery">Nursery</option>
+                                            <option value="VI">VI</option>
                                         </select>
                                     </div>
                                     <div class="filter-group">
@@ -777,6 +828,7 @@
                                         <label><i class="fas fa-book"></i> Subject</label>
                                         <select id="filterSubject">
                                             <option value="">All Subjects</option>
+
                                         </select>
                                     </div>
                                     <div class="filter-actions">
@@ -870,10 +922,10 @@
                 function renderResults(filteredData, subjectFilter) {
                     if (!filteredData || filteredData.length === 0) {
                         $container.html(`
-            <div class="no-subjects-msg">
-              <i class="fas fa-exclamation-circle"></i> No students found for the selected filters.
-            </div>
-          `);
+                                <div class="no-subjects-msg">
+                                    <i class="fas fa-exclamation-circle"></i> No students found for the selected filters.
+                                </div>
+                            `);
                         return;
                     }
 
@@ -887,15 +939,15 @@
 
                     if (matchedStudents.length === 0) {
                         $container.html(`
-            <div class="no-subjects-msg">
-              <i class="fas fa-search"></i> No students found with the selected subject "${subjectFilter}".
-            </div>
-          `);
+                                <div class="no-subjects-msg">
+                                    <i class="fas fa-search"></i> No students found with the selected subject "${subjectFilter}".
+                                </div>
+                            `);
                         return;
                     }
 
                     // START FORM TAG - Using array notation
-                    let html = `<form id="resultForm" method="POST" action="/student-result-update">`;
+                    let html = `<form id="resultForm" method="POST" action="/test">`;
 
                     matchedStudents.forEach((student, index) => {
                         // Get the subject data
@@ -909,84 +961,89 @@
 
                         if (subjectsToShow.length === 0) return;
 
+                        // Add hidden student ID for reliable updates
+                        html += `
+                                
+                            `;
+
                         // Build rows - one per subject for this student
                         subjectsToShow.forEach((sub, subIndex) => {
                             html += `
-              <div class="student-row" data-student-index="${index}" data-subject-index="${subIndex}">
-                <div class="field field-roll">
-                  <label>Roll</label>
-                  <input type="text" 
-                         class="editable-field roll-input" 
-                         name="students[${index}][roll_no]"
-                         value="${student.roll_no || '-'}" 
-                         placeholder="Roll No"
-                         readonly />
-                </div>
-                <div class="field">
-                  <label>Student</label>
-                  <input type="text" 
-                         class="editable-field name-input" 
-                         name="students[${index}][student_name]"
-                         value="${student.student_name || ''}" 
-                         placeholder="Student Name"
-                         readonly />
-                </div>
-                <div class="field">
-                  <label>Class</label>
-                  <input type="text" 
-                         class="editable-field class-input" 
-                         name="students[${index}][current_class]"
-                         value="${student.current_class || ''}" 
-                         placeholder="Class"
-                         readonly />
-                </div>
-                <div class="field">
-                  <label>Section</label>
-                  <input type="text" 
-                         class="editable-field section-input" 
-                         name="students[${index}][section]"
-                         value="${student.section || ''}" 
-                         placeholder="Section"
-                         readonly />
-                </div>
-                <div class="field field-subject">
-                  <label>Subject</label>
-                  <input type="text" 
-                         class="editable-field subject-input" 
-                         name="students[${index}][subjects][${subIndex}][subject]"
-                         value="${sub.subject || ''}" 
-                         placeholder="Subject"
-                         readonly />
-                </div>
-                <div class="field field-om">
-                  <label>OM</label>
-                  <input type="number" 
-                         class="obtained-marks" 
-                         name="students[${index}][subjects][${subIndex}][om]"
-                         value="${sub.om || 0}" 
-                         min="0" 
-                         max="${sub.fm || 100}" 
-                         data-fm="${sub.fm || 100}" 
-                         placeholder="OM"
-                         required />
-                </div>
-                <!-- Hidden fields -->
-                <input type="hidden" 
-                       name="students[${index}][subjects][${subIndex}][fm]" 
-                       value="${sub.fm || 0}" />
-              </div>
-            `;
+                                    <div class="student-row" data-student-index="${index}" data-subject-index="${subIndex}">
+                                        <div class="field field-roll">
+                                            <label>Roll</label>
+                                            <input type="text" 
+                                                   class="editable-field roll-input" 
+                                                   name="students[${index}][roll_no]"
+                                                   value="${student.roll_no || '-'}" 
+                                                   placeholder="Roll No"
+                                                   readonly />
+                                        </div>
+                                        <div class="field">
+                                            <label>Student</label>
+                                            <input type="text" 
+                                                   class="editable-field name-input" 
+                                                   name="students[${index}][student_name]"
+                                                   value="${student.student_name || ''}" 
+                                                   placeholder="Student Name"
+                                                   readonly />
+                                        </div>
+                                        <div class="field">
+                                            <label>Class</label>
+                                            <input type="text" 
+                                                   class="editable-field class-input" 
+                                                   name="students[${index}][current_class]"
+                                                   value="${student.current_class || ''}" 
+                                                   placeholder="Class"
+                                                   readonly />
+                                        </div>
+                                        <div class="field">
+                                            <label>Section</label>
+                                            <input type="text" 
+                                                   class="editable-field section-input" 
+                                                   name="students[${index}][section]"
+                                                   value="${student.section || ''}" 
+                                                   placeholder="Section"
+                                                   readonly />
+                                        </div>
+                                        <div class="field field-subject">
+                                            <label>Subject</label>
+                                            <input type="text" 
+                                                   class="editable-field subject-input" 
+                                                   name="students[${index}][subjects][${subIndex}][subject]"
+                                                   value="${sub.subject || ''}" 
+                                                   placeholder="Subject"
+                                                   readonly />
+                                        </div>
+                                        <div class="field field-om">
+                                            <label>OM</label>
+                                            <input type="number" 
+                                                   class="obtained-marks" 
+                                                   name="students[${index}][subjects][${subIndex}][om]"
+                                                   value="${sub.om || 0}" 
+                                                   min="0" 
+                                                   max="${sub.fm || 100}" 
+                                                   data-fm="${sub.fm || 100}" 
+                                                   placeholder="OM"
+                                                   required />
+                                        </div>
+                                        <!-- Hidden fields -->
+                                        <input type="hidden" 
+                                               name="students[${index}][subjects][${subIndex}][fm]" 
+                                               value="${sub.fm || 0}" />
+                                    </div>
+                                `;
                         });
                     });
 
                     // Submit button inside the form
                     html += `
-          <div class="update-wrap">
-            <button type="submit" class="btn-submit-marksheet">
-              <i class="fas fa-save"></i> Update All Results
-            </button>
-          </div>
-        `;
+                            <div class="update-wrap">
+                                <button type="submit" class="btn-submit-marksheet">
+                                    <i class="fas fa-save"></i> Update All Results
+                                </button>
+                            </div>
+                        `;
 
                     // END FORM TAG
                     html += `</form>`;

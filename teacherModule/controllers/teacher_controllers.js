@@ -232,7 +232,6 @@ const editResultPost = async (req, res) => {
             return res.redirect("/nababiamission/teacher-dashboard");
         }
 
-
     }
 
     catch (err) {
@@ -261,79 +260,325 @@ const teacherLogout = (req, res) => {
 
 const nursery = async (req, res) => {
 
-    const nursery = await result_model.find({ current_class: 'Nursery' })
+    const allStudents = await result_model.find({ current_class: 'Nursery' });
+    const allClass = await class_inserting_model.find();
 
-    res.render('../teacherModule/Views/nursery', { nursery })
+    res.render('../teacherModule/Views/nursery', { allStudents, allClass })
 }
 
 const classI = async (req, res) => {
-    const classI = await result_model.find({ current_class: 'I' });
-    res.render('../teacherModule/Views/class_I', { classI });
+
+    const allStudents = await result_model.find({ current_class: 'I' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_I', { allStudents, allClass });
 };
 
 const classII = async (req, res) => {
-    const classII = await result_model.find({ current_class: 'II' });
-    res.render('../teacherModule/Views/class_II', { classII });
+
+    const allStudents = await result_model.find({ current_class: 'II' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_II', { allStudents, allClass });
 };
 
 const classIII = async (req, res) => {
-    const classIII = await result_model.find({ current_class: 'III' });
-    res.render('../teacherModule/Views/class_III', { classIII });
+    const allStudents = await result_model.find({ current_class: 'III' });
+    const allClass = await class_inserting_model.find();
+    res.render('../teacherModule/Views/class_III', { allStudents, allClass });
 };
 
 const classIV = async (req, res) => {
-    const classIV = await result_model.find({ current_class: 'IV' });
-    res.render('../teacherModule/Views/class_IV', { classIV });
+    const allStudents = await result_model.find({ current_class: 'IV' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_IV', { allStudents, allClass });
 };
 
 const classV = async (req, res) => {
-    const classV = await result_model.find({ current_class: 'V' });
-    res.render('../teacherModule/Views/class_V', { classV });
+
+    const allStudents = await result_model.find({ current_class: 'V' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_V', { allStudents, allClass });
 };
 
 const classVI = async (req, res) => {
-    const classVI = await result_model.find({ current_class: 'VI' });
-    res.render('../teacherModule/Views/class_VI', { classVI });
+    const allStudents = await result_model.find({ current_class: 'VI' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_VI', { allStudents, allClass });
 };
 
 const classVII = async (req, res) => {
-    const classVII = await result_model.find({ current_class: 'VII' });
-    res.render('../teacherModule/Views/class_VII', { classVII });
+    const allStudents = await result_model.find({ current_class: 'VII' });
+    const allClass = await class_inserting_model.find();
+    res.render('../teacherModule/Views/class_VII', { allStudents, allClass });
 };
 
 const classVIII = async (req, res) => {
-    const classVIII = await result_model.find({ current_class: 'VIII' });
-    res.render('../teacherModule/Views/class_VIII', { classVIII });
+    const allStudents = await result_model.find({ current_class: 'VIII' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_VIII', { allStudents, allClass });
 };
 
 const classIX = async (req, res) => {
-    const classIX = await result_model.find({ current_class: 'IX' });
-    res.render('../teacherModule/Views/class_IX', { classIX });
+    const allStudents = await result_model.find({ current_class: 'IX' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_IX', { allStudents, allClass });
 };
 
 const classX = async (req, res) => {
-    const classX = await result_model.find({ current_class: 'X' });
-    res.render('../teacherModule/Views/class_X', { classX });
+    const allStudents = await result_model.find({ current_class: 'X' });
+    const allClass = await class_inserting_model.find();
+    res.render('../teacherModule/Views/class_X', { allStudents, allClass });
 };
 
 const classXIscience = async (req, res) => {
-    const classXIscience = await result_model.find({ current_class: 'XI (Science)' });
-    res.render('../teacherModule/Views/class_XI_science', { classXIscience });
+    const allStudents = await result_model.find({ current_class: 'XI (Science)' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_XI_science', { allStudents, allClass });
 };
 
 const classXIarts = async (req, res) => {
-    const classXIarts = await result_model.find({ current_class: 'XI (Arts)' });
-    res.render('../teacherModule/Views/class_XI_arts', { classXIarts });
+    const allStudents = await result_model.find({ current_class: 'XI (Arts)' });
+    const allClass = await class_inserting_model.find();
+    res.render('../teacherModule/Views/class_XI_arts', { allStudents, allClass });
 };
 
 const classXIIscience = async (req, res) => {
-    const classXIIscience = await result_model.find({ current_class: 'XII (Science)' });
-    res.render('../teacherModule/Views/class_XII_science', { classXIIscience });
+    const allStudents = await result_model.find({ current_class: 'XII (Science)' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_XII_science', { allStudents, allClass });
 };
 
 const classXIIarts = async (req, res) => {
-    const classXIIarts = await result_model.find({ current_class: 'XII (Arts)' });
-    res.render('../teacherModule/Views/class_XII_arts', { classXIIarts });
+    const allStudents = await result_model.find({ current_class: 'XII (Arts)' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/class_XII_arts', { allStudents, allClass });
+};
+
+const test = async (req, res) => {
+
+    const allStudents = await result_model.find({ current_class: 'IX' });
+    const allClass = await class_inserting_model.find();
+
+    res.render('../teacherModule/Views/testing', { allStudents, allClass })
+}
+
+const studentResultUpdate = async (req, res) => {
+
+    try {
+
+        const students = req.body.students;
+
+        const operations = [];
+
+        let currentClass = "";
+
+        // ===============================
+        // Update all subject marks
+        // ===============================
+        for (const student of students) {
+
+            for (const subject of student.subjects) {
+
+                operations.push({
+                    updateOne: {
+                        filter: {
+                            current_class: student.current_class,
+                            section: student.section,
+                            roll_no: student.roll_no,
+                            "result.subject": subject.subject
+                        },
+                        update: {
+                            $set: {
+                                "result.$.om": Number(subject.om)
+                            }
+                        }
+                    }
+                });
+
+            }
+
+        }
+
+        if (operations.length > 0) {
+            await result_model.bulkWrite(operations);
+        }
+
+
+        // ===============================
+        // Recalculate Total / Percentage
+        // ===============================
+        for (const student of students) {
+
+            const resultData = await result_model.findOne({
+                current_class: student.current_class,
+                section: student.section,
+                roll_no: student.roll_no
+            });
+
+            if (!resultData) continue;
+
+            currentClass = resultData.current_class;
+
+            let totalOM = 0;
+            let totalFM = 0;
+
+            resultData.result.forEach(subject => {
+                totalOM += Number(subject.om);
+                totalFM += Number(subject.fm);
+            });
+
+
+            // ===============================
+            // XI & XII Lowest Subject Remove
+            // ===============================
+            if (
+                resultData.current_class === "XI (Science)" ||
+                resultData.current_class === "XI (Arts)" ||
+                resultData.current_class === "XII (Science)" ||
+                resultData.current_class === "XII (Arts)"
+            ) {
+
+                const optionalSubjects = resultData.result.filter(subject =>
+                    subject.subject !== "Bengali" &&
+                    subject.subject !== "English"
+                );
+
+                if (optionalSubjects.length > 0) {
+
+                    const lowestSubject = optionalSubjects.reduce((min, s) =>
+                        Number(s.om) < Number(min.om) ? s : min
+                    );
+
+                    totalOM -= Number(lowestSubject.om);
+                    totalFM -= Number(lowestSubject.fm);
+                }
+            }
+
+
+            // ===============================
+            // Percentage
+            // ===============================
+            const percentage = Number(
+                ((totalOM / totalFM) * 100).toFixed(2)
+            );
+
+
+            // ===============================
+            // Status
+            // ===============================
+            let status = "";
+
+            if (percentage >= 90) {
+                status = "Outstanding";
+            }
+            else if (percentage >= 80) {
+                status = "Excellent";
+            }
+            else if (percentage >= 70) {
+                status = "Very Good";
+            }
+            else if (percentage >= 60) {
+                status = "Good";
+            }
+            else if (percentage >= 50) {
+                status = "Satisfactory";
+            }
+            else if (percentage >= 40) {
+                status = "Needs Improvement";
+            }
+            else {
+                status = "Unsatisfactory";
+            }
+
+
+            // ===============================
+            // Save Updated Result
+            // ===============================
+            await result_model.updateOne(
+                {
+                    _id: resultData._id
+                },
+                {
+                    $set: {
+                        total_om: totalOM,
+                        total_fm: totalFM,
+                        result_percentage: percentage,
+                        result_status: status
+                    }
+                }
+            );
+
+        }
+
+        req.flash("success", "Result updated successfully");
+
+        if (currentClass === "Nursery") {
+            return res.redirect("/nababiamission/class-nursery");
+        }
+        
+        else if (currentClass === "I") {
+            return res.redirect("/nababiamission/class-I");
+        }
+        else if (currentClass === "II") {
+            return res.redirect("/nababiamission/class-II");
+        }
+        else if (currentClass === "III") {
+            return res.redirect("/nababiamission/class-III");
+        }
+        else if (currentClass === "IV") {
+            return res.redirect("/nababiamission/class-IV");
+        }
+        else if (currentClass === "V") {
+            return res.redirect("/nababiamission/class-V");
+        }
+        else if (currentClass === "VI") {
+            return res.redirect("/nababiamission/class-VI");
+        }
+        else if (currentClass === "VII") {
+            return res.redirect("/nababiamission/class-VII");
+        }
+        else if (currentClass === "VIII") {
+            return res.redirect("/nababiamission/class-VIII");
+        }
+        else if (currentClass === "IX") {
+            return res.redirect("/nababiamission/class-IX");
+        }
+        else if (currentClass === "X") {
+            return res.redirect("/nababiamission/class-X");
+        }
+        else if (currentClass === "XI (Arts)") {
+            return res.redirect("/nababiamission/class-XI-arts");
+        }
+        else if (currentClass === "XI (Science)") {
+            return res.redirect("/nababiamission/class-XI-science");
+        }
+        else if (currentClass === "XII (Arts)") {
+            return res.redirect("/nababiamission/class-XII-arts");
+        }
+        else if (currentClass === "XII (Science)") {
+            return res.redirect("/nababiamission/class-XII-science");
+        }
+        else {
+            return res.redirect("/nababiamission/teacher-dashboard");
+        }
+
+    } catch (err) {
+
+        console.log("Teacher - Student result updating error:", err);
+        req.flash("error", "Something went wrong");
+        return res.redirect("/");
+
+    }
+
 };
 
 
@@ -342,4 +587,5 @@ const classXIIarts = async (req, res) => {
 
 
 
-module.exports = { classXIIarts, classXIIscience, classXIarts, classXIscience, classI, classII, classIII, classIV, classV, classVI, classVII, classVIII, classIX, classX, teacherLogout, viewResult, editResultPost, editResult, nursery, teacherDashboard, teacherSigninPost, teacherSignupPost, teacherSignup, teacherCredential }; 
+
+module.exports = { studentResultUpdate, test, classXIIarts, classXIIscience, classXIarts, classXIscience, classI, classII, classIII, classIV, classV, classVI, classVII, classVIII, classIX, classX, teacherLogout, viewResult, editResultPost, editResult, nursery, teacherDashboard, teacherSigninPost, teacherSignupPost, teacherSignup, teacherCredential }; 

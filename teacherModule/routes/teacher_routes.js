@@ -3,7 +3,7 @@ const route = express.Router();
 
 const auth = require('../../authentification/teacher_auth')
 
-const { classXIIscience, classXIIarts, classXIscience, classXIarts, classI, classII, classIII, classIV, classV, classVI, classVII, classVIII, classIX, classX, teacherLogout, viewResult, editResultPost, editResult, nursery, teacherDashboard, teacherSigninPost, teacherSignupPost, teacherCredential, teacherSignup } = require('../../teacherModule/controllers/teacher_controllers')
+const { studentResultUpdate, classXIIscience, classXIIarts, classXIscience, classXIarts, classI, classII, classIII, classIV, classV, classVI, classVII, classVIII, classIX, classX, teacherLogout, viewResult, editResultPost, editResult, nursery, teacherDashboard, teacherSigninPost, teacherSignupPost, teacherCredential, teacherSignup } = require('../../teacherModule/controllers/teacher_controllers')
 
 
 route.get('/nababiamission/teacher-credential', teacherCredential);
@@ -42,5 +42,8 @@ route.get('/nababiamission/class-XI-science', auth, classXIscience);
 route.get('/nababiamission/class-XII-arts', auth, classXIIarts);
 route.get('/nababiamission/class-XII-science', auth, classXIIscience);
 
+
+
+route.post('/student-result-update', studentResultUpdate)
 
 module.exports = route; 
