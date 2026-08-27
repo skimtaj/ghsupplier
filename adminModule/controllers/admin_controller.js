@@ -252,7 +252,7 @@ const addNewPost = async (req, res) => {
 
         console.log(new_billing_model)
 
-        const inputPdfPath = path.join(__dirname, '../../bill_format/G.H. SUPPLIER (2).pdf');
+        const inputPdfPath = path.join(__dirname, '../../bill_format/GH SUPPLIERS (2).pdf');
 
         const existingPdfBytes = await fs.readFile(inputPdfPath);
         const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -358,7 +358,7 @@ const stockList = async (req, res) => {
 
         const page = Number(req.query.page) || 1
 
-        const limit = 1;
+        const limit = 10;
         const skip = (page - 1) * limit;
         const serialNo = skip;
         const totalProductDoc = await product_model.countDocuments(query);
@@ -368,7 +368,10 @@ const stockList = async (req, res) => {
         const allProducts = await product_model.find(query).skip(skip).limit(limit).sort({ _id: -1 });
         const totalProduct = allProducts.length;
 
-        const totalStockValue = await allProducts.reduce((total, ap) => total + ap.purchase_price, 0);
+        const products = await product_model.find();
+
+
+        const totalStockValue = products.reduce((sum, p) => sum + p.stock_value, 0)
 
         res.render('../adminModule/Views/product_list', { search, category, serialNo, currentPage: page, previousPage: page > 1 ? page - 1 : null, nextPage: page < totalPage ? page + 1 : null, totalStockValue, totalInstock, totalLowStock, totalProduct, allProducts })
     }
@@ -422,7 +425,7 @@ const deleteProduct = async (req, res) => {
 const downloadBill = async (req, res) => {
 
     const billSourse = await billing_model.findById(req.params.billid);
-    const inputPdfPath = path.join(__dirname, '../../bill_format/G.H. SUPPLIER (2).pdf');
+    const inputPdfPath = path.join(__dirname, '../../bill_format/GH SUPPLIERS (2).pdf');
 
     const existingPdfBytes = await fs.readFile(inputPdfPath);
     const pdfDoc = await PDFDocument.load(existingPdfBytes);

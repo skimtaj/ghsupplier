@@ -160,11 +160,11 @@
                 margin-top: 0.2rem;
             }
 
-            /* ----- SPECIAL ROW: purchase price + sale price + stock qty in ONE row (3 cols) ----- */
+            /* ----- SPECIAL ROW: purchase price + sale price + stock qty + stock value (4 cols) ----- */
             .price-stock-row {
                 grid-column: 1 / -1;
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
                 gap: 1.6rem 2.2rem;
             }
 
@@ -243,6 +243,21 @@
                 background-size: 13px;
                 cursor: pointer;
                 padding-right: 2.8rem;
+            }
+
+            /* readonly stock value field */
+            .form-group input[readonly] {
+                background: #f2f4fc;
+                border-color: #d8dce8;
+                color: #1a1a2e;
+                cursor: default;
+                opacity: 0.85;
+                font-weight: 500;
+            }
+
+            .form-group input[readonly]:focus {
+                border-color: #d8dce8;
+                box-shadow: none;
             }
 
             /* ===== ACTION BUTTONS ===== */
@@ -412,7 +427,7 @@
                 }
             }
 
-            /* ===== TABLET / MOBILE: stack the three into one column ===== */
+            /* ===== TABLET / MOBILE: stack the four into one column ===== */
             @media (max-width: 768px) {
                 .app-layout {
                     flex-direction: column;
@@ -461,7 +476,6 @@
                     gap: 1rem;
                 }
 
-                /* price-stock-row becomes single column */
                 .price-stock-row {
                     grid-column: 1 / -1;
                     display: grid;
@@ -668,7 +682,7 @@
                                     </select>
                                 </div>
 
-                                <!-- ===== ONE ROW: Purchase Price · Sale Price · Stock Qty ===== -->
+                                <!-- ===== ONE ROW: Purchase Price · Sale Price · Stock Qty · Stock Value ===== -->
                                 <div class="price-stock-row">
                                     <!-- Purchase Price -->
                                     <div class="form-group">
@@ -693,6 +707,14 @@
                                         <label> Stock Qty</label>
                                         <input type="number" id="stockQty" name="stock_qty" placeholder="0" min="0"
                                             step="1" required />
+                                    </div>
+
+                                    <!-- Stock Value (readonly, auto-calculated) -->
+                                    <div class="form-group">
+                                        <label> Stock Value <span
+                                                style="font-weight:400; text-transform:none; opacity:0.6;">(auto)</span></label>
+                                        <input type="text" id="stockValue" name="stock_value" placeholder="0.00" readonly
+                                            value="0.00" />
                                     </div>
                                 </div>
 
@@ -723,18 +745,41 @@
         </div>
 
         <script>
+            (function() {
+                const form = document.getElementById('addProductForm');
+                const purchaseInput = document.getElementById('purchasePrice');
+                const qtyInput = document.getElementById('stockQty');
+                const stockValueInput = document.getElementById('stockValue');
 
-            const addProductForm = document.getElementById('addProductForm');
-            addProductForm.addEventListener('submit', () => {
+                // Function to update stock value = purchase price * quantity
+                function updateStockValue() {
+                    const price = parseFloat(purchaseInput.value) || 0;
+                    const qty = parseInt(qtyInput.value, 10) || 0;
+                    const total = price * qty;
+                    // Format to 2 decimal places, but keep as number for display
+                    stockValueInput.value = total.toFixed(2);
+                }
 
-                const apf = addProductForm.querySelectorAll('input[type="text"], input[type="number"], textarea');
-                apf.forEach((fpa) => {
+                // Trigger update on input events for both fields
+                purchaseInput.addEventListener('input', updateStockValue);
+                qtyInput.addEventListener('input', updateStockValue);
 
-                    fpa.value = fpa.value.trim();
-                })
-            })
+                // Also update on blur (just in case)
+                purchaseInput.addEventListener('blur', updateStockValue);
+                qtyInput.addEventListener('blur', updateStockValue);
 
+                // Initial calculation on page load
+                updateStockValue();
 
+                // Trim inputs before submit (existing logic)
+                form.addEventListener('submit', function() {
+                    const inputs = form.querySelectorAll('input[type="text"], input[type="number"], textarea');
+                    inputs.forEach(function(fpa) {
+                        fpa.value = fpa.value.trim();
+                    });
+                });
+
+            })();
         </script>
 
     </body>
