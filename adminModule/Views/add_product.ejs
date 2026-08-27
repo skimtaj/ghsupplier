@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%-include('admin_sidebar')%>
+
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+        <title>G.H Suppliers · Add Product</title>
+        <!-- Font Awesome 6 (free) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+        <style>
+            /* ----- RESET & BASE (professional) ----- */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                min-height: 100vh;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: #eef0f5;
+                background-image: radial-gradient(circle at 20% 30%, rgba(92, 91, 239, 0.02) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(92, 91, 239, 0.03) 0%, transparent 60%);
+                background-color: #f0f2f7;
+            }
+
+            /* ===== LAYOUT WITH SIDEBAR RESERVED SPACE ===== */
+            .app-layout {
+                display: flex;
+                min-height: 100vh;
+            }
+
+            /* ===== SIDEBAR RESERVED SPACE ===== */
+            .sidebar-reserved {
+                width: 260px;
+                min-height: 100vh;
+                background: #1a1a2e;
+                flex-shrink: 0;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-right: 1px solid rgba(255, 255, 255, 0.04);
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.06);
+            }
+
+            .sidebar-reserved::after {
+                content: '⬅  Your Sidebar';
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                color: rgba(255, 255, 255, 0.10);
+                font-size: 0.7rem;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                padding: 1rem;
+                text-align: center;
+                font-weight: 500;
+            }
+
+            /* ===== MAIN CONTENT AREA ===== */
+            .main-content {
+                flex: 1;
+                padding: 2rem 2.5rem;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+                background: #f5f7fc;
+                min-height: 100vh;
+                margin-top: 50px;
+            }
+
+            /* ===== PRODUCT CARD (professional, standard size) ===== */
+            .product-card {
+                width: 100%;
+                max-width: 860px;
+                background: #ffffff;
+                border-radius: 28px;
+                padding: 2.6rem 3rem;
+                box-shadow: 0 16px 48px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.02);
+                border: 1px solid rgba(255, 255, 255, 0.7);
+                transition: all 0.2s;
+                margin-top: 0.2rem;
+            }
+
+            /* ----- HEADER (professional) ----- */
+            .product-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                margin-bottom: 2rem;
+                padding-bottom: 1.2rem;
+                border-bottom: 2px solid #f0f2f8;
+            }
+
+            .product-title {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .product-title .brand-avatar {
+                width: 52px;
+                height: 52px;
+                border-radius: 16px;
+                background: linear-gradient(145deg, #5C5BEF, #3d3cb8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                font-weight: 700;
+                box-shadow: 0 4px 16px rgba(92, 91, 239, 0.20);
+                color: #ffffff;
+            }
+
+            .product-title h1 {
+                font-size: 1.7rem;
+                font-weight: 700;
+                color: #1a1a2e;
+                letter-spacing: -0.3px;
+            }
+
+            .product-title h1 span {
+                color: #5C5BEF;
+            }
+
+            .badge-pos {
+                background: #f0f2fa;
+                padding: 0.35rem 1.2rem;
+                border-radius: 30px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #3d3d5c;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                border: 1px solid #e4e8f0;
+                letter-spacing: 0.3px;
+            }
+
+            .badge-pos i {
+                color: #5C5BEF;
+                font-size: 0.8rem;
+            }
+
+            /* ===== FORM GRID ===== */
+            .form-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1.6rem 2.2rem;
+                margin-top: 0.2rem;
+            }
+
+            /* ----- SPECIAL ROW: purchase price + sale price + stock qty in ONE row (3 cols) ----- */
+            .price-stock-row {
+                grid-column: 1 / -1;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 1.6rem 2.2rem;
+            }
+
+            .price-stock-row .form-group {
+                margin: 0;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.4rem;
+            }
+
+            .form-group.full-width {
+                grid-column: 1 / -1;
+            }
+
+            .form-group label {
+                font-size: 0.72rem;
+                font-weight: 700;
+                color: #2d2d4a;
+                letter-spacing: 0.4px;
+                text-transform: uppercase;
+                opacity: 0.75;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .form-group label i {
+                color: #5C5BEF;
+                font-size: 0.75rem;
+                opacity: 0.7;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 0.8rem 1.2rem;
+                background: #f8f9fe;
+                border: 1.5px solid #e4e8f0;
+                border-radius: 12px;
+                font-size: 0.95rem;
+                color: #1a1a2e;
+                outline: none;
+                transition: all 0.25s ease;
+                font-family: inherit;
+                width: 100%;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02);
+            }
+
+            .form-group input:focus,
+            .form-group textarea:focus,
+            .form-group select:focus {
+                border-color: #5C5BEF;
+                background: #ffffff;
+                box-shadow: 0 0 0 4px rgba(92, 91, 239, 0.06), inset 0 1px 3px rgba(0, 0, 0, 0.02);
+            }
+
+            .form-group input::placeholder,
+            .form-group textarea::placeholder {
+                color: #b8bcd0;
+                font-weight: 400;
+            }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 68px;
+            }
+
+            .form-group select {
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='9'%3E%3Cpath d='M1 2l5.5 5.5L12 2' stroke='%235C5BEF' stroke-width='2.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 1.2rem center;
+                background-size: 13px;
+                cursor: pointer;
+                padding-right: 2.8rem;
+            }
+
+            /* ===== ACTION BUTTONS ===== */
+            .action-buttons {
+                display: flex;
+                gap: 1rem;
+                justify-content: flex-end;
+                margin-top: 2.2rem;
+                flex-wrap: wrap;
+                padding-top: 0.8rem;
+                border-top: 1px solid #f0f2f8;
+            }
+
+            .btn-primary {
+                padding: 0.8rem 2.8rem;
+                background: linear-gradient(145deg, #5C5BEF, #4a49c9);
+                color: #ffffff;
+                border: none;
+                border-radius: 14px;
+                font-weight: 700;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 20px rgba(92, 91, 239, 0.20);
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                letter-spacing: 0.3px;
+            }
+
+            .btn-primary:hover {
+                background: linear-gradient(145deg, #7a79f2, #3d3cb8);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 28px rgba(92, 91, 239, 0.30);
+            }
+
+            .btn-primary:active {
+                transform: translateY(0px);
+            }
+
+            .btn-secondary {
+                padding: 0.8rem 2rem;
+                background: #f0f2fa;
+                color: #3d3d5c;
+                border: 1.5px solid #e4e8f0;
+                border-radius: 14px;
+                font-weight: 600;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .btn-secondary:hover {
+                background: #e8eaf5;
+                border-color: #c8cce0;
+                transform: translateY(-2px);
+            }
+
+            /* ===== RESPONSIVE: 24-26 inch screens ===== */
+            @media (min-width: 1920px) {
+                .main-content {
+                    padding: 3rem 5rem;
+                }
+
+                .product-card {
+                    max-width: 980px;
+                    padding: 3.2rem 3.8rem;
+                    border-radius: 32px;
+                }
+
+                .product-title h1 {
+                    font-size: 2rem;
+                }
+
+                .product-title .brand-avatar {
+                    width: 64px;
+                    height: 64px;
+                    font-size: 1.7rem;
+                    border-radius: 18px;
+                }
+
+                .form-grid {
+                    gap: 2rem 2.8rem;
+                }
+
+                .price-stock-row {
+                    gap: 2rem 2.8rem;
+                }
+
+                .form-group input,
+                .form-group textarea,
+                .form-group select {
+                    padding: 1rem 1.4rem;
+                    font-size: 1.05rem;
+                    border-radius: 14px;
+                }
+
+                .form-group label {
+                    font-size: 0.8rem;
+                }
+
+                .btn-primary {
+                    padding: 1rem 3.4rem;
+                    font-size: 1.05rem;
+                    border-radius: 16px;
+                }
+
+                .btn-secondary {
+                    padding: 1rem 2.4rem;
+                    font-size: 1rem;
+                    border-radius: 16px;
+                }
+
+                .sidebar-reserved {
+                    width: 280px;
+                }
+
+                .badge-pos {
+                    font-size: 0.85rem;
+                    padding: 0.4rem 1.4rem;
+                }
+            }
+
+            @media (min-width: 1400px) and (max-width: 1919px) {
+                .product-card {
+                    max-width: 900px;
+                    padding: 2.8rem 3.2rem;
+                }
+
+                .product-title h1 {
+                    font-size: 1.8rem;
+                }
+
+                .form-grid {
+                    gap: 1.8rem 2.4rem;
+                }
+
+                .price-stock-row {
+                    gap: 1.8rem 2.4rem;
+                }
+            }
+
+            @media (max-width: 1200px) {
+                .product-card {
+                    padding: 2rem 2rem;
+                }
+
+                .form-grid {
+                    gap: 1.4rem 1.8rem;
+                }
+
+                .price-stock-row {
+                    gap: 1.4rem 1.8rem;
+                }
+
+                .sidebar-reserved {
+                    width: 220px;
+                }
+            }
+
+            @media (max-width: 992px) {
+                .sidebar-reserved {
+                    width: 180px;
+                }
+            }
+
+            /* ===== TABLET / MOBILE: stack the three into one column ===== */
+            @media (max-width: 768px) {
+                .app-layout {
+                    flex-direction: column;
+                }
+
+                .sidebar-reserved {
+                    width: 100%;
+                    min-height: 50px;
+                    height: auto;
+                    position: relative;
+                    padding: 0.4rem;
+                    border-right: none;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                }
+
+                .sidebar-reserved::after {
+                    content: '⬆  Your Sidebar';
+                    height: 50px;
+                    font-size: 0.6rem;
+                }
+
+                .main-content {
+                    padding: 1rem 1rem;
+                    background: #f5f7fc;
+                }
+
+                .product-card {
+                    padding: 1.6rem 1.4rem;
+                    border-radius: 24px;
+                    max-width: 100%;
+                }
+
+                .product-title h1 {
+                    font-size: 1.4rem;
+                }
+
+                .product-title .brand-avatar {
+                    width: 42px;
+                    height: 42px;
+                    font-size: 1.1rem;
+                    border-radius: 12px;
+                }
+
+                .form-grid {
+                    grid-template-columns: 1fr;
+                    gap: 1rem;
+                }
+
+                /* price-stock-row becomes single column */
+                .price-stock-row {
+                    grid-column: 1 / -1;
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 1rem;
+                }
+
+                .form-group input,
+                .form-group textarea,
+                .form-group select {
+                    padding: 0.7rem 1rem;
+                    font-size: 0.95rem;
+                    border-radius: 10px;
+                }
+
+                .form-group label {
+                    font-size: 0.65rem;
+                }
+
+                .action-buttons {
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 0.6rem;
+                    margin-top: 1.6rem;
+                }
+
+                .btn-primary,
+                .btn-secondary {
+                    justify-content: center;
+                    padding: 0.7rem 1rem;
+                    width: 100%;
+                    font-size: 0.9rem;
+                    border-radius: 12px;
+                }
+
+                .badge-pos {
+                    font-size: 0.65rem;
+                    padding: 0.25rem 1rem;
+                }
+
+                .product-header {
+                    margin-bottom: 1.4rem;
+                    padding-bottom: 0.9rem;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .main-content {
+                    padding: 0.6rem 0.6rem;
+                }
+
+                .product-card {
+                    padding: 1.2rem 1rem;
+                    border-radius: 20px;
+                }
+
+                .product-title h1 {
+                    font-size: 1.2rem;
+                }
+
+                .product-title .brand-avatar {
+                    width: 36px;
+                    height: 36px;
+                    font-size: 0.95rem;
+                    border-radius: 10px;
+                }
+
+                .form-group input,
+                .form-group textarea,
+                .form-group select {
+                    font-size: 0.9rem;
+                    padding: 0.6rem 0.9rem;
+                    border-radius: 10px;
+                }
+
+                .form-group label {
+                    font-size: 0.6rem;
+                }
+
+                .btn-primary,
+                .btn-secondary {
+                    font-size: 0.85rem;
+                    padding: 0.6rem 0.8rem;
+                    border-radius: 10px;
+                }
+
+                .badge-pos {
+                    font-size: 0.6rem;
+                    padding: 0.2rem 0.8rem;
+                }
+
+                .product-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 0.5rem;
+                    margin-bottom: 1.2rem;
+                    padding-bottom: 0.7rem;
+                }
+
+                .form-group textarea {
+                    min-height: 50px;
+                }
+            }
+
+            ::-webkit-scrollbar {
+                width: 5px;
+                height: 5px;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #5C5BEF;
+                border-radius: 10px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #eef0f5;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="app-layout">
+            <!-- ===== SIDEBAR RESERVED SPACE ===== -->
+            <aside class="sidebar-reserved">
+                <!-- Your custom sidebar goes here -->
+            </aside>
+
+            <!-- ===== MAIN CONTENT ===== -->
+            <main class="main-content">
+                <div style="width:100%;">
+                    <div class="product-card">
+                        <div class="product-header">
+                            <div class="product-title">
+                                <div class="brand-avatar"><i class="fas fa-cube"></i></div>
+                                <h1>Add <span>Product</span></h1>
+                            </div>
+                        </div>
+
+                        <form id="addProductForm" method="POST" action="/ghsupplier/admin-dashboard/products/add-new">
+                            <div class="form-grid">
+                                <!-- Product Name (full width) -->
+                                <div class="form-group full-width">
+                                    <label> Product Name</label>
+                                    <input type="text" id="productName" name="product_name"
+                                        placeholder="Enter product name" required />
+                                </div>
+
+                                <!-- Category -->
+                                <div class="form-group">
+                                    <label> Category</label>
+                                    <select id="category" name="category" required>
+                                        <option value="">Select category</option>
+                                        <option value="Cement">Cement (সিমেন্ট)</option>
+                                        <option value="Bricks">Bricks (ইট)</option>
+                                        <option value="Sand">Sand (বালি)</option>
+                                        <option value="Stone & Aggregates">Stone & Aggregates (পাথর ও অ্যাগ্রিগেট)
+                                        </option>
+                                        <option value="Steel & TMT Bars">Steel & TMT Bars (রড ও TMT বার)</option>
+                                        <option value="Tiles">Tiles (টাইলস)</option>
+                                        <option value="Pipes & Fittings">Pipes & Fittings (পাইপ ও ফিটিংস)</option>
+                                        <option value="Hardware Materials">Hardware Materials (হার্ডওয়্যার সামগ্রী)
+                                        </option>
+                                        <option value="Paint & Chemicals">Paint & Chemicals (রং ও কেমিক্যাল)</option>
+                                        <option value="Other Construction Materials">Other Construction Materials
+                                            (অন্যান্য নির্মাণ সামগ্রী)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Unit -->
+                                <div class="form-group">
+                                    <label> Unit</label>
+                                    <select id="unit" name="unit" required>
+                                        <option value="#">Select item</option>
+                                        <option value="Piece">Piece</option>
+                                        <option value="Bag">Bag</option>
+                                        <option value="Kg">Kg</option>
+                                        <option value="Gram">Gram</option>
+                                        <option value="Ton">Ton</option>
+                                        <option value="CFT">CFT</option>
+                                        <option value="Cubic Meter">Cubic Meter</option>
+                                        <option value="Feet">Feet</option>
+                                        <option value="Square Feet">Square Feet</option>
+                                        <option value="Square Meter">Square Meter</option>
+                                        <option value="Meter">Meter</option>
+                                        <option value="Inch">Inch</option>
+                                        <option value="MM">MM</option>
+                                        <option value="Litre">Litre</option>
+                                        <option value="Bottle">Bottle</option>
+                                        <option value="Box">Box</option>
+                                        <option value="Packet">Packet</option>
+                                        <option value="Bundle">Bundle</option>
+                                        <option value="Roll">Roll</option>
+                                        <option value="Set">Set</option>
+                                        <option value="Pair">Pair</option>
+                                        <option value="Dozen">Dozen</option>
+                                        <option value="Carton">Carton</option>
+                                        <option value="Drum">Drum</option>
+                                        <option value="Sheet">Sheet</option>
+                                        <option value="Length">Length</option>
+                                        <option value="Load">Load</option>
+                                        <option value="Trip">Trip</option>
+                                        <option value="Unit">Unit</option>
+                                    </select>
+                                </div>
+
+                                <!-- ===== ONE ROW: Purchase Price · Sale Price · Stock Qty ===== -->
+                                <div class="price-stock-row">
+                                    <!-- Purchase Price -->
+                                    <div class="form-group">
+                                        <label> Purchase Price <span
+                                                style="font-weight:400; text-transform:none; opacity:0.6;">(per
+                                                unit)</span></label>
+                                        <input type="number" id="purchasePrice" name="purchase_price" placeholder="0.00"
+                                            min="0" step="0.01" required />
+                                    </div>
+
+                                    <!-- Sale Price -->
+                                    <div class="form-group">
+                                        <label> Sale Price <span
+                                                style="font-weight:400; text-transform:none; opacity:0.6;">(per
+                                                unit)</span></label>
+                                        <input type="number" id="salePrice" name="sale_price" placeholder="0.00" min="0"
+                                            step="0.01" required />
+                                    </div>
+
+                                    <!-- Stock Qty -->
+                                    <div class="form-group">
+                                        <label> Stock Qty</label>
+                                        <input type="number" id="stockQty" name="stock_qty" placeholder="0" min="0"
+                                            step="1" required />
+                                    </div>
+                                </div>
+
+                                <!-- Description (full width) -->
+                                <div class="form-group full-width">
+                                    <label> Description</label>
+                                    <textarea id="description" name="description"
+                                        placeholder="Write a short product description…" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- action buttons -->
+                            <div class="action-buttons">
+                                <button type="submit" class="btn-primary"> Save Product</button>
+                            </div>
+                        </form>
+
+                        <!-- footer note -->
+                        <div
+                            style="margin-top:1.2rem; font-size:0.65rem; color:#b8bcd0; text-align:center; border-top:1px solid #f0f2f8; padding-top:0.9rem; letter-spacing:0.3px;">
+                            <i class="fas fa-circle"
+                                style="color:#5C5BEF; font-size:0.35rem; vertical-align:middle; margin-right:5px;"></i>
+                            All fields marked with <span style="color:#5C5BEF; font-weight:600;">*</span> are required
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <script>
+
+            const addProductForm = document.getElementById('addProductForm');
+            addProductForm.addEventListener('submit', () => {
+
+                const apf = addProductForm.querySelectorAll('input[type="text"], input[type="number"], textarea');
+                apf.forEach((fpa) => {
+
+                    fpa.value = fpa.value.trim();
+                })
+            })
+
+
+        </script>
+
+    </body>
+
+</html>

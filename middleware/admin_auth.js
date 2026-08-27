@@ -1,26 +1,25 @@
+const cookieParser = require('cookie-parser');
 const express = require('express');
 const app = express();
-const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
 require('dotenv').config();
+
+const JWT = require('jsonwebtoken')
 
 app.use(cookieParser());
 
-
-const adminAuth = (req, res, next) => {
+const adminAuth =  (req, res, next) => {
 
     const token = req.cookies.adminToken;
-
     if (!token) {
+        req.flash('error', 'You are not authorized');
+        return res.redirect('/ghsupplier/auth/login')
+    };
 
-        req.flash('error', 'You have to login');
-        return res.redirect('/nm/admin-login')
-    }
+    const verifiedToken =  JWT.verify(token, process.env.Admin_Token_Password);
+    req.adminId = verifiedToken._id;
 
-    const verified = jwt.verify(token, process.env.Admin_Token_Password);
-
-    req.adminId = verified._id;
     next();
-}
 
-module.exports = adminAuth;
+};
+
+module.exports = adminAuth

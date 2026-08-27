@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NM - Admin Dashboard</title>
+    <title>G.H Suppliers - Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -17,11 +16,13 @@
         }
 
         :root {
-            --admin-primary-color: #4F0853;
-            --admin-secondary-color: #2e0431;
-            --admin-accent-color: #9a4a9e;
-            --admin-accent-hover: #7a2a7e;
-            --admin-accent-light: rgba(79, 8, 83, 0.15);
+            --admin-primary-color: #5C5BEF;
+            --admin-primary-dark: #3d3cb8;
+            --admin-secondary-color: #0b061a;
+            --admin-accent-color: #7a79f2;
+            --admin-accent-hover: #4a49c9;
+            --admin-accent-light: rgba(92, 91, 239, 0.18);
+            --admin-accent-glow: rgba(92, 91, 239, 0.35);
             --admin-success-color: #28a745;
             --admin-danger-color: #dc3545;
             --admin-sidebar-width: 260px;
@@ -29,13 +30,13 @@
             --admin-footer-height: 50px;
             --admin-transition: all 0.2s ease;
             --admin-border-radius: 8px;
-            --admin-card-shadow: 0 4px 12px rgba(79, 8, 83, 0.08);
-            --admin-sidebar-shadow: 0 0 20px rgba(79, 8, 83, 0.25);
-            --admin-active-glow: rgba(79, 8, 83, 0.3);
+            --admin-card-shadow: 0 4px 12px rgba(92, 91, 239, 0.12);
+            --admin-sidebar-shadow: 0 0 30px rgba(92, 91, 239, 0.15);
+            --admin-active-glow: rgba(92, 91, 239, 0.35);
         }
 
         body {
-            background-color: #f5f7fb;
+            background-color: #f0f2f8;
             color: #000000;
             overflow-x: hidden;
             min-height: 100vh;
@@ -65,7 +66,7 @@
             right: 0;
             height: var(--admin-header-height);
             background-color: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 8px rgba(92, 91, 239, 0.08);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -94,7 +95,7 @@
         }
 
         .admin-toggle-sidebar:hover {
-            background: var(--admin-accent-color);
+            background: var(--admin-accent-hover);
         }
 
         .admin-search-box {
@@ -174,7 +175,7 @@
         .admin-sidebar-header {
             padding: 16px 12px;
             text-align: left;
-            border-bottom: 1px solid rgba(245, 179, 66, 0.12);
+            border-bottom: 1px solid rgba(92, 91, 239, 0.15);
             display: flex;
             align-items: center;
         }
@@ -189,7 +190,7 @@
 
         .admin-sidebar-header h3 i {
             margin-right: 10px;
-            background: rgba(245, 179, 66, 0.12);
+            background: rgba(92, 91, 239, 0.15);
             width: 34px;
             height: 34px;
             border-radius: 8px;
@@ -225,7 +226,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(245, 179, 66, 0.08), transparent);
+            background: linear-gradient(90deg, transparent, rgba(92, 91, 239, 0.08), transparent);
             transition: left 0.5s ease;
         }
 
@@ -234,17 +235,17 @@
         }
 
         .admin-menu-item:hover {
-            background-color: rgba(245, 179, 66, 0.1);
+            background-color: rgba(92, 91, 239, 0.1);
             transform: translateX(3px);
             color: white;
         }
 
         .admin-menu-item.active {
-            background-color: rgba(245, 179, 66, 0.15);
+            background-color: rgba(92, 91, 239, 0.15);
             box-shadow:
                 0 0 20px var(--admin-active-glow),
                 0 2px 6px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(245, 179, 66, 0.08);
+                inset 0 1px 0 rgba(92, 91, 239, 0.08);
             position: relative;
             transform: translateX(3px);
             z-index: 1;
@@ -300,7 +301,7 @@
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.6s ease;
-            background-color: rgba(245, 179, 66, 0.05);
+            background-color: rgba(92, 91, 239, 0.05);
             border-radius: 6px;
             margin: 0 8px;
         }
@@ -340,18 +341,18 @@
         }
 
         .admin-submenu-item:hover {
-            background-color: rgba(245, 179, 66, 0.08);
+            background-color: rgba(92, 91, 239, 0.08);
             padding-left: 42px;
             color: white;
         }
 
         .admin-submenu-item.active {
-            background-color: rgba(245, 179, 66, 0.12);
+            background-color: rgba(92, 91, 239, 0.12);
             font-weight: 500;
             color: white;
             box-shadow:
-                0 0 12px rgba(245, 179, 66, 0.1),
-                inset 0 1px 0 rgba(245, 179, 66, 0.08);
+                0 0 12px rgba(92, 91, 239, 0.1),
+                inset 0 1px 0 rgba(92, 91, 239, 0.08);
             position: relative;
         }
 
@@ -426,7 +427,7 @@
 
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 20px rgba(92, 91, 239, 0.15);
         }
 
         .stat-icon {
@@ -713,15 +714,12 @@
             <button class="admin-toggle-sidebar" onclick="toggleAdminSidebar()">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="admin-search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search...">
-            </div>
+           
         </div>
         <div class="admin-header-right">
             <div class="admin-user-info">
                 <img src="https://img.freepik.com/free-vector/business-user-shield_78370-7029.jpg" alt="User">
-                <span>Admin User</span>
+                <span>Admin </span>
             </div>
         </div>
     </div>
@@ -729,17 +727,16 @@
     <div class="admin-dashboard-container">
         <div class="admin-sidebar" id="admin-sidebar">
             <div class="admin-sidebar-header">
-                <h3><i class="fas fa-chart-pie"></i> <span>Nababia Mission</span></h3>
+                <h3><i class="fas fa-chart-pie"></i> <span>G.H. Suppliers</span></h3>
             </div>
             <div class="admin-sidebar-menu">
-                <a href="/nababiamission/admin-dashboard" class="admin-menu-item active">
+                <a href="/ghsupplier/admin-dashboard" class="admin-menu-item active">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
 
-                
-                <a href="/nababiamission/admin-dashboard/guardian-feedback" class="admin-menu-item">
-                    <i class="fas fa-user-shield"></i> <span>Guardian Feedback</span>
+                <a href="/ghsupplier/admin-dashboard/products" class="admin-menu-item">
+                    <i class="fas fa-box"></i> <span>Product list</span>
                 </a>
 
                 <a href="/nababiamission/admin-dashboard/add-class" class="admin-menu-item">
@@ -747,162 +744,148 @@
                     <span>Settings</span>
                 </a>
 
-
                 <a href="/logout" onclick="return confirm('Are You Sure ?')" class="admin-menu-item">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // ✅ Submenu Toggle (FIXED)
+        function toggleAdminSubmenu(id) {
+            const submenu = document.getElementById(`${id}-submenu`);
+            const parentItem = submenu.previousElementSibling;
 
+            const allSubmenus = document.querySelectorAll('.admin-submenu');
 
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
+            allSubmenus.forEach(sub => {
+                if (sub !== submenu) {
+                    sub.classList.remove('open');
 
+                    const prev = sub.previousElementSibling;
+                    const chevron = prev?.querySelector('.fa-chevron-down');
+                    if (chevron) chevron.style.transform = 'rotate(0deg)';
+                }
+            });
 
+            submenu.classList.toggle('open');
 
-            // ✅ Submenu Toggle (FIXED)
-            function toggleAdminSubmenu(id) {
-                const submenu = document.getElementById(`${id}-submenu`);
-                const parentItem = submenu.previousElementSibling;
+            const chevron = parentItem.querySelector('.fa-chevron-down');
+            if (chevron) {
+                chevron.style.transform = submenu.classList.contains('open')
+                    ? 'rotate(180deg)'
+                    : 'rotate(0deg)';
+            }
+        }
 
-                const allSubmenus = document.querySelectorAll('.admin-submenu');
+        // ✅ Sidebar Toggle (Mobile)
+        function toggleAdminSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('admin-overlay');
 
-                allSubmenus.forEach(sub => {
-                    if (sub !== submenu) {
-                        sub.classList.remove('open');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
 
-                        const prev = sub.previousElementSibling;
-                        const chevron = prev?.querySelector('.fa-chevron-down');
-                        if (chevron) chevron.style.transform = 'rotate(0deg)';
-                    }
+            if (window.innerWidth < 768) {
+                document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+            }
+        }
+
+        // ✅ Overlay click close
+        document.getElementById('admin-overlay').addEventListener('click', toggleAdminSidebar);
+
+        // ✅ Menu Active Fix
+        document.querySelectorAll('.admin-menu-item').forEach(item => {
+            item.addEventListener('click', function () {
+                // ❌ DO NOT block submenu click
+                if (this.querySelector('.fa-chevron-down')) return;
+
+                document.querySelectorAll('.admin-menu-item').forEach(i => {
+                    i.classList.remove('active');
                 });
 
-                submenu.classList.toggle('open');
-
-                const chevron = parentItem.querySelector('.fa-chevron-down');
-                if (chevron) {
-                    chevron.style.transform = submenu.classList.contains('open')
-                        ? 'rotate(180deg)'
-                        : 'rotate(0deg)';
-                }
-            }
-
-            // ✅ Sidebar Toggle (Mobile)
-            function toggleAdminSidebar() {
-                const sidebar = document.getElementById('admin-sidebar');
-                const overlay = document.getElementById('admin-overlay');
-
-                sidebar.classList.toggle('open');
-                overlay.classList.toggle('active');
+                this.classList.add('active');
 
                 if (window.innerWidth < 768) {
-                    document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
-                }
-            }
-
-            // ✅ Overlay click close
-            document.getElementById('admin-overlay').addEventListener('click', toggleAdminSidebar);
-
-            // ✅ Menu Active Fix
-            document.querySelectorAll('.admin-menu-item').forEach(item => {
-                item.addEventListener('click', function () {
-
-                    // ❌ DO NOT block submenu click
-                    if (this.querySelector('.fa-chevron-down')) return;
-
-                    document.querySelectorAll('.admin-menu-item').forEach(i => {
-                        i.classList.remove('active');
-                    });
-
-                    this.classList.add('active');
-
-                    if (window.innerWidth < 768) {
-                        toggleAdminSidebar();
-                    }
-                });
-            });
-
-            // ✅ Submenu Active Fix
-            document.querySelectorAll('.admin-submenu-item').forEach(item => {
-                item.addEventListener('click', function () {
-
-                    document.querySelectorAll('.admin-submenu-item').forEach(i => {
-                        i.classList.remove('active');
-                    });
-
-                    this.classList.add('active');
-
-                    const parentSubmenu = this.closest('.admin-submenu');
-                    if (parentSubmenu) {
-                        const parentMenuItem = parentSubmenu.previousElementSibling;
-
-                        document.querySelectorAll('.admin-menu-item').forEach(i => {
-                            i.classList.remove('active');
-                        });
-
-                        parentMenuItem.classList.add('active');
-                    }
-
-                    if (window.innerWidth < 768) {
-                        toggleAdminSidebar();
-                    }
-                });
-            });
-
-            // ✅ Click outside to close (mobile)
-            document.addEventListener('click', function (event) {
-                const sidebar = document.getElementById('admin-sidebar');
-                const toggleBtn = document.querySelector('.admin-toggle-sidebar');
-
-                if (
-                    window.innerWidth < 768 &&
-                    sidebar.classList.contains('open') &&
-                    !sidebar.contains(event.target) &&
-                    (!toggleBtn || !toggleBtn.contains(event.target))
-                ) {
                     toggleAdminSidebar();
                 }
             });
+        });
 
-            // ✅ Resize fix
-            window.addEventListener('resize', function () {
-                const sidebar = document.getElementById('admin-sidebar');
-                const overlay = document.getElementById('admin-overlay');
+        // ✅ Submenu Active Fix
+        document.querySelectorAll('.admin-submenu-item').forEach(item => {
+            item.addEventListener('click', function () {
+                document.querySelectorAll('.admin-submenu-item').forEach(i => {
+                    i.classList.remove('active');
+                });
 
-                if (window.innerWidth >= 768) {
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
+                this.classList.add('active');
+
+                const parentSubmenu = this.closest('.admin-submenu');
+                if (parentSubmenu) {
+                    const parentMenuItem = parentSubmenu.previousElementSibling;
+                    document.querySelectorAll('.admin-menu-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    parentMenuItem.classList.add('active');
+                }
+
+                if (window.innerWidth < 768) {
+                    toggleAdminSidebar();
                 }
             });
+        });
 
-            // ✅ Auto active menu based on URL (ADVANCED 🔥)
-            document.addEventListener('DOMContentLoaded', function () {
-                const currentPath = window.location.pathname;
+        // ✅ Click outside to close (mobile)
+        document.addEventListener('click', function (event) {
+            const sidebar = document.getElementById('admin-sidebar');
+            const toggleBtn = document.querySelector('.admin-toggle-sidebar');
 
-                document.querySelectorAll('.admin-menu-item, .admin-submenu-item').forEach(link => {
-                    if (link.getAttribute('href') === currentPath) {
+            if (
+                window.innerWidth < 768 &&
+                sidebar.classList.contains('open') &&
+                !sidebar.contains(event.target) &&
+                (!toggleBtn || !toggleBtn.contains(event.target))
+            ) {
+                toggleAdminSidebar();
+            }
+        });
 
-                        link.classList.add('active');
+        // ✅ Resize fix
+        window.addEventListener('resize', function () {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('admin-overlay');
 
-                        // Open parent submenu if exists
-                        const parentSubmenu = link.closest('.admin-submenu');
-                        if (parentSubmenu) {
-                            parentSubmenu.classList.add('open');
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
 
-                            const parentMenuItem = parentSubmenu.previousElementSibling;
-                            parentMenuItem.classList.add('active');
+        // ✅ Auto active menu based on URL (ADVANCED 🔥)
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPath = window.location.pathname;
 
-                            const chevron = parentMenuItem.querySelector('.fa-chevron-down');
-                            if (chevron) chevron.style.transform = 'rotate(180deg)';
-                        }
+            document.querySelectorAll('.admin-menu-item, .admin-submenu-item').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+
+                    const parentSubmenu = link.closest('.admin-submenu');
+                    if (parentSubmenu) {
+                        parentSubmenu.classList.add('open');
+                        const parentMenuItem = parentSubmenu.previousElementSibling;
+                        parentMenuItem.classList.add('active');
+                        const chevron = parentMenuItem.querySelector('.fa-chevron-down');
+                        if (chevron) chevron.style.transform = 'rotate(180deg)';
                     }
-                });
+                }
             });
-
-        </script>
+        });
+    </script>
 </body>
 
 </html>

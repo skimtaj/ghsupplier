@@ -3,16 +3,9 @@ const bcryptjs = require('bcryptjs');
 const JWT = require('jsonwebtoken');
 require('dotenv').config();
 
-
 const adminSchema = mongoose.Schema({
 
     name: {
-
-        type: String
-    },
-
-    mobile: {
-
         type: String
     },
 
@@ -33,9 +26,7 @@ const adminSchema = mongoose.Schema({
             type: String
         }
     }]
-
 });
-
 
 adminSchema.pre('save', async function (next) {
     if (this.isModified('password')) {
@@ -45,7 +36,7 @@ adminSchema.pre('save', async function (next) {
 });
 
 
-adminSchema.methods.adminTokenGenerate = async function () {
+adminSchema.methods.generateAdminToken = async function () {
 
     const token = JWT.sign({ _id: this._id.toString() }, process.env.Admin_Token_Password, { expiresIn: '365d' });
     this.tokens = this.tokens.concat({ token: token });
@@ -53,7 +44,6 @@ adminSchema.methods.adminTokenGenerate = async function () {
     return token;
 }
 
+const admin_models = mongoose.model('admin_models', adminSchema);
 
-const admin_signup_model = mongoose.model('admin_signup_model', adminSchema);
-
-module.exports = admin_signup_model; 
+module.exports = admin_models;
