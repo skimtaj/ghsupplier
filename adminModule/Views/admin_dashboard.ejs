@@ -86,15 +86,12 @@
 
             .stats-box {
                 padding: 0.9rem 1.2rem;
-                /* reduced height */
                 border-radius: 20px;
                 min-height: 80px;
-                /* smaller height */
             }
 
             .stats-value {
                 font-size: 1.8rem;
-                /* slightly smaller */
             }
 
             .stats-label {
@@ -199,7 +196,6 @@
 
             .stats-box {
                 min-height: 80px;
-                /* consistent reduced height */
             }
         }
 
@@ -378,7 +374,6 @@
             .stats-box {
                 padding: 0.7rem 1rem;
                 min-height: 76px;
-                /* reduced height */
             }
 
             .stats-value {
@@ -483,7 +478,6 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.6rem 1rem;
-            /* reduced padding */
             border-radius: 14px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
             transition: all 0.25s ease;
@@ -492,7 +486,6 @@
             position: relative;
             overflow: hidden;
             min-height: 70px;
-            /* reduced height */
         }
 
         .stats-box::after {
@@ -528,7 +521,6 @@
             background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
         }
 
-        /* two new cards: month sale & profit */
         .stats-box:nth-child(5) {
             background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
         }
@@ -936,10 +928,46 @@
                 justify-content: flex-start;
             }
         }
+
+        /* ----- PAGE LOADING OVERLAY (minimal) ----- */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+        #page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #e0e0f0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
 <body>
+
+    <!-- PAGE LOADING ICON (minimal code) -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
 
     <% if (messages.success) { %>
         <script>
@@ -1113,6 +1141,14 @@
                                     { orderable: false, targets: 5 }
                                 ]
                             });
+
+                            // Hide page loader after everything is ready
+                            $('#page-loader').addClass('hidden');
+                        });
+
+                        // Also hide loader immediately if JS fails (fallback)
+                        window.addEventListener('load', function() {
+                            document.getElementById('page-loader').classList.add('hidden');
                         });
                     </script>
 

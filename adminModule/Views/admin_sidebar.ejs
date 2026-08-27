@@ -730,21 +730,21 @@
                 <h3><i class="fas fa-chart-pie"></i> <span>G.H. Suppliers</span></h3>
             </div>
             <div class="admin-sidebar-menu">
-                <a href="/ghsupplier/admin-dashboard" class="admin-menu-item active">
+                <a href="/ghsupplier/admin-dashboard" class="admin-menu-item" data-path="/ghsupplier/admin-dashboard">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </a>
 
-                <a href="/ghsupplier/admin-dashboard/products" class="admin-menu-item">
+                <a href="/ghsupplier/admin-dashboard/products" class="admin-menu-item" data-path="/ghsupplier/admin-dashboard/products">
                     <i class="fas fa-box"></i> <span>Product list</span>
                 </a>
 
-                <a href="/nababiamission/admin-dashboard/add-class" class="admin-menu-item">
+                <a href="/nababiamission/admin-dashboard/add-class" class="admin-menu-item" data-path="/nababiamission/admin-dashboard/add-class">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </a>
 
-                <a href="/logout" onclick="return confirm('Are You Sure ?')" class="admin-menu-item">
+                <a href="/logout" onclick="return confirm('Are You Sure ?')" class="admin-menu-item" data-path="/logout">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </a>
@@ -754,7 +754,25 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // ✅ Submenu Toggle (FIXED)
+        // ✅ Function to highlight active menu item based on current URL
+        function highlightActiveMenuItem() {
+            const currentPath = window.location.pathname;
+            const menuItems = document.querySelectorAll('.admin-menu-item');
+            
+            menuItems.forEach(item => {
+                const itemPath = item.getAttribute('data-path');
+                
+                // Remove active class from all items first
+                item.classList.remove('active');
+                
+                // If the item's path matches the current URL path, add active class
+                if (itemPath === currentPath) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // ✅ Submenu Toggle
         function toggleAdminSubmenu(id) {
             const submenu = document.getElementById(`${id}-submenu`);
             const parentItem = submenu.previousElementSibling;
@@ -797,18 +815,18 @@
         // ✅ Overlay click close
         document.getElementById('admin-overlay').addEventListener('click', toggleAdminSidebar);
 
-        // ✅ Menu Active Fix
+        // ✅ Menu click handler - update active state on click
         document.querySelectorAll('.admin-menu-item').forEach(item => {
-            item.addEventListener('click', function () {
-                // ❌ DO NOT block submenu click
-                if (this.querySelector('.fa-chevron-down')) return;
-
+            item.addEventListener('click', function (e) {
+                // Remove active class from all menu items
                 document.querySelectorAll('.admin-menu-item').forEach(i => {
                     i.classList.remove('active');
                 });
 
+                // Add active class to clicked item
                 this.classList.add('active');
 
+                // Close sidebar on mobile
                 if (window.innerWidth < 768) {
                     toggleAdminSidebar();
                 }
@@ -866,24 +884,14 @@
             }
         });
 
-        // ✅ Auto active menu based on URL (ADVANCED 🔥)
+        // ✅ Highlight active menu item when page loads
         document.addEventListener('DOMContentLoaded', function () {
-            const currentPath = window.location.pathname;
+            highlightActiveMenuItem();
+        });
 
-            document.querySelectorAll('.admin-menu-item, .admin-submenu-item').forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('active');
-
-                    const parentSubmenu = link.closest('.admin-submenu');
-                    if (parentSubmenu) {
-                        parentSubmenu.classList.add('open');
-                        const parentMenuItem = parentSubmenu.previousElementSibling;
-                        parentMenuItem.classList.add('active');
-                        const chevron = parentMenuItem.querySelector('.fa-chevron-down');
-                        if (chevron) chevron.style.transform = 'rotate(180deg)';
-                    }
-                }
-            });
+        // ✅ Also highlight on page load (fallback)
+        window.addEventListener('load', function () {
+            highlightActiveMenuItem();
         });
     </script>
 </body>
