@@ -2,7 +2,7 @@ const express = require('express');
 const route = express.Router();
 const auth = require('../../middleware/admin_auth')
 
-const { logout, downloadBill, resetPasswordPost, forgetPassword, resetPassword, adminLoginPost, adminSignupPost, adminSignup, exportBillingData, deleteProduct, addProductPost, addProduct, stockList, deleteBill, addNewPost, addNew, adminDashboard, adminCredential } = require('../../adminModule/controllers/admin_controller')
+const { deleteSelectedItem, logout, downloadBill, resetPasswordPost, forgetPassword, resetPassword, adminLoginPost, adminSignupPost, adminSignup, exportBillingData, deleteProduct, addProductPost, addProduct, stockList, deleteBill, addNewPost, addNew, adminDashboard, adminCredential } = require('../../adminModule/controllers/admin_controller')
 
 
 route.get('/ghsupplier/auth/login', adminCredential);
@@ -33,6 +33,8 @@ route.post('/reset-password/:id', resetPasswordPost)
 
 route.post('/forget-password', forgetPassword);
 
-route.get('/logout', logout)
+route.get('/logout', logout);
+
+route.post('/delete-selected-item', deleteSelectedItem)
 
 module.exports = route; 

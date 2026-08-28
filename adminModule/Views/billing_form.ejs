@@ -46,6 +46,63 @@
             z-index: -1;
         }
 
+        /* ----- PAGE LOADING OVERLAY (minimal) ----- */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.4s ease;
+        }
+        #page-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #d5e0e8;
+            border-top-color: #5C5BEF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ----- SUBMIT LOADER (button overlay) ----- */
+        .submit-loader {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .submit-loader .spinner-small {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        .btn-primary.loading {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .btn-primary.loading .btn-text {
+            display: none;
+        }
+        .btn-primary.loading .submit-loader {
+            display: flex;
+        }
+
         /* ===== LAYOUT WITH SIDEBAR RESERVED SPACE ===== */
         .app-layout {
             display: flex;
@@ -658,13 +715,20 @@
             box-shadow: 0 4px 16px rgba(92, 91, 239, 0.25);
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+            min-width: 160px;
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(.loading) {
             background: linear-gradient(145deg, #7a79f2, #4a49c9);
             transform: scale(1.02);
             box-shadow: 0 8px 30px rgba(92, 91, 239, 0.35);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         /* ----- Select2 Custom Styling ----- */
@@ -1013,6 +1077,11 @@
 
 <body>
 
+    <!-- PAGE LOADING OVERLAY (minimal) -->
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
     <% if (messages.success) { %>
         <script>
             Swal.fire({
@@ -1185,7 +1254,11 @@
                                         <!-- ACTION BUTTONS -->
                                         <div class="action-buttons">
                                             <button type="submit" id="submitButton" class="btn-primary">
-                                                Submit
+                                                <span class="btn-text"><i class="fas fa-paper-plane"></i> Submit</span>
+                                                <span class="submit-loader">
+                                                    <span class="spinner-small"></span>
+                                                    Processing...
+                                                </span>
                                             </button>
                                         </div>
                                     </form>
@@ -1461,7 +1534,7 @@
                             }
                         }
 
-                        // ===== FORM SUBMISSION =====
+                        // ===== FORM SUBMISSION WITH LOADER =====
                         document.getElementById('billingForm').addEventListener('submit', function(e) {
                             const itemSelects = document.querySelectorAll('.item-name');
                             let hasValidItem = false;
@@ -1482,6 +1555,11 @@
                                 });
                                 return;
                             }
+
+                            // Show submit loader
+                            const submitBtn = document.getElementById('submitButton');
+                            submitBtn.classList.add('loading');
+                            submitBtn.disabled = true;
                         });
 
                         // ===== KEYBOARD SHORTCUT: Enter to add row =====
@@ -1500,6 +1578,21 @@
                         $(document).on('select2:open', function() {
                             $('.select2-dropdown').css('z-index', 9999);
                         });
+
+                        // ===== Hide page loader after everything is fully loaded =====
+                        window.addEventListener('load', function() {
+                            setTimeout(function() {
+                                document.getElementById('page-loader').classList.add('hidden');
+                            }, 400);
+                        });
+
+                        // ===== Fallback: Hide loader after 5 seconds max =====
+                        setTimeout(function() {
+                            const loader = document.getElementById('page-loader');
+                            if (loader && !loader.classList.contains('hidden')) {
+                                loader.classList.add('hidden');
+                            }
+                        }, 5000);
                     </script>
 
 </body>

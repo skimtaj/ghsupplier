@@ -774,6 +774,14 @@ const logout = (req, res) => {
     return res.redirect('/ghsupplier/auth/login')
 }
 
+const deleteSelectedItem = async (req, res) => {
+
+    const { ids } = req.body;
+    await billing_model.deleteMany({ _id: { $in: ids } });
+    req.flash('success', 'Item deleted successfuly');
+    return res.redirect('/ghsupplier/admin-dashboard')
+}
 
 
-module.exports = { logout, downloadBill, resetPasswordPost, forgetPassword, resetPassword, adminLoginPost, adminSignupPost, adminSignup, exportBillingData, deleteProduct, addProductPost, addProduct, stockList, deleteBill, addNewPost, addNew, adminDashboard, adminCredential }
+
+module.exports = { deleteSelectedItem, logout, downloadBill, resetPasswordPost, forgetPassword, resetPassword, adminLoginPost, adminSignupPost, adminSignup, exportBillingData, deleteProduct, addProductPost, addProduct, stockList, deleteBill, addNewPost, addNew, adminDashboard, adminCredential }
