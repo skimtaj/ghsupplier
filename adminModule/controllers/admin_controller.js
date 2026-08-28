@@ -361,7 +361,7 @@ const stockList = async (req, res) => {
         const limit = 10;
         const skip = (page - 1) * limit;
         const serialNo = skip;
-        const totalProductDoc = await product_model.countDocuments(query);
+        const totalProductDoc = await product_model.countDocuments();
 
         const totalPage = Math.ceil(totalProductDoc / limit);
 
