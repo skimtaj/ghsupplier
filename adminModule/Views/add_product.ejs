@@ -713,8 +713,8 @@
                                     <div class="form-group">
                                         <label> Stock Value <span
                                                 style="font-weight:400; text-transform:none; opacity:0.6;">(auto)</span></label>
-                                        <input type="text" id="stockValue" name="stock_value" placeholder="0.00" readonly
-                                            value="0.00" />
+                                        <input type="text" id="stockValue" name="stock_value" placeholder="0.00"
+                                            readonly value="0.00" />
                                     </div>
                                 </div>
 
@@ -745,41 +745,53 @@
         </div>
 
         <script>
-            (function() {
-                const form = document.getElementById('addProductForm');
-                const purchaseInput = document.getElementById('purchasePrice');
-                const qtyInput = document.getElementById('stockQty');
-                const stockValueInput = document.getElementById('stockValue');
 
-                // Function to update stock value = purchase price * quantity
-                function updateStockValue() {
-                    const price = parseFloat(purchaseInput.value) || 0;
-                    const qty = parseInt(qtyInput.value, 10) || 0;
-                    const total = price * qty;
-                    // Format to 2 decimal places, but keep as number for display
-                    stockValueInput.value = total.toFixed(2);
-                }
 
-                // Trigger update on input events for both fields
-                purchaseInput.addEventListener('input', updateStockValue);
-                qtyInput.addEventListener('input', updateStockValue);
+            const addProductForm = document.getElementById('addProductForm');
 
-                // Also update on blur (just in case)
-                purchaseInput.addEventListener('blur', updateStockValue);
-                qtyInput.addEventListener('blur', updateStockValue);
+            billingForm.addEventListener('submit', () => {
 
-                // Initial calculation on page load
-                updateStockValue();
+                const allinputFields = billingForm.querySelectorAll('input[type="text"], input[type="number"], textarea')
+                allinputFields.forEach((aif) => {
+                    aif.value = aif.value.trim();
+                })
+            })
 
-                // Trim inputs before submit (existing logic)
-                form.addEventListener('submit', function() {
-                    const inputs = form.querySelectorAll('input[type="text"], input[type="number"], textarea');
-                    inputs.forEach(function(fpa) {
-                        fpa.value = fpa.value.trim();
+                (function () {
+                    const form = document.getElementById('addProductForm');
+                    const purchaseInput = document.getElementById('purchasePrice');
+                    const qtyInput = document.getElementById('stockQty');
+                    const stockValueInput = document.getElementById('stockValue');
+
+                    // Function to update stock value = purchase price * quantity
+                    function updateStockValue() {
+                        const price = parseFloat(purchaseInput.value) || 0;
+                        const qty = parseInt(qtyInput.value, 10) || 0;
+                        const total = price * qty;
+                        // Format to 2 decimal places, but keep as number for display
+                        stockValueInput.value = total.toFixed(2);
+                    }
+
+                    // Trigger update on input events for both fields
+                    purchaseInput.addEventListener('input', updateStockValue);
+                    qtyInput.addEventListener('input', updateStockValue);
+
+                    // Also update on blur (just in case)
+                    purchaseInput.addEventListener('blur', updateStockValue);
+                    qtyInput.addEventListener('blur', updateStockValue);
+
+                    // Initial calculation on page load
+                    updateStockValue();
+
+                    // Trim inputs before submit (existing logic)
+                    form.addEventListener('submit', function () {
+                        const inputs = form.querySelectorAll('input[type="text"], input[type="number"], textarea');
+                        inputs.forEach(function (fpa) {
+                            fpa.value = fpa.value.trim();
+                        });
                     });
-                });
 
-            })();
+                })();
         </script>
 
     </body>
