@@ -47,6 +47,17 @@ const billingSchema = mongoose.Schema({
         type: String
     },
 
+    payment_amount: {
+        type: Number,
+        default: 0
+    },
+
+    due_amount: {
+
+        type: Number,
+        default: 0
+    },
+
     items: [{
 
         item_name: {
@@ -77,15 +88,13 @@ const billingSchema = mongoose.Schema({
         },
 
         total: {
-
             type: Number
-        },
+        }
+    }],
 
-        profit: {
-
-            type: Number
-        },
-
+    dueArray: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'due_model'
     }]
 
 });

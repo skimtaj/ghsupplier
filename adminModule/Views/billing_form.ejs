@@ -2,1690 +2,1100 @@
 <html lang="en">
 
 <%-include('admin_sidebar')%>
-
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
-        <title>G.H Suppliers · Billing</title>
-        <!-- Font Awesome 6 -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <!-- Select2 CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-        <!-- jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- Select2 JS -->
-        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-        <style>
-            /* ----- RESET & BASE ----- */
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            body {
-                min-height: 100vh;
-                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                background-color: #eef0f5;
-                background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop');
-                background-size: cover;
-                background-position: center;
-                background-attachment: fixed;
-            }
-
-            body::before {
-                content: '';
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(255, 255, 255, 0.88);
-                z-index: -1;
-            }
-
-            /* ----- PAGE LOADING OVERLAY (minimal) ----- */
-            #page-loader {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(255, 255, 255, 0.88);
-                backdrop-filter: blur(3px);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 9999;
-                transition: opacity 0.4s ease;
-            }
-
-            #page-loader.hidden {
-                opacity: 0;
-                pointer-events: none;
-            }
-
-            .loader-spinner {
-                width: 50px;
-                height: 50px;
-                border: 5px solid #d5e0e8;
-                border-top-color: #5C5BEF;
-                border-radius: 50%;
-                animation: spin 0.8s linear infinite;
-            }
-
-            @keyframes spin {
-                to {
-                    transform: rotate(360deg);
-                }
-            }
-
-            /* ----- SUBMIT LOADER (button overlay) ----- */
-            .submit-loader {
-                display: none;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-            }
-
-            .submit-loader .spinner-small {
-                width: 20px;
-                height: 20px;
-                border: 3px solid rgba(255, 255, 255, 0.3);
-                border-top-color: #ffffff;
-                border-radius: 50%;
-                animation: spin 0.6s linear infinite;
-            }
-
-            .btn-primary.loading {
-                opacity: 0.8;
-                pointer-events: none;
-            }
-
-            .btn-primary.loading .btn-text {
-                display: none;
-            }
-
-            .btn-primary.loading .submit-loader {
-                display: flex;
-            }
-
-            /* ===== LAYOUT WITH SIDEBAR RESERVED SPACE ===== */
-            .app-layout {
-                display: flex;
-                min-height: 100vh;
-            }
-
-            /* ===== SIDEBAR RESERVED SPACE (sticky) ===== */
-            .sidebar-reserved {
-                width: 260px;
-                min-height: 100vh;
-                background: #1a1a2e;
-                flex-shrink: 0;
-                position: sticky;
-                top: 0;
-                height: 100vh;
-                overflow-y: auto;
-            }
-
-            .sidebar-reserved::after {
-                content: '⬅ Sidebar Space';
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 100%;
-                color: rgba(255, 255, 255, 0.15);
-                font-size: 0.8rem;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-            }
-
-            /* ===== MAIN CONTENT AREA ===== */
-            .main-content {
-                flex: 1;
-                padding: 1.5rem 2rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-top: 60px;
-            }
-
-            /* ===== BILL CARD ===== */
-            .bill-card {
-                width: 100%;
-                max-width: 1200px;
-                background: rgba(255, 255, 255, 0.96);
-                backdrop-filter: blur(8px);
-                -webkit-backdrop-filter: blur(8px);
-                border: 1px solid rgba(255, 255, 255, 0.6);
-                border-radius: 40px;
-                padding: 2.8rem 2.5rem;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
-            }
-
-            .bill-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                flex-wrap: wrap;
-                margin-bottom: 2rem;
-                padding-bottom: 1.2rem;
-                border-bottom: 2px solid #e8ecf1;
-            }
-
-            .bill-title {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .bill-title .brand-avatar {
-                width: 60px;
-                height: 60px;
-                border-radius: 50%;
-                background: linear-gradient(145deg, #5C5BEF, #3d3cb8);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.6rem;
-                font-weight: 700;
-                box-shadow: 0 4px 16px rgba(92, 91, 239, 0.25);
-                border: 2px solid rgba(92, 91, 239, 0.15);
-                color: #ffffff;
-            }
-
-            .bill-title h1 {
-                font-size: 1.7rem;
-                font-weight: 700;
-                color: #1a1a2e;
-            }
-
-            .bill-title h1 span {
-                color: #5C5BEF;
-            }
-
-            /* ----- FORM SECTIONS ----- */
-            .form-section {
-                background: #f8f9fe;
-                border-radius: 20px;
-                padding: 1.8rem;
-                margin-bottom: 1.8rem;
-                border: 1px solid #e8ecf3;
-            }
-
-            .form-section-title {
-                color: #4a4a6a;
-                font-size: 0.9rem;
-                font-weight: 700;
-                text-transform: uppercase;
-                letter-spacing: 0.8px;
-                margin-bottom: 1.2rem;
-                padding-bottom: 0.6rem;
-                border-bottom: 1px solid #e8ecf3;
-            }
-
-            /* ----- CUSTOMER DETAILS + PAYMENT ----- */
-            .form-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-                gap: 1.8rem 2rem;
-            }
-
-            .form-group {
-                display: flex;
-                flex-direction: column;
-                gap: 0.4rem;
-            }
-
-            .form-group label {
-                font-size: 0.8rem;
-                font-weight: 600;
-                color: #2d2d4a;
-                letter-spacing: 0.3px;
-                text-transform: uppercase;
-                opacity: 0.8;
-            }
-
-            .form-group input,
-            .form-group textarea,
-            .form-group select {
-                padding: 0.85rem 1.2rem;
-                background: #ffffff;
-                border: 1px solid #dce0e8;
-                border-radius: 14px;
-                font-size: 1rem;
-                color: #1a1a2e;
-                outline: none;
-                transition: all 0.3s ease;
-                font-family: inherit;
-                width: 100%;
-            }
-
-            .form-group input:focus,
-            .form-group textarea:focus,
-            .form-group select:focus {
-                border-color: #5C5BEF;
-                box-shadow: 0 0 0 3px rgba(92, 91, 239, 0.10);
-                background: #ffffff;
-            }
-
-            .form-group input::placeholder,
-            .form-group textarea::placeholder {
-                color: #b0b0c8;
-                font-weight: 400;
-            }
-
-            .form-group textarea {
-                resize: vertical;
-                min-height: 60px;
-            }
-
-            .form-group select {
-                appearance: none;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C5BEF' stroke-width='2' fill='none'/%3E%3C/svg%3E");
-                background-repeat: no-repeat;
-                background-position: right 1rem center;
-                background-size: 12px;
-                cursor: pointer;
-            }
-
-            /* ----- PAYMENT METHOD ----- */
-            .payment-group {
-                display: flex;
-                flex-direction: column;
-                gap: 0.4rem;
-            }
-
-            .payment-group label {
-                font-size: 0.8rem;
-                font-weight: 600;
-                color: #2d2d4a;
-                letter-spacing: 0.3px;
-                text-transform: uppercase;
-                opacity: 0.8;
-            }
-
-            .payment-options {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.6rem 1rem;
-                align-items: center;
-                background: #ffffff;
-                padding: 0.45rem 1rem;
-                border-radius: 14px;
-                border: 1px solid #dce0e8;
-                min-height: 56px;
-                transition: all 0.3s ease;
-            }
-
-            .payment-options:focus-within {
-                border-color: #5C5BEF;
-                box-shadow: 0 0 0 3px rgba(92, 91, 239, 0.10);
-            }
-
-            .payment-options label {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-weight: 500;
-                color: #1a1a2e;
-                cursor: pointer;
-                font-size: 0.95rem;
-                padding: 0.3rem 1rem 0.3rem 0.6rem;
-                border-radius: 30px;
-                transition: all 0.2s;
-                background: transparent;
-                text-transform: none;
-                letter-spacing: 0;
-                opacity: 1;
-            }
-
-            .payment-options label:hover {
-                background: #f0f1fe;
-            }
-
-            .payment-options input[type="radio"] {
-                accent-color: #5C5BEF;
-                width: 17px;
-                height: 17px;
-                margin: 0;
-                cursor: pointer;
-            }
-
-            .payment-options label:has(input:checked) {
-                background: #5C5BEF;
-                color: white;
-                border-radius: 30px;
-                padding: 0.3rem 1rem 0.3rem 0.6rem;
-                box-shadow: 0 2px 12px rgba(92, 91, 239, 0.25);
-            }
-
-            /* ----- ITEMS TABLE ----- */
-            .table-responsive {
-                overflow-x: visible;
-                margin-top: 0.5rem;
-            }
-
-            .items-table {
-                width: 100%;
-                border-collapse: collapse;
-                min-width: auto;
-            }
-
-            .items-table thead th {
-                padding: 0.9rem 0.8rem;
-                background: #f0f2fa;
-                color: #3d3d5c;
-                font-size: 0.75rem;
-                font-weight: 700;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                text-align: left;
-                border-bottom: 2px solid #5C5BEF;
-            }
-
-            .items-table tbody td {
-                padding: 0.6rem 0.5rem;
-                border-bottom: 1px solid #e8ecf3;
-                vertical-align: middle;
-            }
-
-            .items-table tbody tr:hover {
-                background: #f8f9fe;
-            }
-
-            .items-table input,
-            .items-table select,
-            .items-table textarea {
-                padding: 0.6rem 0.6rem;
-                background: #ffffff;
-                border: 1px solid #dce0e8;
-                border-radius: 10px;
-                font-size: 0.9rem;
-                color: #1a1a2e;
-                outline: none;
-                transition: all 0.3s ease;
-                width: 100%;
-                font-family: inherit;
-            }
-
-            .items-table input:focus,
-            .items-table select:focus,
-            .items-table textarea:focus {
-                border-color: #5C5BEF;
-                box-shadow: 0 0 0 3px rgba(92, 91, 239, 0.08);
-            }
-
-            .items-table input::placeholder,
-            .items-table textarea::placeholder {
-                color: #b0b0c8;
-            }
-
-            .items-table textarea {
-                resize: vertical;
-                min-height: 38px;
-                line-height: 1.4;
-            }
-
-            .items-table select {
-                appearance: none;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235C5BEF' stroke-width='2' fill='none'/%3E%3C/svg%3E");
-                background-repeat: no-repeat;
-                background-position: right 0.6rem center;
-                background-size: 10px;
-                cursor: pointer;
-                padding-right: 2rem;
-            }
-
-            .items-table .item-total {
-                font-weight: 700;
-                color: #5C5BEF;
-                font-size: 0.95rem;
-                white-space: nowrap;
-            }
-
-            .items-table .remove-btn {
-                background: #fef0f0;
-                border: 1px solid #fce0e0;
-                color: #e06060;
-                width: 36px;
-                height: 36px;
-                border-radius: 10px;
-                cursor: pointer;
-                transition: all 0.2s;
-                font-size: 0.9rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin: 0 auto;
-            }
-
-            .items-table .remove-btn:hover {
-                background: #fce0e0;
-                border-color: #d05050;
-                transform: scale(1.05);
-            }
-
-            .add-row-btn {
-                background: #f0f2fa;
-                border: 2px dashed #c8cce0;
-                color: #5C5BEF;
-                padding: 0.7rem 1.8rem;
-                border-radius: 12px;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-size: 0.9rem;
-                font-weight: 600;
-                margin-top: 0.8rem;
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .add-row-btn:hover {
-                background: #e8eaf5;
-                border-color: #5C5BEF;
-            }
-
-            /* ----- TOTALS SECTION WITH DISCOUNT ----- */
-            .totals-section {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-                margin-top: 0.5rem;
-            }
-
-            .totals-left {
-                display: flex;
-                flex-direction: column;
-                gap: 0.8rem;
-            }
-
-            .totals-right {
-                display: flex;
-                flex-direction: column;
-                gap: 0.8rem;
-                align-items: flex-end;
-            }
-
-            /* Discount Styles */
-            .discount-section {
-                width: 100%;
-                max-width: 380px;
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .discount-section label {
-                font-size: 0.75rem;
-                font-weight: 600;
-                color: #4a4a6a;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-            }
-
-            .discount-input-wrap {
-                display: flex;
-                gap: 0.8rem;
-                align-items: center;
-                background: #f8f9fe;
-                border: 2px solid #e8ecf3;
-                border-radius: 14px;
-                padding: 0.2rem 0.2rem 0.2rem 1rem;
-                transition: all 0.3s ease;
-            }
-
-            .discount-input-wrap:focus-within {
-                border-color: #5C5BEF;
-                box-shadow: 0 0 0 3px rgba(92, 91, 239, 0.10);
-            }
-
-            .discount-input-wrap .discount-label {
-                font-weight: 600;
-                color: #1a1a2e;
-                font-size: 0.9rem;
-                white-space: nowrap;
-            }
-
-            .discount-input-wrap input[type="number"] {
-                border: none;
-                background: transparent;
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: #5C5BEF;
-                padding: 0.6rem 0.8rem;
-                width: 100%;
-                outline: none;
-                font-family: inherit;
-                min-width: 80px;
-            }
-
-            .discount-input-wrap input[type="number"]:focus {
-                box-shadow: none;
-            }
-
-            .discount-input-wrap .discount-type {
-                display: flex;
-                gap: 0.3rem;
-                background: #ffffff;
-                border-radius: 10px;
-                padding: 0.2rem;
-                border: 1px solid #dce0e8;
-            }
-
-            .discount-input-wrap .discount-type button {
-                padding: 0.4rem 0.8rem;
-                border: none;
-                background: transparent;
-                border-radius: 8px;
-                cursor: pointer;
-                font-weight: 600;
-                font-size: 0.8rem;
-                color: #4a4a6a;
-                transition: all 0.2s ease;
-            }
-
-            .discount-input-wrap .discount-type button.active {
-                background: #5C5BEF;
-                color: white;
-            }
-
-            .discount-input-wrap .discount-type button:hover:not(.active) {
-                background: #f0f1fe;
-            }
-
-            /* Discounted Amount Display */
-            .discounted-amount-wrap {
-                width: 100%;
-                max-width: 380px;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                background: #f0f2fa;
-                border-radius: 14px;
-                padding: 0.2rem 0.2rem 0.2rem 1rem;
-                border: 2px solid #e8ecf3;
-            }
-
-            .discounted-amount-wrap .label {
-                font-weight: 600;
-                color: #1a1a2e;
-                font-size: 0.9rem;
-                white-space: nowrap;
-            }
-
-            .discounted-amount-wrap input {
-                border: none;
-                background: transparent;
-                font-size: 1.2rem;
-                font-weight: 700;
-                color: #00b894;
-                padding: 0.6rem 0.8rem;
-                width: 100%;
-                outline: none;
-                font-family: inherit;
-                text-align: right;
-                min-width: 120px;
-            }
-
-            .grand-total-input-wrap {
-                width: 100%;
-                max-width: 380px;
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                background: #f0f2fa;
-                border-radius: 14px;
-                padding: 0.2rem 0.2rem 0.2rem 1rem;
-                border: 2px solid #5C5BEF;
-            }
-
-            .grand-total-input-wrap .label {
-                font-weight: 600;
-                color: #1a1a2e;
-                font-size: 1rem;
-                white-space: nowrap;
-            }
-
-            .grand-total-input-wrap input {
-                border: none;
-                background: transparent;
-                font-size: 1.4rem;
-                font-weight: 800;
-                color: #5C5BEF;
-                padding: 0.6rem 0.8rem;
-                width: 100%;
-                outline: none;
-                font-family: inherit;
-                text-align: right;
-                min-width: 120px;
-            }
-
-            .grand-total-input-wrap input:focus {
-                box-shadow: 0 0 0 2px rgba(92, 91, 239, 0.2);
-                border-radius: 10px;
-            }
-
-            .rupees-text {
-                width: 100%;
-                max-width: 380px;
-            }
-
-            .rupees-text label {
-                font-size: 0.75rem;
-                font-weight: 600;
-                color: #4a4a6a;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                display: block;
-                margin-bottom: 0.4rem;
-            }
-
-            .rupees-text input {
-                width: 100%;
-                padding: 0.8rem 1rem;
-                background: #f8f9fe;
-                border: 2px solid #5C5BEF;
-                border-radius: 12px;
-                font-size: 1rem;
-                color: #1a1a2e;
-                outline: none;
-                font-family: inherit;
-                font-weight: 600;
-                cursor: default;
-            }
-
-            .rupees-text input:focus {
-                box-shadow: 0 0 0 3px rgba(92, 91, 239, 0.10);
-            }
-
-            /* ----- ACTION BUTTONS ----- */
-            .action-buttons {
-                display: flex;
-                gap: 1.2rem;
-                justify-content: flex-end;
-                margin-top: 2.2rem;
-                flex-wrap: wrap;
-            }
-
-            .btn-primary {
-                padding: 0.9rem 2.8rem;
-                background: linear-gradient(145deg, #5C5BEF, #3d3cb8);
-                color: #ffffff;
-                border: none;
-                border-radius: 14px;
-                font-weight: 600;
-                font-size: 1rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 16px rgba(92, 91, 239, 0.25);
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                min-width: 160px;
-            }
-
-            .btn-primary:hover:not(.loading) {
-                background: linear-gradient(145deg, #7a79f2, #4a49c9);
-                transform: scale(1.02);
-                box-shadow: 0 8px 30px rgba(92, 91, 239, 0.35);
-            }
-
-            .btn-primary:disabled {
-                opacity: 0.7;
-                cursor: not-allowed;
-            }
-
-            /* ----- Select2 Custom Styling ----- */
-            .select2-container--default .select2-selection--single {
-                padding: 0.6rem 0.6rem;
-                background: #ffffff;
-                border: 1px solid #dce0e8;
-                border-radius: 10px;
-                font-size: 0.9rem;
-                color: #1a1a2e;
-                outline: none;
-                transition: all 0.3s ease;
-                font-family: inherit;
-                height: auto;
-                min-height: 44px;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__rendered {
-                padding: 0;
-                line-height: 1.5;
-                color: #1a1a2e;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__arrow {
-                height: 44px;
-                right: 8px;
-            }
-
-            .select2-container--default .select2-selection--single .select2-selection__arrow b {
-                border-color: #5C5BEF transparent transparent transparent;
-            }
-
-            .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
-                border-color: transparent transparent #5C5BEF transparent;
-            }
-
-            .select2-container--default .select2-search--dropdown .select2-search__field {
-                padding: 0.6rem 1rem;
-                border: 1px solid #dce0e8;
-                border-radius: 10px;
-                font-size: 0.9rem;
-                font-family: inherit;
-            }
-
-            .select2-container--default .select2-search--dropdown .select2-search__field:focus {
-                border-color: #5C5BEF;
-                box-shadow: 0 0 0 3px rgba(92, 91, 239, 0.08);
-                outline: none;
-            }
-
-            .select2-container--default .select2-results__option--highlighted[aria-selected] {
-                background-color: #5C5BEF;
-                color: white;
-            }
-
-            .select2-dropdown {
-                border: 1px solid #dce0e8;
-                border-radius: 12px;
-                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            }
-
-            .select2-container--default .select2-results__option {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            /* ===== RESPONSIVE ===== */
-            @media (min-width: 1920px) and (max-width: 2560px) {
-                .main-content {
-                    padding: 2rem 3rem;
-                    margin-top: 100px;
-                }
-
-                .bill-card {
-                    max-width: 1400px;
-                    padding: 3.2rem 3rem;
-                    border-radius: 48px;
-                }
-
-                .bill-title h1 {
-                    font-size: 2.4rem;
-                }
-
-                .form-grid {
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 2rem;
-                }
-
-                .grand-total-input-wrap,
-                .discount-section,
-                .discounted-amount-wrap,
-                .rupees-text {
-                    max-width: 420px;
-                }
-
-                .grand-total-input-wrap input {
-                    font-size: 1.6rem;
-                    padding: 0.8rem 1rem;
-                }
-
-                .sidebar-reserved {
-                    width: 280px;
-                }
-            }
-
-            @media (min-width: 1400px) and (max-width: 1919px) {
-                .bill-card {
-                    max-width: 1200px;
-                    padding: 2.6rem 2.4rem;
-                }
-
-                .form-grid {
-                    grid-template-columns: repeat(4, 1fr);
-                    gap: 1.8rem;
-                }
-
-                .grand-total-input-wrap,
-                .discount-section,
-                .discounted-amount-wrap,
-                .rupees-text {
-                    max-width: 360px;
-                }
-            }
-
-            @media (max-width: 1200px) {
-                .form-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-
-                .bill-card {
-                    padding: 2rem 1.8rem;
-                }
-            }
-
-            @media (max-width: 768px) {
-                .app-layout {
-                    flex-direction: column;
-                }
-
-                .sidebar-reserved {
-                    width: 100%;
-                    min-height: 60px;
-                    height: auto;
-                    position: relative;
-                }
-
-                .sidebar-reserved::after {
-                    content: '⬆ Sidebar Space';
-                    height: 60px;
-                }
-
-                .main-content {
-                    padding: 0.8rem;
-                    margin-top: 10px;
-                }
-
-                .bill-card {
-                    padding: 1.2rem 0.8rem;
-                    border-radius: 28px;
-                }
-
-                .bill-title h1 {
-                    font-size: 1.3rem;
-                }
-
-                .form-grid {
-                    grid-template-columns: 1fr;
-                    gap: 1rem;
-                }
-
-                .form-group input,
-                .form-group textarea,
-                .form-group select {
-                    padding: 1rem 1.2rem;
-                    font-size: 1.05rem;
-                    border-radius: 14px;
-                }
-
-                .form-section {
-                    padding: 1.2rem;
-                }
-
-                .payment-options {
-                    padding: 0.4rem 0.8rem;
-                    min-height: 50px;
-                }
-
-                .payment-options label {
-                    font-size: 0.95rem;
-                    padding: 0.2rem 0.8rem 0.2rem 0.4rem;
-                }
-
-                .table-responsive {
-                    overflow-x: visible;
-                }
-
-                .items-table {
-                    min-width: auto;
-                    width: 100%;
-                    display: block;
-                }
-
-                .items-table thead {
-                    display: none;
-                }
-
-                .items-table tbody,
-                .items-table tr,
-                .items-table td {
-                    display: block;
-                    width: 100%;
-                }
-
-                .items-table tbody tr {
-                    margin-bottom: 1.2rem;
-                    padding: 0.8rem 0.5rem;
-                    border: 1px solid #e8ecf3;
-                    border-radius: 16px;
-                    background: #ffffff;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-                }
-
-                .items-table tbody td {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 0.5rem 0.3rem;
-                    border-bottom: 1px dashed #eef0f5;
-                    gap: 0.5rem;
-                    flex-wrap: wrap;
-                }
-
-                .items-table tbody td:last-child {
-                    border-bottom: none;
-                    justify-content: center;
-                }
-
-                .items-table tbody td::before {
-                    content: attr(data-label);
-                    font-weight: 700;
-                    color: #3d3d5c;
-                    font-size: 0.85rem;
-                    text-transform: uppercase;
-                    letter-spacing: 0.4px;
-                    min-width: 70px;
-                    flex-shrink: 0;
-                }
-
-                .items-table tbody td input,
-                .items-table tbody td select,
-                .items-table tbody td textarea {
-                    width: 100%;
-                    max-width: 200px;
-                    font-size: 1rem;
-                    padding: 0.6rem 0.7rem;
-                }
-
-                .items-table tbody td:first-child input,
-                .items-table tbody td:nth-child(2) textarea {
-                    max-width: 100%;
-                    width: 100%;
-                    font-size: 1.05rem;
-                    padding: 0.7rem 0.9rem;
-                    min-height: 48px;
-                }
-
-                .items-table tbody td:nth-child(2) textarea {
-                    min-height: 50px;
-                    resize: vertical;
-                }
-
-                .items-table tbody td .item-total {
-                    font-size: 1.05rem;
-                    white-space: nowrap;
-                }
-
-                .items-table .remove-btn {
-                    width: 42px;
-                    height: 42px;
-                    font-size: 1.1rem;
-                }
-
-                .select2-container {
-                    width: 100% !important;
-                    max-width: 200px;
-                }
-
-                .items-table tbody td:first-child .select2-container {
-                    max-width: 100%;
-                    width: 100% !important;
-                }
-
-                .add-row-btn {
-                    width: 100%;
-                    justify-content: center;
-                    padding: 0.9rem;
-                    font-size: 1rem;
-                }
-
-                .totals-section {
-                    grid-template-columns: 1fr;
-                    gap: 1rem;
-                }
-
-                .totals-right {
-                    align-items: stretch;
-                }
-
-                .grand-total-input-wrap,
-                .discount-section,
-                .discounted-amount-wrap,
-                .rupees-text {
-                    max-width: 100%;
-                }
-
-                .discount-input-wrap {
-                    flex-wrap: wrap;
-                    padding: 0.5rem;
-                }
-
-                .discount-input-wrap .discount-type {
-                    width: 100%;
-                    justify-content: center;
-                }
-
-                .action-buttons {
-                    justify-content: center;
-                }
-
-                .btn-primary {
-                    width: 100%;
-                    justify-content: center;
-                    padding: 1rem;
-                }
-            }
-
-            @media (max-width: 480px) {
-                .main-content {
-                    padding: 0.3rem;
-                }
-
-                .bill-card {
-                    padding: 0.8rem 0.5rem;
-                    border-radius: 20px;
-                }
-
-                .bill-header {
-                    flex-direction: column;
-                    align-items: flex-start;
-                    gap: 0.6rem;
-                }
-
-                .bill-title h1 {
-                    font-size: 1.1rem;
-                }
-
-                .form-group input,
-                .form-group textarea,
-                .form-group select {
-                    font-size: 0.95rem;
-                    padding: 0.8rem 1rem;
-                }
-
-                .items-table tbody td::before {
-                    font-size: 0.8rem;
-                    min-width: 60px;
-                }
-
-                .items-table tbody td input,
-                .items-table tbody td select,
-                .items-table tbody td textarea {
-                    max-width: 160px;
-                    font-size: 0.95rem;
-                }
-
-                .grand-total-input-wrap input {
-                    font-size: 1.1rem;
-                    min-width: 80px;
-                }
-            }
-
-            ::-webkit-scrollbar {
-                width: 4px;
-                height: 4px;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background: #5C5BEF;
-                border-radius: 4px;
-            }
-
-            ::-webkit-scrollbar-track {
-                background: #eef0f5;
-            }
-        </style>
-    </head>
-
-    <body>
-
-        <!-- PAGE LOADING OVERLAY (minimal) -->
-        <div id="page-loader">
-            <div class="loader-spinner"></div>
-        </div>
-
-        <% if (messages.success) { %>
-            <script>
-                Swal.fire({
-                    toast: true,
-                    position: "top-end",
-                    icon: "success",
-                    title: "<%= messages.success %>",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    background: "#ffffff",
-                    iconColor: "#00b894",
-                    color: "#333",
-                    customClass: {
-                        popup: 'custom-swal-toast'
-                    },
-                    didOpen: (toast) => {
-                        toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                        toast.style.borderRadius = '8px';
-                        toast.style.padding = '0.75rem 1.25rem';
-                    }
-                });
-            </script>
-            <% } %>
-
-                <% if (messages.error) { %>
-                    <script>
-                        Swal.fire({
-                            toast: true,
-                            position: "top-end",
-                            icon: "error",
-                            title: "<%= messages.error %>",
-                            showConfirmButton: false,
-                            timer: 3000,
-                            timerProgressBar: true,
-                            background: "#ffffff",
-                            iconColor: "#red",
-                            color: "#333",
-                            customClass: {
-                                popup: 'custom-swal-toast'
-                            },
-                            didOpen: (toast) => {
-                                toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-                                toast.style.borderRadius = '8px';
-                                toast.style.padding = '0.75rem 1.25rem';
-                            }
-                        });
-                    </script>
-                    <% } %>
-
-                        <div class="app-layout">
-                            <aside class="sidebar-reserved">
-                                <!-- Replace with your actual sidebar -->
-                            </aside>
-
-                            <main class="main-content">
-                                <div style="width:100%;">
-                                    <div class="bill-card">
-                                        <form id="billingForm" method="POST"
-                                            action="/ghsupplier/admin-dashboard/bills/new">
-                                            <div class="bill-header">
-                                                <div class="bill-title">
-                                                    <h1>Billing <span>Invoice</span></h1>
-                                                </div>
-                                            </div>
-
-                                            <!-- CUSTOMER DETAILS + PAYMENT -->
-                                            <div class="form-section">
-                                                <div class="form-grid">
-                                                    <div class="form-group">
-                                                        <label>Customer Name</label>
-                                                        <input type="text" id="customerName" name="customer_name"
-                                                            placeholder="Enter customer name" required />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Mobile</label>
-                                                        <input type="tel" id="customerMobile" name="mobile"
-                                                            placeholder="Enter mobile number" required />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Address</label>
-                                                        <textarea id="customerAddress" name="address"
-                                                            placeholder="Enter full address" rows="2"></textarea>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Billing Date</label>
-                                                        <input type="date" id="billingDate" name="billing_date"
-                                                            required />
-                                                    </div>
-                                                    <div class="payment-group" style="grid-column: span 1;">
-                                                        <label>Payment Method</label>
-                                                        <div class="payment-options">
-                                                            <label>
-                                                                Cash
-                                                                <input type="radio" name="payment_method" value="Cash"
-                                                                    checked />
-                                                            </label>
-                                                            <label>
-                                                                Bank Transfer
-                                                                <input type="radio" name="payment_method"
-                                                                    value="Bank" />
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- ITEMS TABLE -->
-                                            <div class="form-section">
-                                                <div class="form-section-title">Item Details</div>
-                                                <div class="table-responsive">
-                                                    <table class="items-table" id="itemsTable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th style="width:20%">Item Name</th>
-                                                                <th style="width:25%">Description</th>
-                                                                <th style="width:12%">Unit</th>
-                                                                <th style="width:10%">Qty</th>
-                                                                <th style="width:12%">Rate</th>
-                                                                <th style="width:15%">Total</th>
-                                                                <th style="width:6%"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="itemsBody"></tbody>
-                                                    </table>
-                                                </div>
-                                                <button type="button" class="add-row-btn" id="addRowBtn">
-                                                    + Add Item
-                                                </button>
-                                            </div>
-
-                                            <!-- TOTALS WITH DISCOUNT -->
-                                            <div class="form-section">
-                                                <div class="form-section-title">Summary</div>
-                                                <div class="totals-section">
-                                                    <div class="totals-left">
-                                                        <div class="rupees-text">
-                                                            <label>Rupees in Words</label>
-                                                            <input type="text" id="rupeesWords" name="rupees_in_words"
-                                                                readonly placeholder="Auto-generated from total" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="totals-right">
-                                                        <!-- Subtotal -->
-                                                        <div class="grand-total-input-wrap"
-                                                            style="border-color: #e8ecf3;">
-                                                            <span class="label">Subtotal</span>
-                                                            <input type="text" id="subtotalInput" value="0.00" readonly
-                                                                style="color: #4a4a6a; font-size: 1.2rem;" />
-                                                        </div>
-
-                                                        <!-- Discount Section -->
-                                                        <div class="discount-section">
-                                                            <label>Discount</label>
-                                                            <div class="discount-input-wrap">
-                                                                <span class="discount-label">₹</span>
-                                                                <input type="number" id="discountInput" name="discount"
-                                                                    value="0" min="0" step="0.01" placeholder="0" />
-                                                                <div class="discount-type">
-                                                                    <button type="button" id="discountFixed"
-                                                                        class="active">Fixed</button>
-                                                                    <button type="button"
-                                                                        id="discountPercent">%</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Discounted Amount -->
-                                                        <div class="discounted-amount-wrap">
-                                                            <span class="label">After Discount</span>
-                                                            <input type="text" id="discountedAmountInput" value="0.00"
-                                                                readonly style="color: #00b894;" />
-                                                        </div>
-
-                                                        <!-- Grand Total -->
-                                                        <div class="grand-total-input-wrap">
-                                                            <span class="label">Grand Total</span>
-                                                            <input type="text" id="grandTotalInput" name="grand_total"
-                                                                value="0.00" readonly />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- ACTION BUTTONS -->
-                                            <div class="action-buttons">
-                                                <button type="submit" id="submitButton" class="btn-primary">
-                                                    <span class="btn-text"><i class="fas fa-paper-plane"></i>
-                                                        Submit</span>
-                                                    <span class="submit-loader">
-                                                        <span class="spinner-small"></span>
-                                                        Processing...
-                                                    </span>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </main>
-                        </div>
-
-                        <script>
-
-
-
-                            const billingForm = document.getElementById('billingForm');
-
-                            billingForm.addEventListener('submit', () => {
-
-                                const allinputFields = billingForm.querySelectorAll('input[type="text"], input[type="number"], textarea')
-                                allinputFields.forEach((aif) => {
-
-                                    aif.value = aif.value.trim();
-                                })
-                            })
-
-
-                            // ===== DATA FROM BACKEND =====
-                            const allProducts = <%- JSON.stringify(allProducts) %>;
-
-                            // ===== NUMBER TO WORDS CONVERTER =====
-                            function numberToWords(n) {
-                                if (n === 0) return 'Zero';
-                                const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
-                                const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-
-                                function numToWords(num) {
-                                    if (num < 20) return a[num];
-                                    if (num < 100) return b[Math.floor(num / 10)] + (num % 10 ? ' ' + a[num % 10] : '');
-                                    if (num < 1000) return a[Math.floor(num / 100)] + ' Hundred' + (num % 100 ? ' ' + numToWords(num % 100) : '');
-                                    if (num < 100000) return numToWords(Math.floor(num / 1000)) + ' Thousand' + (num % 1000 ? ' ' + numToWords(num % 1000) : '');
-                                    if (num < 10000000) return numToWords(Math.floor(num / 100000)) + ' Lakh' + (num % 100000 ? ' ' + numToWords(num % 100000) : '');
-                                    return numToWords(Math.floor(num / 10000000)) + ' Crore' + (num % 10000000 ? ' ' + numToWords(num % 10000000) : '');
-                                };
-
-                                const rupees = Math.floor(n);
-                                const paise = Math.round((n - rupees) * 100);
-                                let result = numToWords(rupees);
-                                if (paise > 0) {
-                                    result += ' and ' + numToWords(paise) + ' Paise';
-                                }
-                                return result + ' Rupees Only';
-                            }
-
-                            // ===== DISCOUNT STATE =====
-                            let discountType = 'fixed'; // 'fixed' or 'percent'
-
-                            // ===== INIT =====
-                            let rowCounter = 0;
-                            document.getElementById('billingDate').value = new Date().toISOString().split('T')[0];
-
-                            // Discount type toggle
-                            document.getElementById('discountFixed').addEventListener('click', function () {
-                                this.classList.add('active');
-                                document.getElementById('discountPercent').classList.remove('active');
-                                discountType = 'fixed';
-                                updateTotals();
-                            });
-
-                            document.getElementById('discountPercent').addEventListener('click', function () {
-                                this.classList.add('active');
-                                document.getElementById('discountFixed').classList.remove('active');
-                                discountType = 'percent';
-                                updateTotals();
-                            });
-
-                            // Discount input change
-                            document.getElementById('discountInput').addEventListener('input', function () {
-                                updateTotals();
-                            });
-
-                            // Add first row on load
-                            $(document).ready(function () {
-                                addRow();
-                            });
-
-                            // ===== ADD ROW =====
-                            document.getElementById('addRowBtn').addEventListener('click', addRow);
-
-                            function addRow() {
-                                const tbody = document.getElementById('itemsBody');
-                                const row = document.createElement('tr');
-                                const currentId = rowCounter;
-                                row.id = `row-${currentId}`;
-                                row.innerHTML = `
-                                <td data-label="Item">
-                                    <select class="item-name select2-item" 
-                                            name="items[${currentId}][item_name]" 
-                                            style="width:100%;"
-                                            required>
-                                        <option value="">Select item</option>
-                                        ${allProducts.map(p => `
-                                            <option value="${p.product_name}" data-price="${p.sale_price || 0}" data-unit="${p.unit || 'Piece'}">
-                                                ${p.product_name}
-                                            </option>
-                                        `).join('')}
-                                    </select>
-                                </td>
-                                <td data-label="Description">
-                                    <textarea class="item-desc" name="items[${currentId}][description]" placeholder="Description" rows="1"></textarea>
-                                </td>
-                                <td data-label="Unit">
-                                    <select class="item-unit" name="items[${currentId}][unit]">
-                                        <option value="Piece">Piece</option>
-                                        <option value="Bag">Bag</option>
-                                        <option value="Kg">Kg</option>
-                                        <option value="Gram">Gram</option>
-                                        <option value="Ton">Ton</option>
-                                        <option value="CFT">CFT</option>
-                                        <option value="Cubic Meter">Cubic Meter</option>
-                                        <option value="Feet">Feet</option>
-                                        <option value="Square Feet">Square Feet</option>
-                                        <option value="Square Meter">Square Meter</option>
-                                        <option value="Meter">Meter</option>
-                                        <option value="Inch">Inch</option>
-                                        <option value="MM">MM</option>
-                                        <option value="Litre">Litre</option>
-                                        <option value="Bottle">Bottle</option>
-                                        <option value="Box">Box</option>
-                                        <option value="Packet">Packet</option>
-                                        <option value="Bundle">Bundle</option>
-                                        <option value="Roll">Roll</option>
-                                        <option value="Set">Set</option>
-                                        <option value="Pair">Pair</option>
-                                        <option value="Dozen">Dozen</option>
-                                        <option value="Carton">Carton</option>
-                                        <option value="Drum">Drum</option>
-                                        <option value="Sheet">Sheet</option>
-                                        <option value="Length">Length</option>
-                                        <option value="Load">Load</option>
-                                        <option value="Trip">Trip</option>
-                                        <option value="Unit">Unit</option>
-                                    </select>
-                                </td>
-                                <td data-label="Qty">
-                                    <input type="number" class="item-qty" name="items[${currentId}][qty]" placeholder="0" min="0" step="1" value="1" />
-                                </td>
-                                <td data-label="Rate">
-                                    <input type="number" class="item-rate" name="items[${currentId}][rate]" placeholder="0" min="0" step="0.01" />
-                                </td>
-                                <td data-label="Total">
-                                    <input type="number" class="item-total" id="row-total-${currentId}" name="items[${currentId}][total]" placeholder="0.00" 
-                                        value="0.00" min="0" step="0.01" readonly />
-                                </td>
-                                <td data-label="Action">
-                                    <button type="button" class="remove-btn" onclick="removeRow('${currentId}')">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </td>
-                            `;
-                                tbody.appendChild(row);
-
-                                // Initialize Select2
-                                $(`#row-${currentId} .item-name`).select2({
-                                    placeholder: "Search for an item...",
-                                    allowClear: true,
-                                    width: '100%',
-                                    dropdownAutoWidth: true
-                                });
-
-                                // Item select change - auto fill rate and unit
-                                $(`#row-${currentId} .item-name`).on('change', function () {
-                                    const selectedOption = $(this).find('option:selected');
-                                    const price = selectedOption.data('price');
-                                    const unit = selectedOption.data('unit');
-                                    const rowId = $(this).closest('tr').attr('id').replace('row-', '');
-
-                                    if (price !== undefined && price !== null) {
-                                        $(`#row-${rowId} .item-rate`).val(price);
-                                    } else {
-                                        $(`#row-${rowId} .item-rate`).val('');
-                                    }
-
-                                    if (unit) {
-                                        $(`#row-${rowId} .item-unit`).val(unit);
-                                    }
-
-                                    calculateRow(rowId);
-                                });
-
-                                // Qty and Rate input
-                                $(`#row-${currentId} .item-qty`).on('input', function () {
-                                    const rowId = $(this).closest('tr').attr('id').replace('row-', '');
-                                    calculateRow(rowId);
-                                });
-
-                                $(`#row-${currentId} .item-rate`).on('input', function () {
-                                    const rowId = $(this).closest('tr').attr('id').replace('row-', '');
-                                    calculateRow(rowId);
-                                });
-
-                                rowCounter++;
-
-                                setTimeout(() => {
-                                    updateTotals();
-                                }, 100);
-                            }
-
-                            function removeRow(id) {
-                                const tbody = document.getElementById('itemsBody');
-                                if (tbody.children.length <= 1) {
-                                    Swal.fire({
-                                        icon: 'warning',
-                                        title: 'Cannot Remove',
-                                        text: 'At least one item row is required.',
-                                        confirmButtonColor: '#5C5BEF'
-                                    });
-                                    return;
-                                }
-                                const row = document.getElementById(`row-${id}`);
-                                if (row) {
-                                    $(`#row-${id} .item-name`).select2('destroy');
-                                    row.remove();
-                                    updateTotals();
-                                }
-                            }
-
-                            // ===== Calculate row total =====
-                            function calculateRow(id) {
-                                const row = document.getElementById(`row-${id}`);
-                                if (!row) return;
-
-                                const qtyInput = row.querySelector('.item-qty');
-                                const rateInput = row.querySelector('.item-rate');
-                                const totalInput = document.getElementById(`row-total-${id}`);
-
-                                const qty = parseFloat(qtyInput.value) || 0;
-                                const rate = parseFloat(rateInput.value) || 0;
-                                const total = qty * rate;
-
-                                if (totalInput) {
-                                    totalInput.value = total.toFixed(2);
-                                }
-
-                                updateTotals();
-                            }
-
-                            // ===== Update all totals with discount =====
-                            function updateTotals() {
-                                const totalInputs = document.querySelectorAll('.item-total');
-                                let subtotal = 0;
-
-                                totalInputs.forEach(input => {
-                                    const val = parseFloat(input.value) || 0;
-                                    subtotal += val;
-                                });
-
-                                // Update subtotal
-                                document.getElementById('subtotalInput').value = subtotal.toFixed(2);
-
-                                // Calculate discount
-                                const discountValue = parseFloat(document.getElementById('discountInput').value) || 0;
-                                let discountAmount = 0;
-                                let finalTotal = subtotal;
-
-                                if (discountType === 'percent') {
-                                    discountAmount = (subtotal * discountValue) / 100;
-                                    finalTotal = subtotal - discountAmount;
-                                } else {
-                                    discountAmount = discountValue;
-                                    finalTotal = subtotal - discountValue;
-                                }
-
-                                // Ensure final total is not negative
-                                if (finalTotal < 0) {
-                                    finalTotal = 0;
-                                }
-
-                                // Update discounted amount
-                                document.getElementById('discountedAmountInput').value = finalTotal.toFixed(2);
-
-                                // Update grand total
-                                document.getElementById('grandTotalInput').value = finalTotal.toFixed(2);
-
-                                // Update rupees in words
-                                const wordsInput = document.getElementById('rupeesWords');
-                                if (finalTotal > 0) {
-                                    wordsInput.value = numberToWords(finalTotal);
-                                } else {
-                                    wordsInput.value = '';
-                                }
-                            }
-
-                            // ===== FORM SUBMISSION WITH LOADER =====
-                            document.getElementById('billingForm').addEventListener('submit', function (e) {
-                                const itemSelects = document.querySelectorAll('.item-name');
-                                let hasValidItem = false;
-                                itemSelects.forEach(select => {
-                                    const val = $(select).val();
-                                    if (val && val.trim() !== '') {
-                                        hasValidItem = true;
-                                    }
-                                });
-
-                                if (!hasValidItem) {
-                                    e.preventDefault();
-                                    Swal.fire({
-                                        icon: 'warning',
-                                        title: 'Missing Items',
-                                        text: 'Please add at least one item with a name.',
-                                        confirmButtonColor: '#5C5BEF'
-                                    });
-                                    return;
-                                }
-
-                                // Show submit loader
-                                const submitBtn = document.getElementById('submitButton');
-                                submitBtn.classList.add('loading');
-                                submitBtn.disabled = true;
-                            });
-
-                            // ===== KEYBOARD SHORTCUT: Enter to add row =====
-                            document.addEventListener('keydown', function (e) {
-                                if (e.key === 'Enter' && e.target.closest('.items-table input')) {
-                                    const inputs = document.querySelectorAll('.items-table input');
-                                    const lastInput = inputs[inputs.length - 1];
-                                    if (e.target === lastInput) {
-                                        e.preventDefault();
-                                        addRow();
-                                    }
-                                }
-                            });
-
-                            // ===== Fix z-index issues with Select2 =====
-                            $(document).on('select2:open', function () {
-                                $('.select2-dropdown').css('z-index', 9999);
-                            });
-
-                            // ===== Hide page loader after everything is fully loaded =====
-                            window.addEventListener('load', function () {
-                                setTimeout(function () {
-                                    document.getElementById('page-loader').classList.add('hidden');
-                                }, 400);
-                            });
-
-                            // ===== Fallback: Hide loader after 5 seconds max =====
-                            setTimeout(function () {
-                                const loader = document.getElementById('page-loader');
-                                if (loader && !loader.classList.contains('hidden')) {
-                                    loader.classList.add('hidden');
-                                }
-                            }, 5000);
-                        </script>
-
-    </body>
-
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  <title>G.H Suppliers · Billing</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Select2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <style>
+    /* ----- RESET & BASE ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #eef0f5;
+      background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2070&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.88);
+      z-index: -1;
+    }
+    #page-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    #page-loader.hidden { opacity: 0; pointer-events: none; }
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #d5e0e8;
+      border-top-color: #5C5BEF;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .submit-loader {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .submit-loader .spinner-small {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    .btn-primary.loading { opacity: 0.8; pointer-events: none; }
+    .btn-primary.loading .btn-text { display: none; }
+    .btn-primary.loading .submit-loader { display: flex; }
+
+    .app-layout { display: flex; min-height: 100vh; }
+    .sidebar-reserved {
+      width: 260px;
+      min-height: 100vh;
+      background: #1a1a2e;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-reserved::after {
+      content: '⬅ Sidebar Space';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: rgba(255,255,255,0.15);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .main-content {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 60px;
+    }
+    .bill-card {
+      width: 100%;
+      max-width: 1200px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: 40px;
+      padding: 2.8rem 2.5rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.04);
+    }
+    .bill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 2px solid #e8ecf1;
+    }
+    .bill-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .bill-title .brand-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #5C5BEF, #3d3cb8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(92,91,239,0.25);
+      border: 2px solid rgba(92,91,239,0.15);
+      color: #ffffff;
+    }
+    .bill-title h1 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+    .bill-title h1 span { color: #5C5BEF; }
+    .form-section {
+      background: #f8f9fe;
+      border-radius: 20px;
+      padding: 1.8rem;
+      margin-bottom: 1.8rem;
+      border: 1px solid #e8ecf3;
+    }
+    .form-section-title {
+      color: #4a4a6a;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid #e8ecf3;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.8rem 2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2d2d4a;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      padding: 0.85rem 1.2rem;
+      background: #ffffff;
+      border: 1px solid #dce0e8;
+      border-radius: 14px;
+      font-size: 1rem;
+      color: #1a1a2e;
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      width: 100%;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: #5C5BEF;
+      box-shadow: 0 0 0 3px rgba(92,91,239,0.10);
+      background: #ffffff;
+    }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: #b0b0c8; font-weight: 400; }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+    .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235C5BEF' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 12px;
+      cursor: pointer;
+    }
+    .payment-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .payment-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2d2d4a;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .payment-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1rem;
+      align-items: center;
+      background: #ffffff;
+      padding: 0.45rem 1rem;
+      border-radius: 14px;
+      border: 1px solid #dce0e8;
+      min-height: 56px;
+      transition: all 0.3s ease;
+    }
+    .payment-options:focus-within {
+      border-color: #5C5BEF;
+      box-shadow: 0 0 0 3px rgba(92,91,239,0.10);
+    }
+    .payment-options label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: #1a1a2e;
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 0.3rem 1rem 0.3rem 0.6rem;
+      border-radius: 30px;
+      transition: all 0.2s;
+      background: transparent;
+      text-transform: none;
+      letter-spacing: 0;
+      opacity: 1;
+    }
+    .payment-options label:hover { background: #f0f1fe; }
+    .payment-options input[type="radio"] {
+      accent-color: #5C5BEF;
+      width: 17px;
+      height: 17px;
+      margin: 0;
+      cursor: pointer;
+    }
+    .payment-options label:has(input:checked) {
+      background: #5C5BEF;
+      color: white;
+      border-radius: 30px;
+      padding: 0.3rem 1rem 0.3rem 0.6rem;
+      box-shadow: 0 2px 12px rgba(92,91,239,0.25);
+    }
+    .table-responsive { overflow-x: visible; margin-top: 0.5rem; }
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: auto;
+    }
+    .items-table thead th {
+      padding: 0.9rem 0.8rem;
+      background: #f0f2fa;
+      color: #3d3d5c;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: left;
+      border-bottom: 2px solid #5C5BEF;
+    }
+    .items-table tbody td {
+      padding: 0.6rem 0.5rem;
+      border-bottom: 1px solid #e8ecf3;
+      vertical-align: middle;
+    }
+    .items-table tbody tr:hover { background: #f8f9fe; }
+    .items-table input, .items-table select, .items-table textarea {
+      padding: 0.6rem 0.6rem;
+      background: #ffffff;
+      border: 1px solid #dce0e8;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: #1a1a2e;
+      outline: none;
+      transition: all 0.3s ease;
+      width: 100%;
+      font-family: inherit;
+    }
+    .items-table input:focus, .items-table select:focus, .items-table textarea:focus {
+      border-color: #5C5BEF;
+      box-shadow: 0 0 0 3px rgba(92,91,239,0.08);
+    }
+    .items-table input::placeholder, .items-table textarea::placeholder { color: #b0b0c8; }
+    .items-table textarea { resize: vertical; min-height: 38px; line-height: 1.4; }
+    .items-table select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235C5BEF' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      background-size: 10px;
+      cursor: pointer;
+      padding-right: 2rem;
+    }
+    .items-table .item-total { font-weight: 700; color: #5C5BEF; font-size: 0.95rem; white-space: nowrap; }
+    .items-table .remove-btn {
+      background: #fef0f0;
+      border: 1px solid #fce0e0;
+      color: #e06060;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .items-table .remove-btn:hover {
+      background: #fce0e0;
+      border-color: #d05050;
+      transform: scale(1.05);
+    }
+    .add-row-btn {
+      background: #f0f2fa;
+      border: 2px dashed #c8cce0;
+      color: #5C5BEF;
+      padding: 0.7rem 1.8rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .add-row-btn:hover { background: #e8eaf5; border-color: #5C5BEF; }
+
+    /* ---------- TOTALS + PAYMENT / DUE (left aligned) ---------- */
+    .totals-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 0.5rem;
+    }
+    .totals-left { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 0.8rem; 
+    }
+    .totals-right { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 0.8rem; 
+      align-items: flex-end; 
+    }
+
+    .discount-section {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .discount-section label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #4a4a6a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .discount-input-wrap {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+      background: #f8f9fe;
+      border: 2px solid #e8ecf3;
+      border-radius: 14px;
+      padding: 0.2rem 0.2rem 0.2rem 1rem;
+      transition: all 0.3s ease;
+    }
+    .discount-input-wrap:focus-within {
+      border-color: #5C5BEF;
+      box-shadow: 0 0 0 3px rgba(92,91,239,0.10);
+    }
+    .discount-input-wrap .discount-label { font-weight: 600; color: #1a1a2e; font-size: 0.9rem; white-space: nowrap; }
+    .discount-input-wrap input[type="number"] {
+      border: none;
+      background: transparent;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #5C5BEF;
+      padding: 0.6rem 0.8rem;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+      min-width: 80px;
+    }
+    .discount-input-wrap input[type="number"]:focus { box-shadow: none; }
+    .discount-input-wrap .discount-type {
+      display: flex;
+      gap: 0.3rem;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 0.2rem;
+      border: 1px solid #dce0e8;
+    }
+    .discount-input-wrap .discount-type button {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #4a4a6a;
+      transition: all 0.2s ease;
+    }
+    .discount-input-wrap .discount-type button.active { background: #5C5BEF; color: white; }
+    .discount-input-wrap .discount-type button:hover:not(.active) { background: #f0f1fe; }
+
+    .discounted-amount-wrap {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f0f2fa;
+      border-radius: 14px;
+      padding: 0.2rem 0.2rem 0.2rem 1rem;
+      border: 2px solid #e8ecf3;
+    }
+    .discounted-amount-wrap .label { font-weight: 600; color: #1a1a2e; font-size: 0.9rem; white-space: nowrap; }
+    .discounted-amount-wrap input {
+      border: none;
+      background: transparent;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #00b894;
+      padding: 0.6rem 0.8rem;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+      text-align: right;
+      min-width: 120px;
+    }
+
+    .grand-total-input-wrap {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f0f2fa;
+      border-radius: 14px;
+      padding: 0.2rem 0.2rem 0.2rem 1rem;
+      border: 2px solid #5C5BEF;
+    }
+    .grand-total-input-wrap .label { font-weight: 600; color: #1a1a2e; font-size: 1rem; white-space: nowrap; }
+    .grand-total-input-wrap input {
+      border: none;
+      background: transparent;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #5C5BEF;
+      padding: 0.6rem 0.8rem;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+      text-align: right;
+      min-width: 120px;
+    }
+    .grand-total-input-wrap input:focus {
+      box-shadow: 0 0 0 2px rgba(92,91,239,0.2);
+      border-radius: 10px;
+    }
+
+    /* PAYMENT & DUE - now on left side */
+    .payment-due-wrap {
+      width: 100%;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .payment-due-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f8f9fe;
+      border-radius: 14px;
+      padding: 0.2rem 0.2rem 0.2rem 1rem;
+      border: 2px solid #e8ecf3;
+      transition: all 0.3s ease;
+    }
+    .payment-due-row:focus-within {
+      border-color: #5C5BEF;
+      box-shadow: 0 0 0 3px rgba(92,91,239,0.10);
+    }
+    .payment-due-row .label {
+      font-weight: 600;
+      color: #1a1a2e;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+    .payment-due-row input {
+      border: none;
+      background: transparent;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1a1a2e;
+      padding: 0.6rem 0.8rem;
+      width: 100%;
+      outline: none;
+      font-family: inherit;
+      text-align: right;
+      min-width: 100px;
+    }
+    .payment-due-row input:focus { box-shadow: none; }
+    .payment-due-row input[name="payment_amount"] { color: #2d6a4f; }
+    .payment-due-row input[name="due_amount"] { color: #d62828; font-weight: 700; }
+
+    .rupees-text {
+      width: 100%;
+      max-width: 380px;
+    }
+    .rupees-text label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #4a4a6a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .rupees-text input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: #f8f9fe;
+      border: 2px solid #5C5BEF;
+      border-radius: 12px;
+      font-size: 1rem;
+      color: #1a1a2e;
+      outline: none;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: default;
+    }
+    .rupees-text input:focus { box-shadow: 0 0 0 3px rgba(92,91,239,0.10); }
+
+    .action-buttons {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: flex-end;
+      margin-top: 2.2rem;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      padding: 0.9rem 2.8rem;
+      background: linear-gradient(145deg, #5C5BEF, #3d3cb8);
+      color: #ffffff;
+      border: none;
+      border-radius: 14px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(92,91,239,0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 160px;
+    }
+    .btn-primary:hover:not(.loading) {
+      background: linear-gradient(145deg, #7a79f2, #4a49c9);
+      transform: scale(1.02);
+      box-shadow: 0 8px 30px rgba(92,91,239,0.35);
+    }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    /* Select2 custom */
+    .select2-container--default .select2-selection--single {
+      padding: 0.6rem 0.6rem;
+      background: #ffffff;
+      border: 1px solid #dce0e8;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: #1a1a2e;
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      height: auto;
+      min-height: 44px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      padding: 0;
+      line-height: 1.5;
+      color: #1a1a2e;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 44px;
+      right: 8px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-color: #5C5BEF transparent transparent transparent;
+    }
+    .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+      border-color: transparent transparent #5C5BEF transparent;
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+      padding: 0.6rem 1rem;
+      border: 1px solid #dce0e8;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+      border-color: #5C5BEF;
+      box-shadow: 0 0 0 3px rgba(92,91,239,0.08);
+      outline: none;
+    }
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+      background-color: #5C5BEF;
+      color: white;
+    }
+    .select2-dropdown {
+      border: 1px solid #dce0e8;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .select2-container--default .select2-results__option {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* responsive */
+    @media (min-width: 1920px) and (max-width: 2560px) {
+      .main-content { padding: 2rem 3rem; margin-top: 100px; }
+      .bill-card { max-width: 1400px; padding: 3.2rem 3rem; border-radius: 48px; }
+      .bill-title h1 { font-size: 2.4rem; }
+      .form-grid { grid-template-columns: repeat(4,1fr); gap: 2rem; }
+      .grand-total-input-wrap, .discount-section, .discounted-amount-wrap, .rupees-text, .payment-due-wrap { max-width: 420px; }
+      .grand-total-input-wrap input { font-size: 1.6rem; padding: 0.8rem 1rem; }
+      .sidebar-reserved { width: 280px; }
+    }
+    @media (min-width: 1400px) and (max-width: 1919px) {
+      .bill-card { max-width: 1200px; padding: 2.6rem 2.4rem; }
+      .form-grid { grid-template-columns: repeat(4,1fr); gap: 1.8rem; }
+      .grand-total-input-wrap, .discount-section, .discounted-amount-wrap, .rupees-text, .payment-due-wrap { max-width: 360px; }
+    }
+    @media (max-width: 1200px) {
+      .form-grid { grid-template-columns: repeat(2,1fr); }
+      .bill-card { padding: 2rem 1.8rem; }
+    }
+    @media (max-width: 768px) {
+      .app-layout { flex-direction: column; }
+      .sidebar-reserved { width: 100%; min-height: 60px; height: auto; position: relative; }
+      .sidebar-reserved::after { content: '⬆ Sidebar Space'; height: 60px; }
+      .main-content { padding: 0.8rem; margin-top: 10px; }
+      .bill-card { padding: 1.2rem 0.8rem; border-radius: 28px; }
+      .bill-title h1 { font-size: 1.3rem; }
+      .form-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .form-group input, .form-group textarea, .form-group select { padding: 1rem 1.2rem; font-size: 1.05rem; border-radius: 14px; }
+      .form-section { padding: 1.2rem; }
+      .payment-options { padding: 0.4rem 0.8rem; min-height: 50px; }
+      .payment-options label { font-size: 0.95rem; padding: 0.2rem 0.8rem 0.2rem 0.4rem; }
+      .table-responsive { overflow-x: visible; }
+      .items-table { min-width: auto; width: 100%; display: block; }
+      .items-table thead { display: none; }
+      .items-table tbody, .items-table tr, .items-table td { display: block; width: 100%; }
+      .items-table tbody tr { margin-bottom: 1.2rem; padding: 0.8rem 0.5rem; border: 1px solid #e8ecf3; border-radius: 16px; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+      .items-table tbody td { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.3rem; border-bottom: 1px dashed #eef0f5; gap: 0.5rem; flex-wrap: wrap; }
+      .items-table tbody td:last-child { border-bottom: none; justify-content: center; }
+      .items-table tbody td::before { content: attr(data-label); font-weight: 700; color: #3d3d5c; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.4px; min-width: 70px; flex-shrink: 0; }
+      .items-table tbody td input, .items-table tbody td select, .items-table tbody td textarea { width: 100%; max-width: 200px; font-size: 1rem; padding: 0.6rem 0.7rem; }
+      .items-table tbody td:first-child input, .items-table tbody td:nth-child(2) textarea { max-width: 100%; width: 100%; font-size: 1.05rem; padding: 0.7rem 0.9rem; min-height: 48px; }
+      .items-table tbody td:nth-child(2) textarea { min-height: 50px; resize: vertical; }
+      .items-table tbody td .item-total { font-size: 1.05rem; white-space: nowrap; }
+      .items-table .remove-btn { width: 42px; height: 42px; font-size: 1.1rem; }
+      .select2-container { width: 100% !important; max-width: 200px; }
+      .items-table tbody td:first-child .select2-container { max-width: 100%; width: 100% !important; }
+      .add-row-btn { width: 100%; justify-content: center; padding: 0.9rem; font-size: 1rem; }
+      .totals-section { grid-template-columns: 1fr; gap: 1rem; }
+      .totals-right { align-items: stretch; }
+      .grand-total-input-wrap, .discount-section, .discounted-amount-wrap, .rupees-text, .payment-due-wrap { max-width: 100%; }
+      .discount-input-wrap { flex-wrap: wrap; padding: 0.5rem; }
+      .discount-input-wrap .discount-type { width: 100%; justify-content: center; }
+      .action-buttons { justify-content: center; }
+      .btn-primary { width: 100%; justify-content: center; padding: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .main-content { padding: 0.3rem; }
+      .bill-card { padding: 0.8rem 0.5rem; border-radius: 20px; }
+      .bill-header { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+      .bill-title h1 { font-size: 1.1rem; }
+      .form-group input, .form-group textarea, .form-group select { font-size: 0.95rem; padding: 0.8rem 1rem; }
+      .items-table tbody td::before { font-size: 0.8rem; min-width: 60px; }
+      .items-table tbody td input, .items-table tbody td select, .items-table tbody td textarea { max-width: 160px; font-size: 0.95rem; }
+      .grand-total-input-wrap input { font-size: 1.1rem; min-width: 80px; }
+    }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-thumb { background: #5C5BEF; border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: #eef0f5; }
+  </style>
+</head>
+<body>
+
+<!-- PAGE LOADER -->
+<div id="page-loader"><div class="loader-spinner"></div></div>
+
+<% if (messages.success) { %>
+  <script>
+    Swal.fire({ toast: true, position: "top-end", icon: "success", title: "<%= messages.success %>", showConfirmButton: false, timer: 3000, timerProgressBar: true, background: "#ffffff", iconColor: "#00b894", color: "#333", didOpen: (toast) => { toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)'; toast.style.borderRadius = '8px'; toast.style.padding = '0.75rem 1.25rem'; } });
+  </script>
+<% } %>
+<% if (messages.error) { %>
+  <script>
+    Swal.fire({ toast: true, position: "top-end", icon: "error", title: "<%= messages.error %>", showConfirmButton: false, timer: 3000, timerProgressBar: true, background: "#ffffff", iconColor: "#red", color: "#333", didOpen: (toast) => { toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)'; toast.style.borderRadius = '8px'; toast.style.padding = '0.75rem 1.25rem'; } });
+  </script>
+<% } %>
+
+<div class="app-layout">
+  <aside class="sidebar-reserved"></aside>
+  <main class="main-content">
+    <div style="width:100%;">
+      <div class="bill-card">
+        <form id="billingForm" method="POST" action="/ghsupplier/admin-dashboard/bills/new">
+          <div class="bill-header">
+            <div class="bill-title"><h1>Billing <span>Invoice</span></h1></div>
+          </div>
+
+          <!-- CUSTOMER + PAYMENT -->
+          <div class="form-section">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Customer Name</label>
+                <input type="text" id="customerName" name="customer_name" placeholder="Enter customer name" required />
+              </div>
+              <div class="form-group">
+                <label>Mobile</label>
+                <input type="tel" id="customerMobile" name="mobile" placeholder="Enter mobile number" required />
+              </div>
+              <div class="form-group">
+                <label>Address</label>
+                <textarea id="customerAddress" name="address" placeholder="Enter full address" rows="2"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Billing Date</label>
+                <input type="date" id="billingDate" name="billing_date" required />
+              </div>
+              <div class="payment-group" style="grid-column: span 1;">
+                <label>Payment Method</label>
+                <div class="payment-options">
+                  <label>Cash <input type="radio" name="payment_method" value="Cash" checked /></label>
+                  <label>Bank Transfer <input type="radio" name="payment_method" value="Bank" /></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ITEMS TABLE -->
+          <div class="form-section">
+            <div class="form-section-title">Item Details</div>
+            <div class="table-responsive">
+              <table class="items-table" id="itemsTable">
+                <thead>
+                  <tr>
+                    <th style="width:20%">Item Name</th>
+                    <th style="width:25%">Description</th>
+                    <th style="width:12%">Unit</th>
+                    <th style="width:10%">Qty</th>
+                    <th style="width:12%">Rate</th>
+                    <th style="width:15%">Total</th>
+                    <th style="width:6%"></th>
+                  </tr>
+                </thead>
+                <tbody id="itemsBody"></tbody>
+              </table>
+            </div>
+            <button type="button" class="add-row-btn" id="addRowBtn">+ Add Item</button>
+          </div>
+
+          <!-- TOTALS + PAYMENT / DUE (payment & due now on left) -->
+          <div class="form-section">
+            <div class="form-section-title">Summary</div>
+            <div class="totals-section">
+              <div class="totals-left">
+                <!-- Rupees in Words -->
+                <div class="rupees-text">
+                  <label>Rupees in Words</label>
+                  <input type="text" id="rupeesWords" name="rupees_in_words" readonly placeholder="Auto-generated from total" />
+                </div>
+                <!-- PAYMENT & DUE - now on left side -->
+                <div class="payment-due-wrap">
+                  <div class="payment-due-row">
+                    <span class="label">Payment</span>
+                    <input type="number" id="paymentAmount" name="payment_amount" value="0" min="0" step="0.01" placeholder="0.00" />
+                  </div>
+                  <div class="payment-due-row" style="border-color: #d62828;">
+                    <span class="label">Due</span>
+                    <input type="text" id="dueAmount" name="due_amount" value="0.00" readonly style="color: #d62828; font-weight: 700;" />
+                  </div>
+                </div>
+              </div>
+              <div class="totals-right">
+                <!-- Subtotal -->
+                <div class="grand-total-input-wrap" style="border-color: #e8ecf3;">
+                  <span class="label">Subtotal</span>
+                  <input type="text" id="subtotalInput" value="0.00" readonly style="color: #4a4a6a; font-size: 1.2rem;" />
+                </div>
+
+                <!-- Discount -->
+                <div class="discount-section">
+                  <label>Discount</label>
+                  <div class="discount-input-wrap">
+                    <span class="discount-label">₹</span>
+                    <input type="number" id="discountInput" name="discount" value="0" min="0" step="0.01" placeholder="0" />
+                    <div class="discount-type">
+                      <button type="button" id="discountFixed" class="active">Fixed</button>
+                      <button type="button" id="discountPercent">%</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- After Discount -->
+                <div class="discounted-amount-wrap">
+                  <span class="label">After Discount</span>
+                  <input type="text" id="discountedAmountInput" value="0.00" readonly style="color: #00b894;" />
+                </div>
+
+                <!-- Grand Total -->
+                <div class="grand-total-input-wrap">
+                  <span class="label">Grand Total</span>
+                  <input type="text" id="grandTotalInput" name="grand_total" value="0.00" readonly />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTION -->
+          <div class="action-buttons">
+            <button type="submit" id="submitButton" class="btn-primary">
+              <span class="btn-text"><i class="fas fa-paper-plane"></i> Submit</span>
+              <span class="submit-loader"><span class="spinner-small"></span> Processing...</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  // ===== DATA FROM BACKEND =====
+  const allProducts = <%- JSON.stringify(allProducts) %>;
+
+  // ===== NUMBER TO WORDS =====
+  function numberToWords(n) {
+    if (n === 0) return 'Zero';
+    const a = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const b = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    function numToWords(num) {
+      if (num < 20) return a[num];
+      if (num < 100) return b[Math.floor(num/10)] + (num%10 ? ' ' + a[num%10] : '');
+      if (num < 1000) return a[Math.floor(num/100)] + ' Hundred' + (num%100 ? ' ' + numToWords(num%100) : '');
+      if (num < 100000) return numToWords(Math.floor(num/1000)) + ' Thousand' + (num%1000 ? ' ' + numToWords(num%1000) : '');
+      if (num < 10000000) return numToWords(Math.floor(num/100000)) + ' Lakh' + (num%100000 ? ' ' + numToWords(num%100000) : '');
+      return numToWords(Math.floor(num/10000000)) + ' Crore' + (num%10000000 ? ' ' + numToWords(num%10000000) : '');
+    }
+    const rupees = Math.floor(n);
+    const paise = Math.round((n - rupees) * 100);
+    let result = numToWords(rupees);
+    if (paise > 0) result += ' and ' + numToWords(paise) + ' Paise';
+    return result + ' Rupees Only';
+  }
+
+  // ===== DISCOUNT STATE =====
+  let discountType = 'fixed';
+
+  // ===== INIT =====
+  let rowCounter = 0;
+  document.getElementById('billingDate').value = new Date().toISOString().split('T')[0];
+
+  document.getElementById('discountFixed').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('discountPercent').classList.remove('active');
+    discountType = 'fixed';
+    updateTotals();
+  });
+  document.getElementById('discountPercent').addEventListener('click', function() {
+    this.classList.add('active');
+    document.getElementById('discountFixed').classList.remove('active');
+    discountType = 'percent';
+    updateTotals();
+  });
+  document.getElementById('discountInput').addEventListener('input', updateTotals);
+
+  // payment input -> update due
+  document.getElementById('paymentAmount').addEventListener('input', function() {
+    updateDue();
+  });
+
+  // ===== UPDATE DUE =====
+  function updateDue() {
+    const grandTotal = parseFloat(document.getElementById('grandTotalInput').value) || 0;
+    const payment = parseFloat(document.getElementById('paymentAmount').value) || 0;
+    let due = grandTotal - payment;
+    if (due < 0) due = 0;
+    document.getElementById('dueAmount').value = due.toFixed(2);
+  }
+
+  // ===== ADD ROW =====
+  $(document).ready(function() { addRow(); });
+  document.getElementById('addRowBtn').addEventListener('click', addRow);
+
+  function addRow() {
+    const tbody = document.getElementById('itemsBody');
+    const row = document.createElement('tr');
+    const currentId = rowCounter;
+    row.id = `row-${currentId}`;
+    row.innerHTML = `
+      <td data-label="Item">
+        <select class="item-name select2-item" name="items[${currentId}][item_name]" style="width:100%;" required>
+          <option value="">Select item</option>
+          ${allProducts.map(p => `<option value="${p.product_name}" data-price="${p.sale_price || 0}" data-unit="${p.unit || 'Piece'}">${p.product_name}</option>`).join('')}
+        </select>
+      </td>
+      <td data-label="Description"><textarea class="item-desc" name="items[${currentId}][description]" placeholder="Description" rows="1"></textarea></td>
+      <td data-label="Unit">
+        <select class="item-unit" name="items[${currentId}][unit]">
+          <option value="Piece">Piece</option><option value="Bag">Bag</option><option value="Kg">Kg</option>
+          <option value="Gram">Gram</option><option value="Ton">Ton</option><option value="CFT">CFT</option>
+          <option value="Cubic Meter">Cubic Meter</option><option value="Feet">Feet</option>
+          <option value="Square Feet">Square Feet</option><option value="Square Meter">Square Meter</option>
+          <option value="Meter">Meter</option><option value="Inch">Inch</option><option value="MM">MM</option>
+          <option value="Litre">Litre</option><option value="Bottle">Bottle</option><option value="Box">Box</option>
+          <option value="Packet">Packet</option><option value="Bundle">Bundle</option><option value="Roll">Roll</option>
+          <option value="Set">Set</option><option value="Pair">Pair</option><option value="Dozen">Dozen</option>
+          <option value="Carton">Carton</option><option value="Drum">Drum</option><option value="Sheet">Sheet</option>
+          <option value="Length">Length</option><option value="Load">Load</option><option value="Trip">Trip</option>
+          <option value="Unit">Unit</option>
+        </select>
+      </td>
+      <td data-label="Qty"><input type="number" class="item-qty" name="items[${currentId}][qty]" placeholder="0" min="0" step="1" value="1" /></td>
+      <td data-label="Rate"><input type="number" class="item-rate" name="items[${currentId}][rate]" placeholder="0" min="0" step="0.01" /></td>
+      <td data-label="Total"><input type="number" class="item-total" id="row-total-${currentId}" name="items[${currentId}][total]" placeholder="0.00" value="0.00" min="0" step="0.01" readonly /></td>
+      <td data-label="Action"><button type="button" class="remove-btn" onclick="removeRow('${currentId}')"><i class="fas fa-trash-alt"></i></button></td>
+    `;
+    tbody.appendChild(row);
+
+    $(`#row-${currentId} .item-name`).select2({ placeholder: "Search for an item...", allowClear: true, width: '100%', dropdownAutoWidth: true });
+
+    $(`#row-${currentId} .item-name`).on('change', function() {
+      const selected = $(this).find('option:selected');
+      const price = selected.data('price');
+      const unit = selected.data('unit');
+      const rowId = $(this).closest('tr').attr('id').replace('row-', '');
+      if (price !== undefined && price !== null) $(`#row-${rowId} .item-rate`).val(price);
+      else $(`#row-${rowId} .item-rate`).val('');
+      if (unit) $(`#row-${rowId} .item-unit`).val(unit);
+      calculateRow(rowId);
+    });
+
+    $(`#row-${currentId} .item-qty`).on('input', function() {
+      const rowId = $(this).closest('tr').attr('id').replace('row-', '');
+      calculateRow(rowId);
+    });
+    $(`#row-${currentId} .item-rate`).on('input', function() {
+      const rowId = $(this).closest('tr').attr('id').replace('row-', '');
+      calculateRow(rowId);
+    });
+
+    rowCounter++;
+    setTimeout(() => updateTotals(), 100);
+  }
+
+  function removeRow(id) {
+    const tbody = document.getElementById('itemsBody');
+    if (tbody.children.length <= 1) {
+      Swal.fire({ icon: 'warning', title: 'Cannot Remove', text: 'At least one item row is required.', confirmButtonColor: '#5C5BEF' });
+      return;
+    }
+    const row = document.getElementById(`row-${id}`);
+    if (row) {
+      $(`#row-${id} .item-name`).select2('destroy');
+      row.remove();
+      updateTotals();
+    }
+  }
+
+  function calculateRow(id) {
+    const row = document.getElementById(`row-${id}`);
+    if (!row) return;
+    const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+    const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+    const total = qty * rate;
+    const totalInput = document.getElementById(`row-total-${id}`);
+    if (totalInput) totalInput.value = total.toFixed(2);
+    updateTotals();
+  }
+
+  // ===== UPDATE TOTALS + DUE =====
+  function updateTotals() {
+    const totalInputs = document.querySelectorAll('.item-total');
+    let subtotal = 0;
+    totalInputs.forEach(inp => { subtotal += parseFloat(inp.value) || 0; });
+    document.getElementById('subtotalInput').value = subtotal.toFixed(2);
+
+    const discountValue = parseFloat(document.getElementById('discountInput').value) || 0;
+    let discountAmount = 0;
+    let finalTotal = subtotal;
+    if (discountType === 'percent') {
+      discountAmount = (subtotal * discountValue) / 100;
+      finalTotal = subtotal - discountAmount;
+    } else {
+      discountAmount = discountValue;
+      finalTotal = subtotal - discountValue;
+    }
+    if (finalTotal < 0) finalTotal = 0;
+
+    document.getElementById('discountedAmountInput').value = finalTotal.toFixed(2);
+    document.getElementById('grandTotalInput').value = finalTotal.toFixed(2);
+
+    const wordsInput = document.getElementById('rupeesWords');
+    wordsInput.value = finalTotal > 0 ? numberToWords(finalTotal) : '';
+
+    // update due after grand total changes
+    updateDue();
+  }
+
+  // ===== FORM SUBMIT =====
+  document.getElementById('billingForm').addEventListener('submit', function(e) {
+    const itemSelects = document.querySelectorAll('.item-name');
+    let hasValidItem = false;
+    itemSelects.forEach(sel => { if ($(sel).val() && $(sel).val().trim() !== '') hasValidItem = true; });
+    if (!hasValidItem) {
+      e.preventDefault();
+      Swal.fire({ icon: 'warning', title: 'Missing Items', text: 'Please add at least one item with a name.', confirmButtonColor: '#5C5BEF' });
+      return;
+    }
+    const submitBtn = document.getElementById('submitButton');
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+  });
+
+  // ===== KEYBOARD SHORTCUT =====
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && e.target.closest('.items-table input')) {
+      const inputs = document.querySelectorAll('.items-table input');
+      const lastInput = inputs[inputs.length - 1];
+      if (e.target === lastInput) { e.preventDefault(); addRow(); }
+    }
+  });
+
+  $(document).on('select2:open', function() { $('.select2-dropdown').css('z-index', 9999); });
+
+  window.addEventListener('load', function() {
+    setTimeout(() => document.getElementById('page-loader').classList.add('hidden'), 400);
+  });
+  setTimeout(() => {
+    const loader = document.getElementById('page-loader');
+    if (loader && !loader.classList.contains('hidden')) loader.classList.add('hidden');
+  }, 5000);
+</script>
+
+</body>
 </html>

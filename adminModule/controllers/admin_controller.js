@@ -10,6 +10,7 @@ const nodemailer = require('nodemailer')
 const billing_model = require('../../adminModule/models/billing_model');
 const product_model = require('../models/product_model');
 const admin_models = require('../models/admin_models');
+const due_model = require('../models/due_model');
 
 
 const adminCredential = (req, res) => {
@@ -120,13 +121,16 @@ const adminDashboard = async (req, res) => {
 
         const { search } = req.query;
 
-        let query = {};
+        const query = {};
 
-        if (search) {
-            query.invoice_no = {
-                $regex: search,
-                $options: "i"
-            };
+        if (search?.trim()) {
+
+            const searchValue = search.trim();
+
+            query.$or = [
+                { invoice_no: { $regex: searchValue, $options: "i" } },
+                { customer_name: { $regex: searchValue, $options: "i" } }
+            ];
         }
 
         const page = Number(req.query.page) || 1;
@@ -144,15 +148,15 @@ const adminDashboard = async (req, res) => {
         const todayTotalBills = await billing_model.find({ billing_date: today });
         const todayTotalCountBill = todayTotalBills.length;
 
-        const totalTodayPayment = todayTotalBills.reduce((total, ttp) => total + ttp.grand_total, 0);
+        const totalTodayPayment = todayTotalBills.reduce((total, ttp) => total + ttp.grand_total, 0).toFixed(2);
 
         const todayBankPayment = await billing_model.find({ billing_date: today, payment_method: 'Bank' });
         const todayCashPayment = await billing_model.find({ billing_date: today, payment_method: 'Cash' });
 
-        const totalBankPayment = todayBankPayment.reduce((total, bp) => total + bp.grand_total, 0);
-        const totalcashPayment = todayCashPayment.reduce((total, cp) => total + cp.grand_total, 0);
+        const totalBankPayment = todayBankPayment.reduce((total, bp) => total + bp.grand_total, 0).toFixed(2);
+        const totalcashPayment = todayCashPayment.reduce((total, cp) => total + cp.grand_total, 0).toFixed(2);
 
-        const allBills = await billing_model.find(query).limit(limit).skip(skip);
+        const allBills = await billing_model.find(query).limit(limit).skip(skip).sort({ _id: -1 });
 
 
         const Bills = await billing_model.find();
@@ -165,7 +169,7 @@ const adminDashboard = async (req, res) => {
             const billingDate = new Date(b.billing_date);
 
             return currentMonth === billingDate.getMonth() && currentYear === billingDate.getFullYear();
-        }).reduce((total, cmb) => total + cmb.grand_total, 0);
+        }).reduce((total, cmb) => total + cmb.grand_total, 0).toFixed(2);
 
 
         const currentMonthProfit = Bills
@@ -182,13 +186,10 @@ const adminDashboard = async (req, res) => {
             .reduce((totalProfit, bill) => {
 
                 const billProfit = bill.items.reduce((sum, item) => {
-
                     return sum + Number(item.profit || 0);
-
                 }, 0);
 
                 return totalProfit + billProfit;
-
             }, 0);
 
 
@@ -217,9 +218,7 @@ const addNew = async (req, res) => {
 }
 const addNewPost = async (req, res) => {
 
-
     try {
-
         const billingData = req.body;
         const invoiceGenerat = async () => {
             const billingCount = await billing_model.countDocuments();
@@ -230,28 +229,30 @@ const addNewPost = async (req, res) => {
         billingData.invoice_no = await invoiceGenerat();
 
         for (const i of billingData.items) {
-
             const productSourse = await product_model.findOne({ product_name: i.item_name });
-            if (productSourse) {
+
+            if (productSourse.stock_qty < Number(i.qty)) {
+                req.flash('error', 'Item out of stock');
+                return res.redirect('/ghsupplier/admin-dashboard')
+            }
+
+            else if (productSourse) {
                 productSourse.stock_qty = productSourse.stock_qty - Number(i.qty);
                 await productSourse.save();
-                i.profit = (productSourse.sale_price - productSourse.purchase_price)
+                i.profit = Number(i.total) - productSourse.purchase_price * Number(i.qty);
             }
 
             else {
-                req.flash('error', 'Product not found');
+                req.flash('error', 'Item Out of Stock');
                 return res.redirect('/ghsupplier/admin-dashboard/bills/new')
             }
         }
 
 
-
         const new_billing_model = billing_model(billingData);
         await new_billing_model.save();
 
-
         console.log(new_billing_model)
-
         const inputPdfPath = path.join(__dirname, '../../bill_format/GH SUPPLIERS (2).pdf');
 
         const existingPdfBytes = await fs.readFile(inputPdfPath);
@@ -262,6 +263,10 @@ const addNewPost = async (req, res) => {
 
         form.getTextField('invoice_no').setText(billingData.invoice_no || '');
         form.getTextField('customer_name').setText(billingData.customer_name || '');
+
+        form.getTextField('payment_amount').setText(billingData.payment_amount.toString() || '');
+        form.getTextField('due_amount').setText(billingData.due_amount.toString() || '');
+
         form.getTextField('mobile').setText(billingData.mobile || '');
         form.getTextField('address').setText(billingData.address || '');
         form.getTextField('billing_date').setText(billingData.billing_date || '');
@@ -773,7 +778,6 @@ const logout = (req, res) => {
     req.flash('success', 'You have been logged out successfully.');
     return res.redirect('/ghsupplier/auth/login')
 }
-
 const deleteSelectedItem = async (req, res) => {
 
     const { ids } = req.body;
@@ -781,7 +785,93 @@ const deleteSelectedItem = async (req, res) => {
     req.flash('success', 'Item deleted successfuly');
     return res.redirect('/ghsupplier/admin-dashboard')
 }
+const editProduct = async (req, res) => {
+
+    const productSourse = await product_model.findById(req.params.productid)
+    res.render('../adminModule/Views/edit_product', { productSourse })
+}
+const editProductPost = async (req, res) => {
+    await product_model.findByIdAndUpdate(req.params.productid);
+    req.flash('success', 'Product update successfully');
+    return res.redirect('/ghsupplier/admin-dashboard/products')
+}
+const dueAmountPayment = async (req, res) => {
+
+    try {
+        const billSourse = await billing_model.findById(req.params.billid)
+        res.render('../adminModule/Views/due_amount_payment', { billSourse })
+    }
+
+    catch (err) {
+        console.log('dueAmountPayment error', err);
+        req.flash('error', 'Something is wrong');
+        return res.redirect('/ghsupplier/admin-dashboard')
+    }
+}
+const dueAmountPaymentPost = async (req, res) => {
+
+    try {
+        const dueAmountPayment = req.body;
+        const new_due_amount_model = due_model(dueAmountPayment)
+        await new_due_amount_model.save();
+
+        const billingSourse = await billing_model.findOne({ invoice_no: new_due_amount_model.invoice_no });
+
+        if (billingSourse) {
+
+            if (Number(dueAmountPayment.payment_amount) > billingSourse.due_amount) {
+                req.flash('error', 'amount is greater than due amount');
+                return res.redirect(`/due-payment/${billingSourse._id}`)
+            }
+
+            else {
+                billingSourse.dueArray.push(new_due_amount_model._id);
+                billingSourse.due_amount = billingSourse.due_amount - Number(dueAmountPayment.payment_amount);
+                billingSourse.payment_amount = billingSourse.payment_amount + Number(dueAmountPayment.payment_amount)
+                await billingSourse.save();
+            }
+        }
+
+        req.flash('success', 'Payment Successfully');
+        return res.redirect('/ghsupplier/admin-dashboard')
+    }
+
+    catch (err) {
+
+        const billingSourse = await billing_model.findById(req.params.billid)
+        console.log('Due Payment Amount error', err);
+        req.flash('error', 'Something is wrong');
+        return res.redirect(`/due-payment/${billingSourse._id}`)
+    }
+
+}
+const paymentHistory = async (req, res) => {
+
+    const billingSourse = await billing_model.findById(req.params.billid).populate('dueArray').sort({ _id: -1 })
+    res.render('../adminModule/Views/payment_history', { billingSourse })
+}
+const deleteDueAmount = async (req, res) => {
+
+    try {
+        const billingSourse = await billing_model.findOne({ dueArray: req.params.dueid });
+        const dueSourse = await due_model.findById(req.params.dueid);
+
+        billingSourse.payment_amount = billingSourse.payment_amount - dueSourse.payment_amount;
+        billingSourse.due_amount = billingSourse.due_amount + dueSourse.payment_amount;
+        await billingSourse.save();
+
+        await due_model.findByIdAndDelete(req.params.dueid);
+        req.flash('success', 'Due Amount Deleted successfully');
+        return res.redirect(`/ghsupplier/admin-dashboard/payment-history/${billingSourse._id}`)
+    }
+
+    catch (err) {
+        const billingSourse = await billing_model.findOne({ dueArray: req.params.dueid });
+        onsole.log('due payment signup error', err);
+        req.flash('error', 'Something is wrong');
+        return res.redirect(`/ghsupplier/admin-dashboard/payment-history/${billingSourse._id}`)
+    }
+}
 
 
-
-module.exports = { deleteSelectedItem, logout, downloadBill, resetPasswordPost, forgetPassword, resetPassword, adminLoginPost, adminSignupPost, adminSignup, exportBillingData, deleteProduct, addProductPost, addProduct, stockList, deleteBill, addNewPost, addNew, adminDashboard, adminCredential }
+module.exports = { deleteDueAmount, paymentHistory, dueAmountPaymentPost, dueAmountPayment, editProductPost, editProduct, deleteSelectedItem, logout, downloadBill, resetPasswordPost, forgetPassword, resetPassword, adminLoginPost, adminSignupPost, adminSignup, exportBillingData, deleteProduct, addProductPost, addProduct, stockList, deleteBill, addNewPost, addNew, adminDashboard, adminCredential }

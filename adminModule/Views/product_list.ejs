@@ -2,1183 +2,1193 @@
 <html lang="en">
 <%-include('admin_sidebar')%>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
-    <title>NM - Stock List</title>
-    <!-- Fonts & Libraries -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js">
-    </script>
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js">
-    </script>
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
-    </script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+        <title>G.H Suppliers - Stock List</title>
+        <!-- Fonts & Libraries -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js">
+        </script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js">
+        </script>
+        <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+        </script>
 
-    <style>
-        /* ----- RESET & VARIABLES (new stock theme) ----- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        body {
-            background: #eef2f7;
-            min-height: 100vh;
-            color: #0b1a2b;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        :root {
-            --primary: #0f6e8c;
-            --primary-light: #2a8faf;
-            --primary-dark: #07445a;
-            --primary-gradient: linear-gradient(145deg, #0f6e8c, #07445a);
-            --secondary: #e67e22;
-            --secondary-light: #f39c12;
-            --white: #ffffff;
-            --gray-bg: #f2f6fa;
-            --border: #c0d0dd;
-            --shadow: 0 2px 8px rgba(15, 110, 140, 0.10);
-            --shadow-md: 0 4px 16px rgba(15, 110, 140, 0.12);
-            --shadow-lg: 0 12px 28px rgba(15, 110, 140, 0.15);
-            --sidebar: 260px;
-        }
-
-        /* ----- PAGE LOADING OVERLAY (minimal) ----- */
-        #page-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(3px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.4s ease;
-        }
-        #page-loader.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .loader-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #d5e0e8;
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .container {
-            width: 100%;
-            padding: 12px 16px;
-            margin: 0 auto;
-        }
-
-        .main {
-            display: grid;
-            gap: 20px;
-            width: 100%;
-            grid-template-columns: 1fr;
-            margin-top: 50px;
-        }
-
-        /* ===== 24-26 INCH SCREEN RESPONSIVE ===== */
-        @media (min-width: 1400px) and (max-width: 2600px) {
-            .container {
-                max-width: 1800px;
-                margin-left: var(--sidebar);
-                padding: 32px 48px;
+        <style>
+            /* ----- RESET & VARIABLES (new stock theme) ----- */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             }
 
-            .main {
-                gap: 28px;
-                margin-top: 64px;
+            body {
+                background: #eef2f7;
+                min-height: 100vh;
+                color: #0b1a2b;
+                -webkit-font-smoothing: antialiased;
             }
 
-            .stats-row {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 24px;
+            :root {
+                --primary: #0f6e8c;
+                --primary-light: #2a8faf;
+                --primary-dark: #07445a;
+                --primary-gradient: linear-gradient(145deg, #0f6e8c, #07445a);
+                --secondary: #e67e22;
+                --secondary-light: #f39c12;
+                --white: #ffffff;
+                --gray-bg: #f2f6fa;
+                --border: #c0d0dd;
+                --shadow: 0 2px 8px rgba(15, 110, 140, 0.10);
+                --shadow-md: 0 4px 16px rgba(15, 110, 140, 0.12);
+                --shadow-lg: 0 12px 28px rgba(15, 110, 140, 0.15);
+                --sidebar: 260px;
             }
 
-            .stats-box {
-                padding: 1.6rem 2rem;
-                border-radius: 24px;
-            }
-
-            .stats-value {
-                font-size: 2.2rem;
-            }
-
-            .stats-label {
-                font-size: 0.9rem;
-                letter-spacing: 0.8px;
-            }
-
-            .stats-box .stats-icon {
-                font-size: 3rem;
-            }
-
-            .data-table-header {
-                padding: 1.5rem 2.4rem;
-            }
-
-            .data-table-title-left h3 {
-                font-size: 1.8rem;
-            }
-
-            .data-table-title-left p {
-                font-size: 0.95rem;
-            }
-
-            .filter-group {
-                gap: 18px 28px;
-                padding-top: 18px;
-                margin-top: 12px;
-            }
-
-            .filter-item input[type="date"] {
-                padding: 0.6rem 1.6rem;
-                font-size: 0.95rem;
-                min-width: 180px;
-            }
-
-            .filter-item label {
-                font-size: 0.95rem;
-            }
-
-            .search-input-group input {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.95rem;
-                width: 260px;
-                min-width: 200px;
-            }
-
-            .search-input-group .search-icon,
-            .search-input-group .clear-btn {
-                font-size: 1rem;
-                padding: 0.6rem 0.8rem;
-            }
-
-            .btn-apply-filter,
-            .btn-clear-filter,
-            .btn-add-new {
-                font-size: 0.95rem;
-                padding: 0.6rem 2rem;
-            }
-
-            .table-responsive-wrapper {
-                padding: 0 2.4rem 0 2.4rem;
-            }
-
-            table.dataTable thead th {
-                padding: 20px 18px;
-                font-size: 1rem;
-            }
-
-            table.dataTable tbody td {
-                padding: 18px 18px;
-                font-size: 1rem;
-            }
-
-            .admin-profile-section {
-                padding: 2.4rem 3rem;
-                border-radius: 28px;
-                gap: 1.8rem;
-            }
-
-            .admin-profile-img {
-                width: 96px;
-                height: 96px;
-                border-width: 4px;
-            }
-
-            .admin-profile-name {
-                font-size: 1.8rem;
-                gap: 1rem;
-            }
-
-            .admin-profile-badge {
-                font-size: 0.9rem;
-                padding: 0.3rem 1.2rem;
-            }
-
-            .admin-profile-detail {
-                font-size: 1rem;
-                gap: 1rem;
-            }
-
-            .stats-box {
-                min-height: 120px;
-            }
-        }
-
-        @media (max-width:575.98px) {
-            .container {
-                padding: 8px 10px;
-            }
-
-            .main {
-                gap: 12px;
-                margin-top: 42px;
-            }
-
-            .admin-profile-section {
-                padding: 0.8rem;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .admin-profile-img {
-                width: 48px;
-                height: 48px;
-            }
-
-            .admin-profile-name {
-                font-size: 0.95rem;
-                flex-wrap: wrap;
-            }
-
-            .stats-row {
-                grid-template-columns: 1fr !important;
-                gap: 8px;
-            }
-
-            .stats-box {
-                padding: 0.6rem 0.8rem;
-            }
-
-            .stats-value {
-                font-size: 1rem;
-            }
-
-            .data-table-header {
-                padding: 0.6rem 0.8rem;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-            }
-
-            .filter-group {
-                flex-wrap: wrap;
-                gap: 6px;
-                justify-content: flex-start;
-            }
-
-            .filter-item input[type="date"] {
-                font-size: 0.6rem;
-                padding: 0.2rem 0.5rem;
-                min-width: 100px;
-            }
-
-            .filter-item label {
-                font-size: 0.6rem;
-            }
-
-            .btn-apply-filter,
-            .btn-clear-filter {
-                font-size: 0.6rem;
-                padding: 0.25rem 0.8rem;
-            }
-
-            .search-input-group {
-                flex-direction: row;
+            /* ----- PAGE LOADING OVERLAY (minimal) ----- */
+            #page-loader {
+                position: fixed;
+                top: 0;
+                left: 0;
                 width: 100%;
-                flex-wrap: nowrap;
+                height: 100%;
+                background: rgba(255, 255, 255, 0.88);
+                backdrop-filter: blur(3px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                transition: opacity 0.4s ease;
             }
 
-            .search-input-group input {
-                width: 100% !important;
-                min-width: 80px;
+            #page-loader.hidden {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .loader-spinner {
+                width: 50px;
+                height: 50px;
+                border: 5px solid #d5e0e8;
+                border-top-color: var(--primary);
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+            }
+
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .container {
+                width: 100%;
+                padding: 12px 16px;
+                margin: 0 auto;
+            }
+
+            .main {
+                display: grid;
+                gap: 20px;
+                width: 100%;
+                grid-template-columns: 1fr;
+                margin-top: 50px;
+            }
+
+            /* ===== 24-26 INCH SCREEN RESPONSIVE ===== */
+            @media (min-width: 1400px) and (max-width: 2600px) {
+                .container {
+                    max-width: 1800px;
+                    margin-left: var(--sidebar);
+                    padding: 32px 48px;
+                }
+
+                .main {
+                    gap: 28px;
+                    margin-top: 64px;
+                }
+
+                .stats-row {
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 24px;
+                }
+
+                .stats-box {
+                    padding: 1.6rem 2rem;
+                    border-radius: 24px;
+                }
+
+                .stats-value {
+                    font-size: 2.2rem;
+                }
+
+                .stats-label {
+                    font-size: 0.9rem;
+                    letter-spacing: 0.8px;
+                }
+
+                .stats-box .stats-icon {
+                    font-size: 3rem;
+                }
+
+                .data-table-header {
+                    padding: 1.5rem 2.4rem;
+                }
+
+                .data-table-title-left h3 {
+                    font-size: 1.8rem;
+                }
+
+                .data-table-title-left p {
+                    font-size: 0.95rem;
+                }
+
+                .filter-group {
+                    gap: 18px 28px;
+                    padding-top: 18px;
+                    margin-top: 12px;
+                }
+
+                .filter-item input[type="date"] {
+                    padding: 0.6rem 1.6rem;
+                    font-size: 0.95rem;
+                    min-width: 180px;
+                }
+
+                .filter-item label {
+                    font-size: 0.95rem;
+                }
+
+                .search-input-group input {
+                    padding: 0.6rem 1.2rem;
+                    font-size: 0.95rem;
+                    width: 260px;
+                    min-width: 200px;
+                }
+
+                .search-input-group .search-icon,
+                .search-input-group .clear-btn {
+                    font-size: 1rem;
+                    padding: 0.6rem 0.8rem;
+                }
+
+                .btn-apply-filter,
+                .btn-clear-filter,
+                .btn-add-new {
+                    font-size: 0.95rem;
+                    padding: 0.6rem 2rem;
+                }
+
+                .table-responsive-wrapper {
+                    padding: 0 2.4rem 0 2.4rem;
+                }
+
+                table.dataTable thead th {
+                    padding: 20px 18px;
+                    font-size: 1rem;
+                }
+
+                table.dataTable tbody td {
+                    padding: 18px 18px;
+                    font-size: 1rem;
+                }
+
+                .admin-profile-section {
+                    padding: 2.4rem 3rem;
+                    border-radius: 28px;
+                    gap: 1.8rem;
+                }
+
+                .admin-profile-img {
+                    width: 96px;
+                    height: 96px;
+                    border-width: 4px;
+                }
+
+                .admin-profile-name {
+                    font-size: 1.8rem;
+                    gap: 1rem;
+                }
+
+                .admin-profile-badge {
+                    font-size: 0.9rem;
+                    padding: 0.3rem 1.2rem;
+                }
+
+                .admin-profile-detail {
+                    font-size: 1rem;
+                    gap: 1rem;
+                }
+
+                .stats-box {
+                    min-height: 120px;
+                }
+            }
+
+            @media (max-width:575.98px) {
+                .container {
+                    padding: 8px 10px;
+                }
+
+                .main {
+                    gap: 12px;
+                    margin-top: 42px;
+                }
+
+                .admin-profile-section {
+                    padding: 0.8rem;
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .admin-profile-img {
+                    width: 48px;
+                    height: 48px;
+                }
+
+                .admin-profile-name {
+                    font-size: 0.95rem;
+                    flex-wrap: wrap;
+                }
+
+                .stats-row {
+                    grid-template-columns: 1fr !important;
+                    gap: 8px;
+                }
+
+                .stats-box {
+                    padding: 0.6rem 0.8rem;
+                }
+
+                .stats-value {
+                    font-size: 1rem;
+                }
+
+                .data-table-header {
+                    padding: 0.6rem 0.8rem;
+                    flex-direction: column;
+                    align-items: stretch;
+                    gap: 12px;
+                }
+
+                .filter-group {
+                    flex-wrap: wrap;
+                    gap: 6px;
+                    justify-content: flex-start;
+                }
+
+                .filter-item input[type="date"] {
+                    font-size: 0.6rem;
+                    padding: 0.2rem 0.5rem;
+                    min-width: 100px;
+                }
+
+                .filter-item label {
+                    font-size: 0.6rem;
+                }
+
+                .btn-apply-filter,
+                .btn-clear-filter {
+                    font-size: 0.6rem;
+                    padding: 0.25rem 0.8rem;
+                }
+
+                .search-input-group {
+                    flex-direction: row;
+                    width: 100%;
+                    flex-wrap: nowrap;
+                }
+
+                .search-input-group input {
+                    width: 100% !important;
+                    min-width: 80px;
+                    flex: 1;
+                    font-size: 0.6rem;
+                    padding: 0.2rem 0.5rem;
+                }
+
+                .search-input-group .search-icon {
+                    font-size: 0.6rem;
+                    padding: 0.2rem 0.2rem 0.2rem 0.6rem;
+                }
+
+                .search-input-group .clear-btn {
+                    font-size: 0.6rem;
+                    padding: 0.2rem;
+                }
+
+                table.dataTable thead th,
+                table.dataTable tbody td {
+                    padding: 6px 6px;
+                    font-size: 0.6rem;
+                }
+
+                .btn-add-new {
+                    font-size: 0.6rem;
+                    padding: 0.25rem 1rem;
+                }
+
+                .data-table-title {
+                    width: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 8px;
+                }
+            }
+
+            @media (min-width:576px) and (max-width:767.98px) {
+                .container {
+                    padding: 12px 16px;
+                }
+
+                .stats-row {
+                    grid-template-columns: 1fr !important;
+                    gap: 10px;
+                }
+
+                .data-table-header {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    padding: 0.8rem 1rem;
+                }
+            }
+
+            @media (min-width:768px) and (max-width:991.98px) {
+                .container {
+                    padding: 16px 20px;
+                }
+
+                .stats-row {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .data-table-header {
+                    padding: 0.9rem 1.5rem;
+                }
+            }
+
+            @media (min-width:992px) {
+                .container {
+                    margin-left: var(--sidebar);
+                    padding: 24px 32px;
+                    max-width: calc(100% - var(--sidebar));
+                }
+
+                .main {
+                    gap: 22px;
+                    margin-top: 58px;
+                }
+
+                .stats-row {
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 16px;
+                }
+
+                .stats-box {
+                    padding: 1rem 1.5rem;
+                }
+
+                .stats-value {
+                    font-size: 1.6rem;
+                }
+
+                .data-table-header {
+                    padding: 1rem 1.8rem;
+                }
+            }
+
+            /* ----- ADMIN PROFILE (stock theme) ----- */
+            .admin-profile-section {
+                display: flex;
+                align-items: center;
+                padding: 1.5rem;
+                background: linear-gradient(135deg, rgba(15, 110, 140, 0.92), rgba(7, 68, 90, 0.96)),
+                    url('https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format') center/cover no-repeat;
+                border-radius: 16px;
+                box-shadow: var(--shadow-lg);
+                gap: 1rem;
+                color: white;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .admin-profile-section::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -20%;
+                width: 300px;
+                height: 300px;
+                background: radial-gradient(circle, rgba(230, 126, 34, 0.2), transparent 70%);
+                border-radius: 50%;
+            }
+
+            .admin-profile-img {
+                width: 70px;
+                height: 70px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 3px solid #f39c12;
+            }
+
+            .admin-status-indicator {
+                position: absolute;
+                bottom: 2px;
+                right: 4px;
+                width: 14px;
+                height: 14px;
+                background: #f1c40f;
+                border: 2px solid var(--primary);
+                border-radius: 50%;
+            }
+
+            .admin-profile-info {
                 flex: 1;
-                font-size: 0.6rem;
-                padding: 0.2rem 0.5rem;
+                z-index: 1;
             }
 
-            .search-input-group .search-icon {
-                font-size: 0.6rem;
-                padding: 0.2rem 0.2rem 0.2rem 0.6rem;
-            }
-
-            .search-input-group .clear-btn {
-                font-size: 0.6rem;
-                padding: 0.2rem;
-            }
-
-            table.dataTable thead th,
-            table.dataTable tbody td {
-                padding: 6px 6px;
-                font-size: 0.6rem;
-            }
-
-            .btn-add-new {
-                font-size: 0.6rem;
-                padding: 0.25rem 1rem;
-            }
-
-            .data-table-title {
-                width: 100%;
+            .admin-profile-name {
+                font-size: 1.25rem;
+                font-weight: 800;
                 display: flex;
                 flex-wrap: wrap;
                 align-items: center;
-                justify-content: space-between;
-                gap: 8px;
-            }
-        }
-
-        @media (min-width:576px) and (max-width:767.98px) {
-            .container {
-                padding: 12px 16px;
+                gap: 0.6rem;
             }
 
+            .admin-profile-badge {
+                font-size: 0.7rem;
+                background: #f39c12;
+                color: #07445a;
+                padding: 0.2rem 0.7rem;
+                border-radius: 30px;
+                font-weight: 700;
+            }
+
+            .admin-profile-detail {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                font-size: 0.8rem;
+                opacity: 0.92;
+            }
+
+            .admin-profile-detail i {
+                color: #f39c12;
+                width: 16px;
+            }
+
+            /* ----- STATS - STOCK THEME (warm & teal) ----- */
             .stats-row {
-                grid-template-columns: 1fr !important;
-                gap: 10px;
-            }
-
-            .data-table-header {
-                flex-direction: row;
-                flex-wrap: wrap;
-                padding: 0.8rem 1rem;
-            }
-        }
-
-        @media (min-width:768px) and (max-width:991.98px) {
-            .container {
-                padding: 16px 20px;
-            }
-
-            .stats-row {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .data-table-header {
-                padding: 0.9rem 1.5rem;
-            }
-        }
-
-        @media (min-width:992px) {
-            .container {
-                margin-left: var(--sidebar);
-                padding: 24px 32px;
-                max-width: calc(100% - var(--sidebar));
-            }
-
-            .main {
-                gap: 22px;
-                margin-top: 58px;
-            }
-
-            .stats-row {
+                display: grid;
+                gap: 14px;
                 grid-template-columns: repeat(4, 1fr);
-                gap: 16px;
             }
 
             .stats-box {
-                padding: 1rem 1.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.85rem 1.25rem;
+                border-radius: 16px;
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+                transition: all 0.25s ease;
+                border: none;
+                color: #fff;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .stats-box::after {
+                content: '';
+                position: absolute;
+                top: -30%;
+                right: -10%;
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.08);
+                pointer-events: none;
+            }
+
+            .stats-box:hover {
+                transform: translateY(-6px) scale(1.01);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            }
+
+            .stats-box:nth-child(1) {
+                background: linear-gradient(135deg, #0f6e8c, #1a8aad);
+            }
+
+            .stats-box:nth-child(2) {
+                background: linear-gradient(135deg, #e67e22, #f39c12);
+            }
+
+            .stats-box:nth-child(3) {
+                background: linear-gradient(135deg, #d35400, #e67e22);
+            }
+
+            .stats-box:nth-child(4) {
+                background: linear-gradient(135deg, #1abc9c, #16a085);
+            }
+
+            .stats-box .stats-details {
+                z-index: 2;
             }
 
             .stats-value {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
+                font-weight: 800;
+                margin-bottom: 0.2rem;
+                color: #fff;
+                text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+            }
+
+            .stats-label {
+                font-size: 0.7rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.6px;
+                color: rgba(255, 255, 255, 0.9);
+                opacity: 0.9;
+            }
+
+            .stats-box .stats-icon {
+                font-size: 2.2rem;
+                opacity: 0.3;
+                color: #fff;
+                z-index: 1;
+            }
+
+            /* ----- TABLE & FILTERS (stock theme) ----- */
+            .data-table-container {
+                background: var(--white);
+                border-radius: 12px;
+                box-shadow: var(--shadow-md);
+                overflow: hidden;
             }
 
             .data-table-header {
                 padding: 1rem 1.8rem;
+                background: #ffffff;
+                border-bottom: 1px solid rgba(15, 110, 140, 0.08);
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 15px;
             }
-        }
 
-        /* ----- ADMIN PROFILE (stock theme) ----- */
-        .admin-profile-section {
-            display: flex;
-            align-items: center;
-            padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(15, 110, 140, 0.92), rgba(7, 68, 90, 0.96)),
-                url('https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=2070&auto=format') center/cover no-repeat;
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
-            gap: 1rem;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
+            .data-table-title {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
 
-        .admin-profile-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(230, 126, 34, 0.2), transparent 70%);
-            border-radius: 50%;
-        }
+            .data-table-title-left h3 {
+                font-weight: 700;
+                margin: 0;
+                font-size: 1.2rem;
+                color: var(--primary-dark);
+            }
 
-        .admin-profile-img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #f39c12;
-        }
+            .data-table-title-left p {
+                margin: 0;
+                font-size: 0.7rem;
+                color: #4a6a7a;
+            }
 
-        .admin-status-indicator {
-            position: absolute;
-            bottom: 2px;
-            right: 4px;
-            width: 14px;
-            height: 14px;
-            background: #f1c40f;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-        }
+            .filter-group {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px 16px;
+                background: transparent;
+                padding: 0;
+                border: none;
+                border-radius: 0;
+                width: 100%;
+                justify-content: flex-start !important;
+                margin-top: 8px;
+                border-top: 1px solid #d5e0e8;
+                padding-top: 12px;
+            }
 
-        .admin-profile-info {
-            flex: 1;
-            z-index: 1;
-        }
+            .filter-item {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
 
-        .admin-profile-name {
-            font-size: 1.25rem;
-            font-weight: 800;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 0.6rem;
-        }
+            .filter-item input[type="date"] {
+                background: white;
+                border: 1px solid #b8ccd9;
+                border-radius: 0;
+                padding: 0.35rem 1rem;
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: #0b1a2b;
+                outline: none;
+                transition: border 0.15s, box-shadow 0.15s;
+                min-width: 140px;
+                cursor: pointer;
+            }
 
-        .admin-profile-badge {
-            font-size: 0.7rem;
-            background: #f39c12;
-            color: #07445a;
-            padding: 0.2rem 0.7rem;
-            border-radius: 30px;
-            font-weight: 700;
-        }
+            .filter-item input[type="date"]:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px rgba(15, 110, 140, 0.15);
+            }
 
-        .admin-profile-detail {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.8rem;
-            opacity: 0.92;
-        }
+            .filter-item label {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #07445a;
+                margin: 0;
+                white-space: nowrap;
+            }
 
-        .admin-profile-detail i {
-            color: #f39c12;
-            width: 16px;
-        }
+            .search-input-group {
+                display: flex;
+                align-items: center;
+                border: 1px solid #b8ccd9;
+                background: white;
+                transition: border 0.15s, box-shadow 0.15s;
+                border-radius: 0;
+                overflow: hidden;
+            }
 
-        /* ----- STATS - STOCK THEME (warm & teal) ----- */
-        .stats-row {
-            display: grid;
-            gap: 14px;
-            grid-template-columns: repeat(4, 1fr);
-        }
+            .search-input-group:focus-within {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px rgba(15, 110, 140, 0.15);
+            }
 
-        .stats-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.85rem 1.25rem;
-            border-radius: 16px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-            transition: all 0.25s ease;
-            border: none;
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-        }
+            .search-input-group input {
+                border: none;
+                padding: 0.35rem 0.8rem;
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: #0b1a2b;
+                background: transparent;
+                outline: none;
+                width: 180px;
+                min-width: 120px;
+                flex: 1;
+            }
 
-        .stats-box::after {
-            content: '';
-            position: absolute;
-            top: -30%;
-            right: -10%;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
-            pointer-events: none;
-        }
+            .search-input-group input::placeholder {
+                color: #7f9aab;
+                font-weight: 400;
+            }
 
-        .stats-box:hover {
-            transform: translateY(-6px) scale(1.01);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-        }
+            .search-input-group .search-icon {
+                padding: 0.35rem 0.3rem 0.35rem 0.8rem;
+                color: var(--primary);
+                font-size: 0.75rem;
+                opacity: 0.7;
+            }
 
-        .stats-box:nth-child(1) {
-            background: linear-gradient(135deg, #0f6e8c, #1a8aad);
-        }
+            .search-input-group .clear-btn {
+                padding: 0.35rem 0.8rem 0.35rem 0.3rem;
+                color: #7f9aab;
+                font-size: 0.75rem;
+                cursor: pointer;
+                display: none;
+                background: none;
+                border: none;
+            }
 
-        .stats-box:nth-child(2) {
-            background: linear-gradient(135deg, #e67e22, #f39c12);
-        }
+            .search-input-group .clear-btn.visible {
+                display: block;
+            }
 
-        .stats-box:nth-child(3) {
-            background: linear-gradient(135deg, #d35400, #e67e22);
-        }
+            .search-input-group .clear-btn:hover {
+                color: var(--primary);
+            }
 
-        .stats-box:nth-child(4) {
-            background: linear-gradient(135deg, #1abc9c, #16a085);
-        }
+            .btn-apply-filter {
+                background: var(--primary-gradient);
+                border: none;
+                color: white;
+                padding: 0.35rem 1.6rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                transition: all 0.2s;
+                cursor: pointer;
+                white-space: nowrap;
+                letter-spacing: 0.3px;
+                border-radius: 0;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 2px 6px rgba(15, 110, 140, 0.25);
+            }
 
-        .stats-box .stats-details {
-            z-index: 2;
-        }
+            .btn-apply-filter:hover {
+                background: linear-gradient(145deg, #1a8aad, #085a78);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(15, 110, 140, 0.35);
+            }
 
-        .stats-value {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 0.2rem;
-            color: #fff;
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-        }
+            .btn-clear-filter {
+                background: transparent;
+                border: 1.5px solid #b8ccd9;
+                color: #2a5a6a;
+                padding: 0.35rem 1.4rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                transition: all 0.2s;
+                cursor: pointer;
+                white-space: nowrap;
+                letter-spacing: 0.3px;
+                border-radius: 0;
+            }
 
-        .stats-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: rgba(255, 255, 255, 0.9);
-            opacity: 0.9;
-        }
+            .btn-clear-filter:hover {
+                background: #e8f0f5;
+                border-color: var(--primary);
+                color: var(--primary-dark);
+            }
 
-        .stats-box .stats-icon {
-            font-size: 2.2rem;
-            opacity: 0.3;
-            color: #fff;
-            z-index: 1;
-        }
+            .btn-add-new {
+                border: none;
+                border-radius: 0 !important;
+                padding: 0.35rem 1.4rem;
+                font-size: 0.75rem;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                transition: all 0.2s;
+                cursor: pointer;
+                white-space: nowrap;
+                letter-spacing: 0.3px;
+                background: transparent;
+                color: var(--primary-dark);
+                border: 1.5px solid var(--primary);
+                box-shadow: 0 1px 4px rgba(15, 110, 140, 0.06);
+            }
 
-        /* ----- TABLE & FILTERS (stock theme) ----- */
-        .data-table-container {
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-        }
+            .btn-add-new:hover {
+                background: rgba(15, 110, 140, 0.06);
+                border-color: var(--primary-light);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 10px rgba(15, 110, 140, 0.08);
+            }
 
-        .data-table-header {
-            padding: 1rem 1.8rem;
-            background: #ffffff;
-            border-bottom: 1px solid rgba(15, 110, 140, 0.08);
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
+            .btn-add-new i {
+                font-size: 0.75rem;
+                color: var(--primary);
+            }
 
-        .data-table-title {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
+            .dataTables_filter,
+            .dataTables_paginate,
+            .dataTables_length,
+            .dataTables_info {
+                display: none !important;
+            }
 
-        .data-table-title-left h3 {
-            font-weight: 700;
-            margin: 0;
-            font-size: 1.2rem;
-            color: var(--primary-dark);
-        }
+            .table-responsive-wrapper {
+                padding: 0 1.5rem 0 1.5rem;
+                overflow-x: auto;
+            }
 
-        .data-table-title-left p {
-            margin: 0;
-            font-size: 0.7rem;
-            color: #4a6a7a;
-        }
+            table.dataTable {
+                width: 100% !important;
+                border-collapse: separate;
+                border-spacing: 0;
+                margin-top: 0.5rem !important;
+            }
 
-        .filter-group {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 10px 16px;
-            background: transparent;
-            padding: 0;
-            border: none;
-            border-radius: 0;
-            width: 100%;
-            justify-content: flex-start !important;
-            margin-top: 8px;
-            border-top: 1px solid #d5e0e8;
-            padding-top: 12px;
-        }
+            table.dataTable thead th {
+                padding: 14px 12px;
+                background: #e4edf3;
+                font-weight: 700;
+                font-size: 0.8rem;
+                color: var(--primary-dark);
+                border-bottom: 2px solid var(--primary);
+                white-space: nowrap;
+            }
 
-        .filter-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+            table.dataTable tbody td {
+                padding: 12px 12px;
+                font-size: 0.8rem;
+                vertical-align: middle;
+                border-bottom: 1px solid #d5e0e8;
+            }
 
-        .filter-item input[type="date"] {
-            background: white;
-            border: 1px solid #b8ccd9;
-            border-radius: 0;
-            padding: 0.35rem 1rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #0b1a2b;
-            outline: none;
-            transition: border 0.15s, box-shadow 0.15s;
-            min-width: 140px;
-            cursor: pointer;
-        }
-
-        .filter-item input[type="date"]:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(15, 110, 140, 0.15);
-        }
-
-        .filter-item label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #07445a;
-            margin: 0;
-            white-space: nowrap;
-        }
-
-        .search-input-group {
-            display: flex;
-            align-items: center;
-            border: 1px solid #b8ccd9;
-            background: white;
-            transition: border 0.15s, box-shadow 0.15s;
-            border-radius: 0;
-            overflow: hidden;
-        }
-
-        .search-input-group:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(15, 110, 140, 0.15);
-        }
-
-        .search-input-group input {
-            border: none;
-            padding: 0.35rem 0.8rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #0b1a2b;
-            background: transparent;
-            outline: none;
-            width: 180px;
-            min-width: 120px;
-            flex: 1;
-        }
-
-        .search-input-group input::placeholder {
-            color: #7f9aab;
-            font-weight: 400;
-        }
-
-        .search-input-group .search-icon {
-            padding: 0.35rem 0.3rem 0.35rem 0.8rem;
-            color: var(--primary);
-            font-size: 0.75rem;
-            opacity: 0.7;
-        }
-
-        .search-input-group .clear-btn {
-            padding: 0.35rem 0.8rem 0.35rem 0.3rem;
-            color: #7f9aab;
-            font-size: 0.75rem;
-            cursor: pointer;
-            display: none;
-            background: none;
-            border: none;
-        }
-
-        .search-input-group .clear-btn.visible {
-            display: block;
-        }
-
-        .search-input-group .clear-btn:hover {
-            color: var(--primary);
-        }
-
-        .btn-apply-filter {
-            background: var(--primary-gradient);
-            border: none;
-            color: white;
-            padding: 0.35rem 1.6rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            cursor: pointer;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-            border-radius: 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 2px 6px rgba(15, 110, 140, 0.25);
-        }
-
-        .btn-apply-filter:hover {
-            background: linear-gradient(145deg, #1a8aad, #085a78);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(15, 110, 140, 0.35);
-        }
-
-        .btn-clear-filter {
-            background: transparent;
-            border: 1.5px solid #b8ccd9;
-            color: #2a5a6a;
-            padding: 0.35rem 1.4rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            cursor: pointer;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-            border-radius: 0;
-        }
-
-        .btn-clear-filter:hover {
-            background: #e8f0f5;
-            border-color: var(--primary);
-            color: var(--primary-dark);
-        }
-
-        .btn-add-new {
-            border: none;
-            border-radius: 0 !important;
-            padding: 0.35rem 1.4rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            cursor: pointer;
-            white-space: nowrap;
-            letter-spacing: 0.3px;
-            background: transparent;
-            color: var(--primary-dark);
-            border: 1.5px solid var(--primary);
-            box-shadow: 0 1px 4px rgba(15, 110, 140, 0.06);
-        }
-
-        .btn-add-new:hover {
-            background: rgba(15, 110, 140, 0.06);
-            border-color: var(--primary-light);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(15, 110, 140, 0.08);
-        }
-
-        .btn-add-new i {
-            font-size: 0.75rem;
-            color: var(--primary);
-        }
-
-        .dataTables_filter,
-        .dataTables_paginate,
-        .dataTables_length,
-        .dataTables_info {
-            display: none !important;
-        }
-
-        .table-responsive-wrapper {
-            padding: 0 1.5rem 0 1.5rem;
-            overflow-x: auto;
-        }
-
-        table.dataTable {
-            width: 100% !important;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-top: 0.5rem !important;
-        }
-
-        table.dataTable thead th {
-            padding: 14px 12px;
-            background: #e4edf3;
-            font-weight: 700;
-            font-size: 0.8rem;
-            color: var(--primary-dark);
-            border-bottom: 2px solid var(--primary);
-            white-space: nowrap;
-        }
-
-        table.dataTable tbody td {
-            padding: 12px 12px;
-            font-size: 0.8rem;
-            vertical-align: middle;
-            border-bottom: 1px solid #d5e0e8;
-        }
-
-        .fade-in {
-            animation: fadeInUp 0.4s ease forwards;
-            opacity: 0;
-        }
-
-        @keyframes fadeInUp {
-            from {
+            .fade-in {
+                animation: fadeInUp 0.4s ease forwards;
                 opacity: 0;
-                transform: translateY(12px);
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(12px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
-        }
 
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
+            ::-webkit-scrollbar {
+                width: 4px;
+                height: 4px;
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 0;
-        }
+            ::-webkit-scrollbar-thumb {
+                background: var(--primary);
+                border-radius: 0;
+            }
 
-        .admin-profile-actions {
-            display: none !important;
-        }
+            .admin-profile-actions {
+                display: none !important;
+            }
 
-        /* ----- PAGINATION: just two buttons, no text ----- */
-        .pagination-wrapper {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 1rem 1.8rem;
-            border-top: 1px solid #d5e0e8;
-            gap: 12px;
-        }
-
-        .pagination-wrapper .page-btn {
-            background: white;
-            border: 1px solid #b8ccd9;
-            padding: 0.4rem 1.6rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--primary-dark);
-            cursor: pointer;
-            transition: all 0.15s;
-            border-radius: 0;
-        }
-
-        .pagination-wrapper .page-btn:hover {
-            background: #e8f0f5;
-            border-color: var(--primary);
-        }
-
-        .pagination-wrapper .page-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            background: #f5f8fa;
-        }
-
-        /* category select style */
-        .filter-item select {
-            background: white;
-            border: 1px solid #b8ccd9;
-            border-radius: 0;
-            padding: 0.35rem 2rem 0.35rem 1rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #0b1a2b;
-            outline: none;
-            transition: border 0.15s, box-shadow 0.15s;
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2307445a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.8rem center;
-            min-width: 140px;
-        }
-
-        .filter-item select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(15, 110, 140, 0.15);
-        }
-
-        @media (max-width:575.98px) {
+            /* ----- PAGINATION: just two buttons, no text ----- */
             .pagination-wrapper {
-                padding: 0.5rem 0.8rem;
-                justify-content: center;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                padding: 1rem 1.8rem;
+                border-top: 1px solid #d5e0e8;
+                gap: 12px;
             }
 
             .pagination-wrapper .page-btn {
-                padding: 0.2rem 1rem;
-                font-size: 0.65rem;
+                background: white;
+                border: 1px solid #b8ccd9;
+                padding: 0.4rem 1.6rem;
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: var(--primary-dark);
+                cursor: pointer;
+                transition: all 0.15s;
+                border-radius: 0;
             }
 
+            .pagination-wrapper .page-btn:hover {
+                background: #e8f0f5;
+                border-color: var(--primary);
+            }
+
+            .pagination-wrapper .page-btn:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                background: #f5f8fa;
+            }
+
+            /* category select style */
             .filter-item select {
-                font-size: 0.6rem;
-                padding: 0.2rem 1.5rem 0.2rem 0.5rem;
-                min-width: 100px;
+                background: white;
+                border: 1px solid #b8ccd9;
+                border-radius: 0;
+                padding: 0.35rem 2rem 0.35rem 1rem;
+                font-size: 0.75rem;
+                font-weight: 500;
+                color: #0b1a2b;
+                outline: none;
+                transition: border 0.15s, box-shadow 0.15s;
+                cursor: pointer;
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2307445a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 0.8rem center;
+                min-width: 140px;
             }
-        }
-    </style>
-</head>
 
-<body>
+            .filter-item select:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 0 2px rgba(15, 110, 140, 0.15);
+            }
 
-    <!-- PAGE LOADING OVERLAY (minimal) -->
-    <div id="page-loader">
-        <div class="loader-spinner"></div>
-    </div>
+            @media (max-width:575.98px) {
+                .pagination-wrapper {
+                    padding: 0.5rem 0.8rem;
+                    justify-content: center;
+                }
 
-    <% if (messages.success) { %>
-        <script>
-            Swal.fire({ toast: true, position: "top-end", icon: "success", title: "<%= messages.success %>", showConfirmButton: false, timer: 3000, timerProgressBar: true });
-        </script>
-        <% } %>
-            <% if (messages.error) { %>
-                <script>
-                    Swal.fire({ toast: true, position: "top-end", icon: "error", title: "<%= messages.error %>", showConfirmButton: false, timer: 3000, timerProgressBar: true });
-                </script>
-                <% } %>
+                .pagination-wrapper .page-btn {
+                    padding: 0.2rem 1rem;
+                    font-size: 0.65rem;
+                }
 
-                    <div class="sidebar-placeholder"></div>
-                    <div class="container" id="top">
-                        <main class="content">
-                            <div class="main">
+                .filter-item select {
+                    font-size: 0.6rem;
+                    padding: 0.2rem 1.5rem 0.2rem 0.5rem;
+                    min-width: 100px;
+                }
+            }
+        </style>
+    </head>
 
-                                <!-- ===== STATS ROW ===== -->
-                                <div class="stats-row">
-                                    <div class="stats-box fade-in">
-                                        <div class="stats-details">
-                                            <h4 class="stats-value">
-                                                <%=totalProduct%>
-                                            </h4>
-                                            <span class="stats-label">Total Products</span>
-                                        </div>
-                                        <div class="stats-icon"></div>
-                                    </div>
-                                    <div class="stats-box fade-in">
-                                        <div class="stats-details">
-                                            <h4 class="stats-value">
-                                                <%=totalInstock%>
-                                            </h4>
-                                            <span class="stats-label">In Stock</span>
-                                        </div>
-                                        <div class="stats-icon"></div>
-                                    </div>
-                                    <div class="stats-box fade-in">
-                                        <div class="stats-details">
-                                            <h4 class="stats-value">
-                                                <%=totalLowStock%>
-                                            </h4>
-                                            <span class="stats-label">Low Stock</span>
-                                        </div>
-                                        <div class="stats-icon"></div>
-                                    </div>
-                                    <div class="stats-box fade-in">
-                                        <div class="stats-details">
-                                            <h4 class="stats-value">
-                                                <%=totalStockValue%>
-                                            </h4>
-                                            <span class="stats-label">Stock Value</span>
-                                        </div>
-                                        <div class="stats-icon"></div>
-                                    </div>
-                                </div>
+    <body>
 
-                                <!-- ===== DATA TABLE ===== -->
-                                <div class="data-table-container fade-in">
-                                    <div class="data-table-header">
-                                        <div class="data-table-title">
-                                            <div class="data-table-title-left">
-                                                <h3><i class="fas fa-clipboard-list"
-                                                        style="color:var(--primary);margin-right:8px;"></i>Product
-                                                    List</h3>
-                                                <p>All inventory items</p>
-                                            </div>
-                                            <button type="button"
-                                                onclick="window.location.href='/ghsupplier/admin-dashboard/products/add-new'"
-                                                class="btn-add-new" id="addNewBtn">
-                                                <i class="fas fa-plus-circle"></i> Add Item
-                                            </button>
-                                        </div>
+        <!-- PAGE LOADING OVERLAY (minimal) -->
+        <div id="page-loader">
+            <div class="loader-spinner"></div>
+        </div>
 
-                                        <!-- FILTER: Search + Category + Filter button in a FORM -->
-                                        <form id="filterForm" method="get"
-                                            action="/ghsupplier/admin-dashboard/products" class="filter-group"
-                                            style="display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; width:100%; padding-top:12px; border-top:1px solid #d5e0e8; margin-top:8px;">
-                                            <!-- Search input -->
-                                            <div class="search-input-group" style="flex:1 1 180px;">
-                                                <span class="search-icon"><i class="fas fa-search"></i></span>
-                                                <input type="text" id="searchInput"
-                                                    placeholder="Search any field..." name="search" />
-
-                                                <button type="submit" class="btn-apply-filter" id="filterBtn">
-                                                    <i class="fas fa-filter"></i> Search
-                                                </button>
-
-                                            </div>
-
-                                            <!-- Category dropdown -->
-                                            <div class="filter-item">
-
-                                                <select id="categorySelect" name="category">
-                                                    <option value="">Select category</option>
-                                                    <option value="Cement">Cement (সিমেন্ট)</option>
-                                                    <option value="Bricks">Bricks (ইট)</option>
-                                                    <option value="Sand">Sand (বালি)</option>
-                                                    <option value="Stone & Aggregates">Stone & Aggregates (পাথর ও
-                                                        অ্যাগ্রিগেট)
-                                                    </option>
-                                                    <option value="Steel & TMT Bars">Steel & TMT Bars (রড ও TMT বার)
-                                                    </option>
-                                                    <option value="Tiles">Tiles (টাইলস)</option>
-                                                    <option value="Pipes & Fittings">Pipes & Fittings (পাইপ ও
-                                                        ফিটিংস)</option>
-                                                    <option value="Hardware Materials">Hardware Materials
-                                                        (হার্ডওয়্যার সামগ্রী)
-                                                    </option>
-                                                    <option value="Paint & Chemicals">Paint & Chemicals (রং ও
-                                                        কেমিক্যাল)</option>
-                                                    <option value="Other Construction Materials">Other Construction
-                                                        Materials
-                                                        (অন্যান্য নির্মাণ সামগ্রী)</option>
-                                                    <!-- add more as needed -->
-                                                </select>
-                                            </div>
-
-                                            <!-- Filter (submit) button -->
-                                            <button type="submit" class="btn-apply-filter" id="filterBtn">
-                                                <i class="fas fa-filter"></i> Filter
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    <div class="table-responsive-wrapper">
-                                        <table id="stockTable" class="display responsive nowrap" style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>Sl no</th>
-                                                    <th>Product Name</th>
-                                                    <th>Category</th>
-                                                    <th>Unit</th>
-                                                    <th>Purchase Price</th>
-                                                    <th>Sale Price</th>
-                                                    <th>Stock qty</th>
-                                                    <th>Description</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% allProducts.forEach((ap, index)=>{ %>
-                                                    <tr>
-                                                        <td>
-                                                            <%=serialNo+index+1%>
-                                                        </td>
-                                                        <td>
-                                                            <%=ap.product_name%>
-                                                        </td>
-                                                        <td>
-                                                            <%=ap.category%>
-                                                        </td>
-                                                        <td>
-                                                            <%=ap.unit%>
-                                                        </td>
-                                                        <td>
-                                                            <%=ap.purchase_price%>
-                                                        </td>
-                                                        <td>
-                                                            <%=ap.sale_price%>
-                                                        </td>
-                                                        <td>
-                                                            <%=ap.stock_qty%>
-                                                        </td>
-                                                        <td>
-                                                            <%=ap.description%>
-                                                        </td>
-                                                        <td>
-                                                            <a href="/delete-product/<%=ap._id%>"
-                                                                onclick="return confirm('Are you sure?')"
-                                                                type="button"
-                                                                class="btn btn-primary btn-sm">Delete</a>
-                                                        </td>
-                                                    </tr>
-                                                    <% }) %>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-
-                                    <div class="pagination-wrapper">
-
-
-                                        <% if(previousPage){ %>
-                                            <button
-                                                onclick="window.location.href='/ghsupplier/admin-dashboard/products?page=<%=previousPage%>&search=<%=search%>&category=<%=category%>'"
-                                                class="page-btn" id="prevPageBtn">← Previous</button>
-
-                                            <% }%>
-
-                                                <% if(nextPage){ %>
-                                                    <button
-                                                        onclick="window.location.href='/ghsupplier/admin-dashboard/products?page=<%=nextPage%>'"
-                                                        class="page-btn" id="nextPageBtn">Next →</button>
-                                                    <% }%>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </main>
-                    </div>
-
+        <% if (messages.success) { %>
+            <script>
+                Swal.fire({ toast: true, position: "top-end", icon: "success", title: "<%= messages.success %>", showConfirmButton: false, timer: 3000, timerProgressBar: true });
+            </script>
+            <% } %>
+                <% if (messages.error) { %>
                     <script>
-                        $(document).ready(function () {
-                            // Init DataTable with NO built-in search/paging
-                            var table = $('#stockTable').DataTable({
-                                responsive: true,
-                                paging: false,
-                                info: false,
-                                lengthChange: false,
-                                searching: false,
-                                columnDefs: [
-                                    { responsivePriority: 1, targets: 0 },
-                                    { responsivePriority: 2, targets: 1 },
-                                    { orderable: false, targets: 6 }
-                                ]
-                            });
-                        });
-
-                        // ✅ FIX: Hide loader ONLY when everything is fully loaded
-                        window.addEventListener('load', function() {
-                            // Small delay for smoother transition
-                            setTimeout(function() {
-                                document.getElementById('page-loader').classList.add('hidden');
-                            }, 400);
-                        });
-
-                        // ✅ Fallback: Hide loader after 5 seconds max (safety net)
-                        setTimeout(function() {
-                            const loader = document.getElementById('page-loader');
-                            if (loader && !loader.classList.contains('hidden')) {
-                                loader.classList.add('hidden');
-                            }
-                        }, 5000);
+                        Swal.fire({ toast: true, position: "top-end", icon: "error", title: "<%= messages.error %>", showConfirmButton: false, timer: 3000, timerProgressBar: true });
                     </script>
+                    <% } %>
 
-</body>
+                        <div class="sidebar-placeholder"></div>
+                        <div class="container" id="top">
+                            <main class="content">
+                                <div class="main">
+
+                                    <!-- ===== STATS ROW ===== -->
+                                    <div class="stats-row">
+                                        <div class="stats-box fade-in">
+                                            <div class="stats-details">
+                                                <h4 class="stats-value">
+                                                    <%=totalProduct%>
+                                                </h4>
+                                                <span class="stats-label">Total Products</span>
+                                            </div>
+                                            <div class="stats-icon"></div>
+                                        </div>
+                                        <div class="stats-box fade-in">
+                                            <div class="stats-details">
+                                                <h4 class="stats-value">
+                                                    <%=totalInstock%>
+                                                </h4>
+                                                <span class="stats-label">In Stock</span>
+                                            </div>
+                                            <div class="stats-icon"></div>
+                                        </div>
+                                        <div class="stats-box fade-in">
+                                            <div class="stats-details">
+                                                <h4 class="stats-value">
+                                                    <%=totalLowStock%>
+                                                </h4>
+                                                <span class="stats-label"> <a style='color:white' href="#">Low
+                                                        Stock</a></span>
+                                            </div>
+                                            <div class="stats-icon"></div>
+                                        </div>
+                                        <div class="stats-box fade-in">
+                                            <div class="stats-details">
+                                                <h4 class="stats-value">
+                                                    <%=totalStockValue%>
+                                                </h4>
+                                                <span class="stats-label">Stock Value</span>
+                                            </div>
+                                            <div class="stats-icon"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- ===== DATA TABLE ===== -->
+                                    <div class="data-table-container fade-in">
+                                        <div class="data-table-header">
+                                            <div class="data-table-title">
+                                                <div class="data-table-title-left">
+                                                    <h3><i class="fas fa-clipboard-list"
+                                                            style="color:var(--primary);margin-right:8px;"></i>Product
+                                                        List</h3>
+                                                    <p>All inventory items</p>
+                                                </div>
+                                                <button type="button"
+                                                    onclick="window.location.href='/ghsupplier/admin-dashboard/products/add-new'"
+                                                    class="btn-add-new" id="addNewBtn">
+                                                    <i class="fas fa-plus-circle"></i> Add Item
+                                                </button>
+                                            </div>
+
+                                            <!-- FILTER: Search + Category + Filter button in a FORM -->
+                                            <form id="filterForm" method="get"
+                                                action="/ghsupplier/admin-dashboard/products" class="filter-group"
+                                                style="display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; width:100%; padding-top:12px; border-top:1px solid #d5e0e8; margin-top:8px;">
+                                                <!-- Search input -->
+                                                <div class="search-input-group" style="flex:1 1 180px;">
+                                                    <span class="search-icon"><i class="fas fa-search"></i></span>
+                                                    <input type="text" id="searchInput"
+                                                        placeholder="Search any field..." name="search" />
+
+                                                    <button type="submit" class="btn-apply-filter" id="filterBtn">
+                                                        <i class="fas fa-filter"></i> Search
+                                                    </button>
+
+                                                </div>
+
+                                                <!-- Category dropdown -->
+                                                <div class="filter-item">
+
+                                                    <select id="categorySelect" name="category">
+                                                        <option value="">Select category</option>
+                                                        <option value="Cement">Cement (সিমেন্ট)</option>
+                                                        <option value="Bricks">Bricks (ইট)</option>
+                                                        <option value="Sand">Sand (বালি)</option>
+                                                        <option value="Stone & Aggregates">Stone & Aggregates (পাথর ও
+                                                            অ্যাগ্রিগেট)
+                                                        </option>
+                                                        <option value="Steel & TMT Bars">Steel & TMT Bars (রড ও TMT বার)
+                                                        </option>
+                                                        <option value="Tiles">Tiles (টাইলস)</option>
+                                                        <option value="Pipes & Fittings">Pipes & Fittings (পাইপ ও
+                                                            ফিটিংস)</option>
+                                                        <option value="Hardware Materials">Hardware Materials
+                                                            (হার্ডওয়্যার সামগ্রী)
+                                                        </option>
+                                                        <option value="Paint & Chemicals">Paint & Chemicals (রং ও
+                                                            কেমিক্যাল)</option>
+                                                        <option value="Other Construction Materials">Other Construction
+                                                            Materials
+                                                            (অন্যান্য নির্মাণ সামগ্রী)</option>
+                                                        <!-- add more as needed -->
+                                                    </select>
+                                                </div>
+
+                                                <!-- Filter (submit) button -->
+                                                <button type="submit" class="btn-apply-filter" id="filterBtn">
+                                                    <i class="fas fa-filter"></i> Filter
+                                                </button>
+                                            </form>
+                                        </div>
+
+                                        <div class="table-responsive-wrapper">
+                                            <table id="stockTable" class="display responsive nowrap" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sl no</th>
+                                                        <th>Product Name</th>
+                                                        <th>Category</th>
+                                                        <th>Unit</th>
+                                                        <th>Purchase Price</th>
+                                                        <th>Sale Price</th>
+                                                        <th>Stock qty</th>
+                                                        <th>Description</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% allProducts.forEach((ap, index)=>{ %>
+                                                        <tr>
+                                                            <td>
+                                                                <%=serialNo+index+1%>
+                                                            </td>
+                                                            <td>
+                                                                <%=ap.product_name%>
+                                                            </td>
+                                                            <td>
+                                                                <%=ap.category%>
+                                                            </td>
+                                                            <td>
+                                                                <%=ap.unit%>
+                                                            </td>
+                                                            <td>
+                                                                <%=ap.purchase_price%>
+                                                            </td>
+                                                            <td>
+                                                                <%=ap.sale_price%>
+                                                            </td>
+                                                            <td>
+                                                                <%=ap.stock_qty%>
+                                                            </td>
+                                                            <td>
+                                                                <%=ap.description%>
+                                                            </td>
+                                                            <td>
+
+                                                                <a href="/ghsupplier/admin-dashboard/products/edit-product/<%=ap._id%>" type="button"
+                                                                    class="btn btn-warning btn-sm">Edit</a>
+
+                                                                <a href="/delete-product/<%=ap._id%>"
+                                                                    onclick="return confirm('Are you sure?')"
+                                                                    type="button"
+                                                                    class="btn btn-primary btn-sm">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+
+                                        <div class="pagination-wrapper">
+
+
+                                            <% if(previousPage){ %>
+                                                <button
+                                                    onclick="window.location.href='/ghsupplier/admin-dashboard/products?page=<%=previousPage%>&search=<%=search%>&category=<%=category%>'"
+                                                    class="page-btn" id="prevPageBtn">← Previous</button>
+
+                                                <% }%>
+
+                                                    <% if(nextPage){ %>
+                                                        <button
+                                                            onclick="window.location.href='/ghsupplier/admin-dashboard/products?page=<%=nextPage%>'"
+                                                            class="page-btn" id="nextPageBtn">Next →</button>
+                                                        <% }%>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </main>
+                        </div>
+
+                        <script>
+                            $(document).ready(function () {
+                                // Init DataTable with NO built-in search/paging
+                                var table = $('#stockTable').DataTable({
+                                    responsive: true,
+                                    paging: false,
+                                    info: false,
+                                    lengthChange: false,
+                                    searching: false,
+                                    columnDefs: [
+                                        { responsivePriority: 1, targets: 0 },
+                                        { responsivePriority: 2, targets: 1 },
+                                        { orderable: false, targets: 6 }
+                                    ]
+                                });
+                            });
+
+                            // ✅ FIX: Hide loader ONLY when everything is fully loaded
+                            window.addEventListener('load', function () {
+                                // Small delay for smoother transition
+                                setTimeout(function () {
+                                    document.getElementById('page-loader').classList.add('hidden');
+                                }, 400);
+                            });
+
+                            // ✅ Fallback: Hide loader after 5 seconds max (safety net)
+                            setTimeout(function () {
+                                const loader = document.getElementById('page-loader');
+                                if (loader && !loader.classList.contains('hidden')) {
+                                    loader.classList.add('hidden');
+                                }
+                            }, 5000);
+                        </script>
+
+    </body>
 
 </html>
