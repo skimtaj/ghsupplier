@@ -371,7 +371,7 @@ const stockList = async (req, res) => {
         const totalPage = Math.ceil(totalProductDoc / limit);
 
         const allProducts = await product_model.find(query).skip(skip).limit(limit).sort({ _id: -1 });
-        const totalProduct = allProducts.length;
+        const totalProduct = await product_model.countDocuments();
 
         const products = await product_model.find();
 
