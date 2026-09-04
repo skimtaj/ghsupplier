@@ -753,7 +753,6 @@ G.H. Supplier`
 
             req.flash('success', 'Please Chcek your email');
             return res.redirect('/ghsupplier/auth/login')
-
         }
 
         else {
@@ -761,7 +760,6 @@ G.H. Supplier`
             req.flash('error', 'Account not found');
             return res.redirect('/ghsupplier/auth/login')
         }
-
     }
 
     catch (err) {
@@ -871,7 +869,7 @@ const deleteDueAmount = async (req, res) => {
         req.flash('error', 'Something is wrong');
         return res.redirect(`/ghsupplier/admin-dashboard/payment-history/${billingSourse._id}`)
     }
-}
+};
 
 
 module.exports = { deleteDueAmount, paymentHistory, dueAmountPaymentPost, dueAmountPayment, editProductPost, editProduct, deleteSelectedItem, logout, downloadBill, resetPasswordPost, forgetPassword, resetPassword, adminLoginPost, adminSignupPost, adminSignup, exportBillingData, deleteProduct, addProductPost, addProduct, stockList, deleteBill, addNewPost, addNew, adminDashboard, adminCredential }
