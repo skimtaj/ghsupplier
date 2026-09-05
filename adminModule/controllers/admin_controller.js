@@ -789,7 +789,9 @@ const editProduct = async (req, res) => {
     res.render('../adminModule/Views/edit_product', { productSourse })
 }
 const editProductPost = async (req, res) => {
-    await product_model.findByIdAndUpdate(req.params.productid);
+
+    const updateProduct = req.body;
+    await product_model.findByIdAndUpdate(req.params.productid, updateProduct);
     req.flash('success', 'Product update successfully');
     return res.redirect('/ghsupplier/admin-dashboard/products')
 }
@@ -870,6 +872,9 @@ const deleteDueAmount = async (req, res) => {
         return res.redirect(`/ghsupplier/admin-dashboard/payment-history/${billingSourse._id}`)
     }
 };
+
+
+
 
 
 module.exports = { deleteDueAmount, paymentHistory, dueAmountPaymentPost, dueAmountPayment, editProductPost, editProduct, deleteSelectedItem, logout, downloadBill, resetPasswordPost, forgetPassword, resetPassword, adminLoginPost, adminSignupPost, adminSignup, exportBillingData, deleteProduct, addProductPost, addProduct, stockList, deleteBill, addNewPost, addNew, adminDashboard, adminCredential }
